@@ -1,2 +1,9 @@
 rootProject.name = 'DevTalk-BE'
-
+include 'dtk-gateway'
+include 'dtk-config'
+include 'dtk-discovery'
+include 'dtk-payment-api'
+include 'dtk-member-api'
+include 'dtk-board-api'
+include 'dtk-match-api'
+include 'dtk-item-api'
