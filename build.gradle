@@ -21,13 +21,9 @@ allprojects {}
 
 // 전체 서브 모듈에 해당되는 설정
 subprojects {
-    apply plugin: 'java-library'
+    apply plugin: 'java'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
-
-    group = 'com.devtalk'
-    version = '1.0'
-    sourceCompatibility = '17'
 
     repositories {
         mavenCentral()
@@ -37,19 +33,3 @@ subprojects {
 
     }
 }
-
-//dependencies {
-
-//    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-//    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
-//}
-//group 'org.example'
-//version '1.0-SNAPSHOT'
-//
-//repositories {
-//    mavenCentral()
-//}
-//
-//test {
-//    useJUnitPlatform()
-//}
