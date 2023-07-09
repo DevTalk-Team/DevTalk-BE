@@ -1,4 +1,4 @@
-group = 'com.devtalk.match'
+group = 'com.devtalk.consultation'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
@@ -18,7 +18,8 @@ ext {
 }
 
 dependencies {
-	//implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '3.1.0'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.cloud:spring-cloud-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -28,6 +29,8 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	implementation "com.fasterxml.uuid:java-uuid-generator:4.0.1" //UUID
 }
 
 dependencyManagement {
