@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 class PaymentInput {
-    private String reservationId;
+    private String consultationId;
     private String processType;
     private Integer cost;
 //    private String paymentPGID;

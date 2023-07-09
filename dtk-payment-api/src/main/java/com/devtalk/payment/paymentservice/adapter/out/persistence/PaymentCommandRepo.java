@@ -1,4 +1,8 @@
 package com.devtalk.payment.paymentservice.adapter.out.persistence;
 
-public interface PaymentCommandRepo {
+
+import org.springframework.stereotype.Repository;
+
+@Repository
+class PaymentCommandRepo {
 }

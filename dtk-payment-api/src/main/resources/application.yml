@@ -1,5 +1,5 @@
 server:
-  port: 8088
+  port: 2175
 
 spring:
   application:
@@ -17,13 +17,17 @@ spring:
       path: /h2-console
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     properties:
       hibernate:
         format_sql: true
+    defer-datasource-initialization: true
   cloud:
     config:
       enabled: false
+  sql:
+    init:
+      mode: always
 
 eureka:
 #  instance:

@@ -6,34 +6,34 @@ import lombok.Data;
 import java.util.Date;
 
 @Entity
-@Table(name = "consultation")
+@Table(name = "refund")
 @Data
-class ConsultationEntity {
+public class Refund {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 예약ID
+    // 환불ID
     @Column(nullable = false, unique = true)
+    private String refundId;
+
+    // 결제ID
+    @Column(nullable = false)
+    private String paymentId;
+
+    // 예약ID
+    @Column(nullable = false)
     private String consultationId;
 
-    // 의뢰자 이름
-    @Column(nullable = false)
-    private String counselee;
+    // 환불 사유
+    @Column(nullable = false, length = 100)
+    private String text;
 
-    // 전문가 이름
-    @Column(nullable = false)
-    private String counselor;
-
-    // 상담 유형
-    @Column(nullable = false)
-    private String consultationType;
-
-    // 상담 일시
+    // 환불 일시
     @Column(nullable = false, updatable = false, insertable = false)
-    private Date consultationAt;
+    private Date refundAt;
 
-    // 상담 진행 상태
+    // 환불 금액
     @Column(nullable = false)
-    private String processStatus;
+    private Integer refundCost;
 }

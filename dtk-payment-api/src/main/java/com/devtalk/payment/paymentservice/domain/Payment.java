@@ -7,9 +7,9 @@ import org.hibernate.annotations.ColumnDefault;
 import java.util.Date;
 
 @Entity
-@Table(name = "payment_info")
+@Table(name = "payment")
 @Data
-class PaymentEntity {
+public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,11 +24,11 @@ class PaymentEntity {
 
     // 거래고유 번호
     @Column(nullable = false)
-    private String impUID;
+    private String impUid;
 
     // 결제 PG사 코드
     @Column(nullable = false)
-    private String paymentPGID;
+    private String paymentPgId;
 
     // 결제 금액
     @Column(nullable = false)
@@ -41,5 +41,6 @@ class PaymentEntity {
 
     // 결제 상태
     @Column(nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus status;
 }
