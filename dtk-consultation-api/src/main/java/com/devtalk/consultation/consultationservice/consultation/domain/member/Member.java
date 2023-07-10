@@ -1,14 +1,17 @@
 package com.devtalk.consultation.consultationservice.consultation.domain.member;
 
+import com.devtalk.consultation.consultationservice.global.vo.BaseTime;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "type")
+@SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Member {
+public class Member extends BaseTime {
 
     @Id
     @Column(nullable = false, unique = true)
@@ -21,13 +24,13 @@ public class Member {
     private String name;
 
     @Column(nullable = false, length = 20)
-    @Enumerated(value = EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private RoleType role;
 
-    Member(Long id, String loginId, String name, RoleType role) {
-        this.id = id;
-        this.loginId = loginId;
-        this.name = name;
-        this.role = role;
-    }
+//    Member(Long id, String loginId, String name, RoleType role) {
+//        this.id = id;
+//        this.loginId = loginId;
+//        this.name = name;
+//        this.role = role;
+//    }
 }

@@ -4,6 +4,9 @@ import com.devtalk.consultation.consultationservice.consultation.domain.member.C
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -17,5 +20,14 @@ public class Consultation {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "consulter_id")
     private Consulter consulter;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "consultation", fetch = FetchType.LAZY)
+    private List<ReservedItem> reservedItemList = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "consultation", fetch = FetchType.LAZY)
+    private List<CanceledItem> canceledItemList = new ArrayList<>();
+
 
 }
