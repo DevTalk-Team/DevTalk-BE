@@ -1,6 +1,10 @@
 package com.devtalk.payment.paymentservice.adapter.in.web;
 
+import com.devtalk.payment.paymentservice.application.port.in.PaymentUseCase;
+import com.devtalk.payment.paymentservice.application.port.in.dto.PaymentRes;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /*
@@ -15,16 +19,25 @@ import org.springframework.web.bind.annotation.*;
  * */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/payments")
+@RequestMapping("/payment")
 class PaymentApiController {
+    private final PaymentUseCase paymentUseCase;
+
+    @GetMapping("/hello")
+    public String hello(){
+        return "hello";
+    }
+
     @PostMapping
     public String requestPayment() {
         return "hello";
     }
 
     @GetMapping("/{consultationId}")
-    public String getPayment(){
-        return "hello";
+    public ResponseEntity<PaymentRes> getPayment(@PathVariable("consultationId") String consultationId){
+        PaymentRes paymentRes = paymentUseCase.getPaymentInfoByConsultationId(consultationId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(paymentRes);
     }
 
     @DeleteMapping("/{paymentId}")

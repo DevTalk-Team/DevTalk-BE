@@ -1,10 +1,11 @@
 package com.devtalk.payment.paymentservice.adapter.in.web.dto;
 
+import com.devtalk.payment.paymentservice.domain.Payment;
 import lombok.Data;
 
 @Data
-class PaymentOutput {
-    private String paymentId;
-    private String paymentPGID;
-    private String impUID;
+public class PaymentOutput {
+    private String code;
+    private String message;
+    private Payment result;
 }
