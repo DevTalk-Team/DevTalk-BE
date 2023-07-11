@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-@Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Counselee {
 
@@ -31,5 +30,11 @@ public class Counselee {
 
     //관심 분야
 
+    public Counselee(String email, String password, String phoneNumber, LocalDate birthDate) {
+        this.email = email;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.birthDate = birthDate;
+    }
 
 }
