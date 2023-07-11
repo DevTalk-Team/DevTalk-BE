@@ -20,5 +20,9 @@ public class ReservedItem extends LinkItem {
     @OneToOne(mappedBy = "consultationItemId", fetch = FetchType.LAZY)
     private Review review;
 
-
+    public static ReservedItem createReservedItem(Consultation consultation) {
+        return ReservedItem.builder()
+                .consultation(consultation)
+                .build();
+    }
 }

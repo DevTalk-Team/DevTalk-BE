@@ -4,8 +4,8 @@ import com.devtalk.consultation.consultationservice.consultation.domain.member.C
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Builder
@@ -22,12 +22,20 @@ public class Consultation {
     private Consulter consulter;
 
     @Builder.Default
-    @OneToMany(mappedBy = "consultation", fetch = FetchType.LAZY)
-    private List<ReservedItem> reservedItemList = new ArrayList<>();
+    @OneToMany(mappedBy = "consultation", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ReservedItem> reservedItemList = new HashSet<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "consultation", fetch = FetchType.LAZY)
-    private List<CanceledItem> canceledItemList = new ArrayList<>();
+    @OneToMany(mappedBy = "consultation", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<CanceledItem> canceledItemList = new HashSet<>();
 
+    public static Consultation createConsultation(Consulter consulter) {
+        return Consultation.builder()
+                .consulter(consulter)
+                .build();
+    }
 
+    public void reserve() {
+        ReservedItem reservedItem = ReservedItem.createReservedItem(this);
+    }
 }

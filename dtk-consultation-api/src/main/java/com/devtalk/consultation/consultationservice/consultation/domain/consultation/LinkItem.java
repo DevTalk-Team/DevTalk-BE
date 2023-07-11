@@ -34,13 +34,19 @@ public class LinkItem extends BaseTime {
 
     @Column(nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
-    private ConsultationType consultationType;
+    private ProcessType processType;
+
+    @Column(nullable = false, length = 20)
+    private String largeArea;
+
+    @Column(nullable = false, length = 20)
+    private String detailArea;
 
     @Column(nullable = false, length = 30)
     private LocalDateTime reservationAT;
 
     @Column(nullable = false, length = 20)
-    private ProcessStatus processStatus;
+    private ProcessStatus status;
 
     @Column(nullable = false)
     private Money price;

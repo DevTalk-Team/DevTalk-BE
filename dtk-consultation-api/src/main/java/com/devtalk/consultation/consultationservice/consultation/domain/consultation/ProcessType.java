@@ -1,6 +1,6 @@
 package com.devtalk.consultation.consultationservice.consultation.domain.consultation;
 
-public enum ConsultationType {
+public enum ProcessType {
     PHONE, VIDEO, OFFLINE
 
 }
