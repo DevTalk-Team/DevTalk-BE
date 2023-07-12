@@ -18,6 +18,9 @@ import lombok.experimental.SuperBuilder;
 @Getter
 public class CanceledItem extends LinkItem {
 
+    @Column(nullable = false)
+    private Long productId;
+
     @Column(nullable = false, length = 500)
     private String reason;
 }
