@@ -27,10 +27,4 @@ public class Member extends BaseTime {
     @Enumerated(EnumType.STRING)
     private RoleType role;
 
-//    Member(Long id, String loginId, String name, RoleType role) {
-//        this.id = id;
-//        this.loginId = loginId;
-//        this.name = name;
-//        this.role = role;
-//    }
 }
