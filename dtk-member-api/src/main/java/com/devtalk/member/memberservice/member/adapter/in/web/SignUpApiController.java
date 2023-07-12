@@ -5,9 +5,13 @@ import com.devtalk.member.memberservice.member.adapter.in.web.dto.CounseleeSignU
 import com.devtalk.member.memberservice.member.application.port.in.SignUpUseCase;
 import com.devtalk.member.memberservice.member.application.port.in.dto.CounseleeSignUpReq;
 import com.devtalk.member.memberservice.member.domain.Counselee;
+import jakarta.validation.Valid;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,16 +34,17 @@ public class SignUpApiController {
 
     /* 멘티 회원가입 */
     @PostMapping("/counselee")
-    public ResponseEntity<CounseleeSignUpOutput> counseleeSignUp(@RequestBody CounseleeSignUpInput dto) {
+    public ResponseEntity<CounseleeSignUpOutput> counseleeSignUp(@Valid @RequestBody CounseleeSignUpInput input, BindingResult bindingResult) {
         //command(req) 생성
-        CounseleeSignUpReq req = new CounseleeSignUpReq(dto.getEmail(), dto.getPassword(), dto.getPhoneNumber(), dto.getBirthDate());
+        CounseleeSignUpReq req = new CounseleeSignUpReq(input.getEmail(), input.getPassword(), input.getPhoneNumber(), input.getBirthDate());
 
         //usecase 함수 호출
         signUpUseCase.signUp(req);
 
-        return ResponseEntity.ok().build();
-    }
+        CounseleeSignUpOutput output = new CounseleeSignUpOutput("0111", "멘티 회원가입 성공");
 
+        return ResponseEntity.ok().body(output);
+    }
 
 
 }

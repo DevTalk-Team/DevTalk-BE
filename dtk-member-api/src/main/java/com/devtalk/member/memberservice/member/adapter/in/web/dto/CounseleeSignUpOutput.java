@@ -8,4 +8,9 @@ public class CounseleeSignUpOutput {
     private String code;
     private String message;
 
+
+    public CounseleeSignUpOutput(String code, String message) {
+        this.code = code;
+        this.message = message;
+    }
 }

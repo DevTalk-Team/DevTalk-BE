@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -16,7 +17,7 @@ public class Counselee {
     private String password;
     private String phoneNumber;
     private LocalDate birthDate;
-    //관심 분야
+//    private List<String> interests; //관심 분야
 
     public Counselee(String email, String password, String phoneNumber, LocalDate birthDate) {
         this.email = email;
