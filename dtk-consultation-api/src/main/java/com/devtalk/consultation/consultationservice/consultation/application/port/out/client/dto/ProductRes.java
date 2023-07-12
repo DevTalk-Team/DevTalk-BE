@@ -1,6 +1,6 @@
 package com.devtalk.consultation.consultationservice.consultation.application.port.out.client.dto;
 
-import com.devtalk.consultation.consultationservice.consultation.domain.consultation.ProcessType;
+import com.devtalk.consultation.consultationservice.consultation.domain.consultation.ProcessMean;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +16,7 @@ public class ProductRes {
     public static class ProductSearchRes {
         private Long consultantId;
         private LocalDateTime reservationAT;
-        private String processType;
+        private ProcessMean processMean;
         private String reservationStatus;
         private Integer cost;
     }

@@ -40,7 +40,7 @@ public class ConsultationValidator {
 
         if (reservationReq.getConsultantId() != realProduct.getConsultantId() ||
                 reservationReq.getReservationAT() != realProduct.getReservationAT() ||
-                reservationReq.getProcessType() != realProduct.getProcessType() ||
+                reservationReq.getProcessMean() != realProduct.getProcessMean() ||
                 reservationReq.getCost() != realProduct.getCost()) {
 
             throw new InvalidInputException(INVALID_RESERVATION_REQUEST);

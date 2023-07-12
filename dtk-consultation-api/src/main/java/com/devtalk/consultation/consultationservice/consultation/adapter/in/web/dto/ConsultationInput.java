@@ -1,5 +1,7 @@
 package com.devtalk.consultation.consultationservice.consultation.adapter.in.web.dto;
 
+import com.devtalk.consultation.consultationservice.consultation.application.port.in.dto.ConsultationReq;
+import com.devtalk.consultation.consultationservice.consultation.domain.consultation.ProcessMean;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -9,6 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.devtalk.consultation.consultationservice.consultation.application.port.in.dto.ConsultationReq.*;
 
 public class ConsultationInput {
 
@@ -25,7 +29,7 @@ public class ConsultationInput {
         private Long productId;
 
         @NotBlank @Size(max = 10)
-        private String processType;
+        private ProcessMean processMean;
 
         @NotBlank @Size(max = 20)
         private String largeArea;
@@ -45,6 +49,20 @@ public class ConsultationInput {
         private List<MultipartFile> attachedFileList = new ArrayList<>();
 
         private Integer cost;
+
+        public ReservationReq toReq() {
+            return ReservationReq.builder()
+                    .consultantId(consultantId)
+                    .productId(productId)
+                    .processMean(processMean)
+                    .largeArea(largeArea)
+                    .detailArea(detailArea)
+                    .reservationAT(reservationAT)
+                    .content(content)
+                    .attachedFileList(attachedFileList)
+                    .cost(cost)
+                    .build();
+        }
     }
 
 }

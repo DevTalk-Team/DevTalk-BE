@@ -1,11 +1,18 @@
 package com.devtalk.consultation.consultationservice.consultation.domain.consultation;
 
+import com.devtalk.consultation.consultationservice.consultation.domain.member.Consultant;
 import com.devtalk.consultation.consultationservice.consultation.domain.member.Consulter;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import static com.devtalk.consultation.consultationservice.consultation.domain.consultation.ReservedItem.*;
 
 @Entity
 @Builder
@@ -35,7 +42,15 @@ public class Consultation {
                 .build();
     }
 
-    public void reserve() {
-        ReservedItem reservedItem = ReservedItem.createReservedItem(this);
+    public void addReservedItem(ReservedItem reservedItem) {
+        reservedItemList.add(reservedItem);
+        reservedItem.changeConsultation(this);
+    }
+
+    public void reserve(Consultant consultant, Long productId, ProcessMean mean,
+                        String largeArea, String detailArea, LocalDateTime reservationAT,
+                        String content, List<AttachedFile> attachedFileList, Integer cost) {
+        this.addReservedItem(createReservedItem(consultant, productId, mean, largeArea, detailArea,
+                        reservationAT, content, attachedFileList, cost));
     }
 }

@@ -14,9 +14,6 @@ public class Review extends BaseTime {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private Long consultationItemId;
-
     @Column(nullable = false)
     private Long memberId;
 

@@ -32,6 +32,9 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+	// File 관련
+	implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
+
 	implementation "com.fasterxml.uuid:java-uuid-generator:4.0.1" //UUID
 }
 

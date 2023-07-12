@@ -1,5 +1,6 @@
 package com.devtalk.consultation.consultationservice.consultation.application.port.in.dto;
 
+import com.devtalk.consultation.consultationservice.consultation.domain.consultation.ProcessMean;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -19,7 +20,7 @@ public class ConsultationReq {
 
         private Long consultantId;
         private Long productId;
-        private String processType;
+        private ProcessMean processMean;
         private String largeArea;
         private String detailArea;
         private LocalDateTime reservationAT;

@@ -1,5 +1,6 @@
 package com.devtalk.consultation.consultationservice.consultation.adapter.in.web;
 
+import com.devtalk.consultation.consultationservice.consultation.application.port.in.ReserveUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -15,8 +16,11 @@ import static com.devtalk.consultation.consultationservice.consultation.adapter.
 @RequiredArgsConstructor
 public class ConsultationApiController {
 
+    private final ReserveUseCase reserveUseCase;
+
     @PostMapping("/v1/consultations")
     public ResponseEntity<?> reserveConsultation(@RequestBody @Validated ReservationInput reservationInput) {
-
+        reserveUseCase.reserve(reservationInput.toReq());
+        return ResponseEntity.ok().build();
     }
 }

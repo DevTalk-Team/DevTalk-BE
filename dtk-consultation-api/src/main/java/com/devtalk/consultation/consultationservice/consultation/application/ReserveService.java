@@ -1,43 +1,75 @@
 package com.devtalk.consultation.consultationservice.consultation.application;
 
-import com.devtalk.consultation.consultationservice.consultation.application.port.in.ReserveUseCase;
-import com.devtalk.consultation.consultationservice.consultation.application.port.in.dto.ConsultationReq;
-import com.devtalk.consultation.consultationservice.consultation.application.port.out.client.ProductServiceClient;
-import com.devtalk.consultation.consultationservice.consultation.application.port.out.client.dto.ProductRes;
-import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.ConsultationQueryableRepo;
+import com.devtalk.consultation.consultationservice.consultation.application.port.in.*;
+import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.*;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.ConsultationRepo;
 import com.devtalk.consultation.consultationservice.consultation.application.validator.ConsultationValidator;
+import com.devtalk.consultation.consultationservice.consultation.domain.consultation.AttachedFile;
 import com.devtalk.consultation.consultationservice.consultation.domain.consultation.Consultation;
-import com.devtalk.consultation.consultationservice.global.error.ErrorCode;
-import com.devtalk.consultation.consultationservice.global.error.execption.BusinessRuleException;
-import com.devtalk.consultation.consultationservice.global.util.FileValidatorUtils;
+import com.devtalk.consultation.consultationservice.consultation.domain.member.Consultant;
+import com.devtalk.consultation.consultationservice.global.error.execption.NotFoundException;
+import com.devtalk.consultation.consultationservice.global.util.FileUploadUtils;
+import com.devtalk.consultation.consultationservice.global.vo.BaseFile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.devtalk.consultation.consultationservice.consultation.application.port.in.dto.ConsultationReq.*;
-import static com.devtalk.consultation.consultationservice.consultation.application.port.out.client.dto.ProductRes.*;
 import static com.devtalk.consultation.consultationservice.global.error.ErrorCode.*;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ReserveService implements ReserveUseCase {
 
     private final ConsultationValidator consultationValidator;
     private final ConsultationRepo consultationRepo;
     private final ConsultationQueryableRepo consultationQueryableRepo;
+    private final FileUploadUtils fileUploadUtils;
+    private final MemberQueryableRepo memberQueryableRepo;
 
-    //findByConsulterId의 결과가 Null이면 Consultation을 생성
+    @Transactional
     public void reserve(ReservationReq reservationReq) {
         consultationValidator.validate(reservationReq);
 
-        Consultation consultation = consultationQueryableRepo.findByConsulterId(reservationReq.getConsultantId())
-                .orElseThrow(() -> new BusinessRuleException(NOT_FOUND_CONSULTATION));
+        Consultation consultation = searchConsultation(reservationReq.getConsultantId());
 
+        Consultant consultant = searchConsultant(reservationReq.getConsultantId());
 
-        consultation.reserve(reservationReq.getConsultantId(), reservationReq.getConsultantName(), reservationReq.getConsultantEmail());
+        List<AttachedFile> attachedFileList = uploadAttachedFileList(reservationReq.getAttachedFileList());
+
+        consultation.reserve(consultant, reservationReq.getProductId(),
+                reservationReq.getProcessMean(), reservationReq.getLargeArea(), reservationReq.getDetailArea(),
+                reservationReq.getReservationAT(), reservationReq.getContent(), attachedFileList, reservationReq.getCost());
     }
 
+    private Consultation searchConsultation(Long consulterId) {
+        return consultationQueryableRepo.findByConsulterId(consulterId)
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND_CONSULTATION));
+    }
+
+    private Consultant searchConsultant(Long consultantId) {
+        return memberQueryableRepo.findByConsultantId(consultantId)
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND_CONSULTANT);
+    }
+
+    private List<AttachedFile> uploadAttachedFileList(List<MultipartFile> attachedFileList) {
+        List<BaseFile> baseFileList = fileUploadUtils.uploadFileList(attachedFileList);
+        List<AttachedFile> uploadedAttachedFileList = new ArrayList<>();
+
+        baseFileList.stream().forEach(baseFile -> {
+            uploadedAttachedFileList.add(AttachedFile.builder()
+                    .fileUrl(baseFile.getFileUrl())
+                    .originName(baseFile.getOriginName())
+                    .storedName(baseFile.getStoredName())
+                    .build());
+        });
+
+        return uploadedAttachedFileList;
+    }
 
 }
