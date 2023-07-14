@@ -37,7 +37,7 @@ public class LinkItem extends BaseTime {
     private ProcessMean processMean;
 
     @Embedded
-    private ConsultationArea consultationArea;
+    private Category category;
 
     @Column(nullable = false, length = 30)
     private LocalDateTime reservationAT;

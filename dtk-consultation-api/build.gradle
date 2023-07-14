@@ -1,6 +1,7 @@
 group = 'com.devtalk.consultation'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
+targetCompatibility = '17'
 
 configurations {
 	compileOnly {
@@ -41,7 +42,7 @@ dependencies {
 dependencyManagement {
 	imports {
 		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:2022.0.3"
+		//mavenBom "org.springframework.cloud:spring-cloud-dependencies:2022.0.3"
 	}
 }
 

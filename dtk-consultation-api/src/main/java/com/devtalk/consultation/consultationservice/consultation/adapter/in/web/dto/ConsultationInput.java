@@ -50,8 +50,9 @@ public class ConsultationInput {
 
         private Integer cost;
 
-        public ReservationReq toReq() {
+        public ReservationReq toReq(Long consulterId) {
             return ReservationReq.builder()
+                    .consulterId(consulterId)
                     .consultantId(consultantId)
                     .productId(productId)
                     .processMean(processMean)
@@ -64,5 +65,6 @@ public class ConsultationInput {
                     .build();
         }
     }
+
 
 }

@@ -22,7 +22,8 @@ public enum ErrorCode {
     EXCESS_FILE_LIST_SIZE(CONFLICT, "02003", "파일 리스트의 최대 허용 사이즈를를 초과하였습니다."),
     UNSUPPORTED_FILE_EXTENSION(CONFLICT, "02004", "허용되지 않는 확장자를 가진 파일이 입력되었습니다."),
     NOT_FOUND_CONSULTATION(NOT_FOUND, "02005", "등록되지 않은 회원의 요청입니다."),
-    NOT_FOUND_CONSULTANT(NOT_FOUND, "02006", "해당 전문가가 등록되어 있지 않습니다.");
+    NOT_FOUND_CONSULTANT(NOT_FOUND, "02006", "해당 전문가가 등록되어 있지 않습니다."),
+    DUPLICATED_RESERVATION(CONFLICT, "02007", "이미 예약된 상담입니다.");
 
 
 
