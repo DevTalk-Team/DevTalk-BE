@@ -30,11 +30,11 @@ public class Consultation {
 
     @Builder.Default
     @OneToMany(mappedBy = "consultation", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ReservedItem> reservedItemList = new HashSet<>();
+    private List<ReservedItem> reservedItemList = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "consultation", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<CanceledItem> canceledItemList = new HashSet<>();
+    private List<CanceledItem> canceledItemList = new ArrayList<>();
 
     public static Consultation createConsultation(Consulter consulter) {
         return Consultation.builder()

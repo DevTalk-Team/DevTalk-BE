@@ -2,15 +2,13 @@ package com.devtalk.consultation.consultationservice.consultation.domain.consult
 
 import com.devtalk.consultation.consultationservice.global.vo.BaseTime;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class AttachedFile extends BaseTime {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

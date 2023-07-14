@@ -19,7 +19,7 @@ import java.util.UUID;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class FileUploadUtils {
+public class FileUploadService {
 
     @Value("${file.inbound}")
     private String inbound;

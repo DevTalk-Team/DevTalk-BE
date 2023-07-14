@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Repository
 public interface ConsultationQueryableRepo {
 
     Optional<Consultation> findByConsulterId(Long consulterId);
