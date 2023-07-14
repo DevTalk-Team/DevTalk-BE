@@ -8,7 +8,7 @@ import com.devtalk.consultation.consultationservice.consultation.domain.consulta
 import com.devtalk.consultation.consultationservice.consultation.domain.consultation.Consultation;
 import com.devtalk.consultation.consultationservice.consultation.domain.member.Consultant;
 import com.devtalk.consultation.consultationservice.global.error.execption.NotFoundException;
-import com.devtalk.consultation.consultationservice.global.util.FileUploadUtils;
+import com.devtalk.consultation.consultationservice.global.util.FileUploadService;
 import com.devtalk.consultation.consultationservice.global.vo.BaseFile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,18 +25,15 @@ import static com.devtalk.consultation.consultationservice.global.error.ErrorCod
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ReserveService implements ReserveUseCase {
-
-    private final ConsultationValidator consultationValidator;
     private final ConsultationRepo consultationRepo;
-    private final ConsultationQueryableRepo consultationQueryableRepo;
-    private final FileUploadUtils fileUploadUtils;
     private final MemberQueryableRepo memberQueryableRepo;
+    private final ConsultationValidator consultationValidator;
+    private final FileUploadService fileUploadUtils;
 
     @Transactional
     public void reserve(ReservationReq reservationReq) {
         consultationValidator.validate(reservationReq);
-
-        Consultation consultation = searchConsultation(reservationReq.getConsultantId());
+        Consultation consultation = searchConsultation(reservationReq.getConsulterId());
 
         Consultant consultant = searchConsultant(reservationReq.getConsultantId());
 
@@ -45,16 +42,18 @@ public class ReserveService implements ReserveUseCase {
         consultation.reserve(consultant, reservationReq.getProductId(),
                 reservationReq.getProcessMean(), reservationReq.getLargeArea(), reservationReq.getDetailArea(),
                 reservationReq.getReservationAT(), reservationReq.getContent(), attachedFileList, reservationReq.getCost());
+
+        consultationRepo.save(consultation);
     }
 
     private Consultation searchConsultation(Long consulterId) {
-        return consultationQueryableRepo.findByConsulterId(consulterId)
+        return consultationRepo.findByConsulterId(consulterId)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_CONSULTATION));
     }
 
     private Consultant searchConsultant(Long consultantId) {
         return memberQueryableRepo.findByConsultantId(consultantId)
-                .orElseThrow(() -> new NotFoundException(NOT_FOUND_CONSULTANT);
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND_CONSULTANT));
     }
 
     private List<AttachedFile> uploadAttachedFileList(List<MultipartFile> attachedFileList) {

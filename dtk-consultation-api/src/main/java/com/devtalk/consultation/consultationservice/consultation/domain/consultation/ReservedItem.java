@@ -5,7 +5,6 @@ import com.devtalk.consultation.consultationservice.global.vo.Money;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -46,7 +45,7 @@ public class ReservedItem extends LinkItem {
                 .consultant(consultant)
                 .productId(productId)
                 .processMean(mean)
-                .consultationArea(new ConsultationArea(largeArea, detailArea))
+                .category(new Category(largeArea, detailArea))
                 .reservationAT(reservationAT)
                 .content(content)
                 .attachedFileList(attachedFileList)

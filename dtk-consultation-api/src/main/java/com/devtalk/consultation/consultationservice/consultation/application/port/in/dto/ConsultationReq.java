@@ -18,6 +18,7 @@ public class ConsultationReq {
     @Getter
     public static class ReservationReq {
 
+        private Long consulterId;
         private Long consultantId;
         private Long productId;
         private ProcessMean processMean;
@@ -25,6 +26,8 @@ public class ConsultationReq {
         private String detailArea;
         private LocalDateTime reservationAT;
         private String content;
+
+        @Builder.Default
         private List<MultipartFile> attachedFileList = new ArrayList<>();
         private Integer cost;
     }

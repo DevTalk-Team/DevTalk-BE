@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 public class ProductRes {
 
-    @Builder(access = AccessLevel.PRIVATE)
+    @Builder
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @Getter
     public static class ProductSearchRes {

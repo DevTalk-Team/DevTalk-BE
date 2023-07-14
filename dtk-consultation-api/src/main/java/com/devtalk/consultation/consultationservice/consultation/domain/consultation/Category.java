@@ -8,7 +8,7 @@ import lombok.*;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ConsultationArea {
+public class Category {
 
     @Column(nullable = false, length = 20)
     private String largeArea;
