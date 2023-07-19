@@ -11,7 +11,9 @@ import com.devtalk.consultation.consultationservice.consultation.domain.consulta
 import com.devtalk.consultation.consultationservice.consultation.domain.member.Consultant;
 import com.devtalk.consultation.consultationservice.consultation.domain.member.Consulter;
 import com.devtalk.consultation.consultationservice.consultation.domain.member.RoleType;
+import com.devtalk.consultation.consultationservice.global.error.execption.DuplicationException;
 import com.devtalk.consultation.consultationservice.global.error.execption.FileException;
+import com.devtalk.consultation.consultationservice.global.error.execption.InvalidInputException;
 import com.devtalk.consultation.consultationservice.global.vo.BaseFile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -52,7 +54,8 @@ public class ConsultationValidatorUnitTest {
          * F1. 상담 예약 실패 - 첨부파일의 최대 허용 개수 초과
          * F2. 상담 예약 실패 - 첨부파일 리스트의 총 용량이 최대 허용 용량 초과
          * F3. 상담 예약 실패 - 금지된 확장자를 가진 파일이 첨부파일에 포함됨
-         * F4. 상담 예약 실패 - 요청으로 들어온 상품 정보와 실제 상품 정보가 불일치
+         * F4. 상담 예약 실패 - 요청으로 들어온 전문가의 id와 실제 상품의 전문가 id가 불일치
+         * F5. 상담 예약 실패 - 이미 예약된 상품
      */
 
     @Test
@@ -71,6 +74,7 @@ public class ConsultationValidatorUnitTest {
 
         ReservationReq reservationReq = getReservationReq(consulter.getId(), consultant.getId(), productId, attachedFileList);
 
+        willThrow(FileException.class).willDoNothing().given(fileValidator).checkExceedMaxCount(reservationReq.getAttachedFileList().size());
 
         // when, then
         assertThrows(FileException.class, () -> consultationValidator.validate(reservationReq));
@@ -92,6 +96,8 @@ public class ConsultationValidatorUnitTest {
 
         ReservationReq reservationReq = getReservationReq(consulter.getId(), consultant.getId(), productId, attachedFileList);
 
+        willDoNothing().given(fileValidator).checkExceedMaxCount(reservationReq.getAttachedFileList().size());
+        willThrow(FileException.class).willDoNothing().given(fileValidator).checkExceedMaxSize(reservationReq.getAttachedFileList());
 
         // when, then
         assertThrows(FileException.class, () -> consultationValidator.validate(reservationReq));
@@ -113,13 +119,17 @@ public class ConsultationValidatorUnitTest {
 
         ReservationReq reservationReq = getReservationReq(consulter.getId(), consultant.getId(), productId, attachedFileList);
 
+        willDoNothing().given(fileValidator).checkExceedMaxCount(reservationReq.getAttachedFileList().size());
+        willDoNothing().given(fileValidator).checkExceedMaxSize(reservationReq.getAttachedFileList());
+        willThrow(FileException.class).willDoNothing().given(fileValidator).checkFileExtension(reservationReq.getAttachedFileList());
+
 
         // when, then
         assertThrows(FileException.class, () -> consultationValidator.validate(reservationReq));
     }
 
     @Test
-    @DisplayName("F4. 상담 예약 실패 - 요청으로 들어온 상품 정보와 실제 상품 정보가 불일치")
+    @DisplayName("F4. 상담 예약 실패 - 요청으로 들어온 전문가의 id와 실제 상품의 전문가 id가 불일치")
     void 상담예약실패_상품정보불일치() {
         // given
         Consulter consulter = getConsulter();
@@ -133,10 +143,47 @@ public class ConsultationValidatorUnitTest {
         }
 
         ReservationReq reservationReq = getReservationReq(consulter.getId(), consultant.getId(), productId, attachedFileList);
-        given(productServiceClient.getProduct(productId)).willReturn(ProductSearchRes.builder().consultantId(consultant.getId()).reservationAT(LocalDateTime.now().plusDays(1)).cost(30000).build());
+
+        willDoNothing().given(fileValidator).checkExceedMaxCount(reservationReq.getAttachedFileList().size());
+        willDoNothing().given(fileValidator).checkExceedMaxSize(reservationReq.getAttachedFileList());
+        willDoNothing().given(fileValidator).checkFileExtension(reservationReq.getAttachedFileList());
+        given(productServiceClient.getProduct(productId)).willReturn(ProductSearchRes.builder().consultantId(consultant.getId() + 1L).reservationAT(LocalDateTime.now().plusDays(1)).cost(30000).build());
 
         // when, then
-        assertThrows(FileException.class, () -> consultationValidator.validate(reservationReq));
+        assertThrows(InvalidInputException.class, () -> consultationValidator.validate(reservationReq));
+    }
+
+    @Test
+    @DisplayName("F5. 상담 예약 실패 - 이미 예약된 상품(상품 서비스에서는 이용가능하다는 응답받고 그 사이에 예약되버림)")
+    void 상담예약실패_이미예약된상품() {
+        // given
+        Consulter consulter = getConsulter();
+        Consultation consultation = getConsultation(consulter);
+        Consultant consultant = getConsultant();
+        Long productId = 3L;
+
+        List<MultipartFile> attachedFileList = new ArrayList<>();
+        for (int i = 0; i < fileListMaxCount-2; i++) {
+            attachedFileList.add(new MockMultipartFile("file1", "file1.sql", "sql", new byte[fileListMaxSize+1]));
+        }
+
+        ReservationReq reservationReq = getReservationReq(consulter.getId(), consultant.getId(), productId, attachedFileList);
+
+        willDoNothing().given(fileValidator).checkExceedMaxCount(reservationReq.getAttachedFileList().size());
+        willDoNothing().given(fileValidator).checkExceedMaxSize(reservationReq.getAttachedFileList());
+        willDoNothing().given(fileValidator).checkFileExtension(reservationReq.getAttachedFileList());
+        given(productServiceClient.getProduct(productId)).willReturn(
+                ProductSearchRes.builder()
+                        .consultantId(reservationReq.getConsultantId()).
+                        reservationAT(reservationReq.getReservationAT())
+                        .processMean(reservationReq.getProcessMean())
+                        .cost(reservationReq.getCost())
+                        .reservationStatus("AVAILABLE")
+                        .build());
+        given(linkItemQueryableRepository.existsByProductIdInReservedItem(reservationReq.getProductId())).willReturn(true);
+
+        // when, then
+        assertThrows(DuplicationException.class, () -> consultationValidator.validate(reservationReq));
     }
 
     private ReservationReq getReservationReq(Long consulterId, Long consultantId, Long productId, List<MultipartFile> attachedFileList) {
