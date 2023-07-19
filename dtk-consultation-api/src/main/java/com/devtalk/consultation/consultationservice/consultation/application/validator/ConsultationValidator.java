@@ -44,7 +44,7 @@ public class ConsultationValidator {
                 reservationReq.getReservationAT() != realProduct.getReservationAT() ||
                 reservationReq.getProcessMean() != realProduct.getProcessMean() ||
                 reservationReq.getCost() != realProduct.getCost() ||
-                realProduct.getReservationStatus().equals("RESERVED")) {
+                !realProduct.getReservationStatus().equals(ProductStatus.AVAILABLE.getStatus())) {
 
             throw new InvalidInputException(INVALID_RESERVATION_REQUEST);
         }
@@ -52,6 +52,20 @@ public class ConsultationValidator {
         if(linkItemQueryableRepository.existsByProductIdInReservedItem(reservationReq.getProductId()) == true) {
             throw new DuplicationException(DUPLICATED_RESERVATION);
         }
+    }
 
+    private enum ProductStatus {
+        RESERVED("RESERVED"),
+        CANCELED("CANCELED"),
+        AVAILABLE("AVAILABLE");
+        private String status;
+
+        ProductStatus(String status) {
+            this.status = status;
+        }
+
+        public String getStatus() {
+            return status;
+        }
     }
 }
