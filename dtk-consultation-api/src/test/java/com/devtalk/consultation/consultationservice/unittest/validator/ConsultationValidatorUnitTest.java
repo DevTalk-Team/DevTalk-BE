@@ -1,9 +1,7 @@
 package com.devtalk.consultation.consultationservice.unittest.validator;
 
-import com.devtalk.consultation.consultationservice.consultation.application.port.in.dto.ConsultationReq;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.client.ProductServiceClient;
-import com.devtalk.consultation.consultationservice.consultation.application.port.out.client.dto.ProductRes;
-import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.LinkItemQueryableRepository;
+import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.LinkItemQueryableRepo;
 import com.devtalk.consultation.consultationservice.consultation.application.validator.ConsultationValidator;
 import com.devtalk.consultation.consultationservice.consultation.application.validator.FileValidator;
 import com.devtalk.consultation.consultationservice.consultation.domain.consultation.Consultation;
@@ -15,11 +13,9 @@ import com.devtalk.consultation.consultationservice.global.error.execption.Dupli
 import com.devtalk.consultation.consultationservice.global.error.execption.FileException;
 import com.devtalk.consultation.consultationservice.global.error.execption.InvalidInputException;
 import com.devtalk.consultation.consultationservice.global.vo.BaseFile;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -37,6 +33,16 @@ import static com.devtalk.consultation.consultationservice.consultation.applicat
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.*;
 
+/** 테스트 케이스
+ * S. 상담 예약 성공
+ * F. 상담 예약 실패
+ * F1. 상담 예약 실패 - 첨부파일의 최대 허용 개수 초과
+ * F2. 상담 예약 실패 - 첨부파일 리스트의 총 용량이 최대 허용 용량 초과
+ * F3. 상담 예약 실패 - 금지된 확장자를 가진 파일이 첨부파일에 포함됨
+ * F4. 상담 예약 실패 - 요청으로 들어온 전문가의 id와 실제 상품의 전문가 id가 불일치
+ * F5. 상담 예약 실패 - 이미 예약된 상품
+ */
+
 @ExtendWith(MockitoExtension.class)
 public class ConsultationValidatorUnitTest {
     final Integer fileListMaxSize = 10485760;
@@ -44,19 +50,10 @@ public class ConsultationValidatorUnitTest {
 
     @InjectMocks ConsultationValidator consultationValidator;
     @Mock ProductServiceClient productServiceClient;
-    @Mock LinkItemQueryableRepository linkItemQueryableRepository;
+    @Mock
+    LinkItemQueryableRepo linkItemQueryableRepository;
 
     @Spy FileValidator fileValidator = new FileValidator(fileListMaxSize, fileListMaxCount);
-
-    /** 테스트 케이스
-     * S. 상담 예약 성공
-     * F. 상담 예약 실패
-         * F1. 상담 예약 실패 - 첨부파일의 최대 허용 개수 초과
-         * F2. 상담 예약 실패 - 첨부파일 리스트의 총 용량이 최대 허용 용량 초과
-         * F3. 상담 예약 실패 - 금지된 확장자를 가진 파일이 첨부파일에 포함됨
-         * F4. 상담 예약 실패 - 요청으로 들어온 전문가의 id와 실제 상품의 전문가 id가 불일치
-         * F5. 상담 예약 실패 - 이미 예약된 상품
-     */
 
     @Test
     @DisplayName("F1. 상담 예약 실패 - 첨부파일의 최대 허용 개수 초과")
