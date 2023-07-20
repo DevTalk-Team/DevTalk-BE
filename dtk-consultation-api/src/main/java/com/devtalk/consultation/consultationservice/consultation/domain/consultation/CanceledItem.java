@@ -1,9 +1,7 @@
 package com.devtalk.consultation.consultationservice.consultation.domain.consultation;
 
 import com.devtalk.consultation.consultationservice.global.vo.BaseTime;
-import jakarta.persistence.Column;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,6 +15,10 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class CanceledItem extends LinkItem {
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "consultation_id")
+    private Consultation consultation;
 
     @Column(nullable = false)
     private Long productId;

@@ -3,6 +3,6 @@ package com.devtalk.consultation.consultationservice.consultation.application.po
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface LinkItemQueryableRepository {
+public interface LinkItemQueryableRepo {
     boolean existsByProductIdInReservedItem(Long productId);
 }

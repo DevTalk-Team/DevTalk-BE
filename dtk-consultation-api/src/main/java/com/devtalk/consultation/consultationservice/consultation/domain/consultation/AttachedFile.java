@@ -17,7 +17,7 @@ public class AttachedFile extends BaseTime {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reserved_item_id")
-    private ReservedItem reservedItemId;
+    private ReservedItem reservedItem;
 
     private String fileUrl;
 
