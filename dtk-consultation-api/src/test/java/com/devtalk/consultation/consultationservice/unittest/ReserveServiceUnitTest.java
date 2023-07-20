@@ -32,6 +32,14 @@ import static com.devtalk.consultation.consultationservice.consultation.applicat
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.*;
 
+/** 테스트 케이스 (Validator 테스트는 분리하여 진행)
+ * S. 상담 예약 성공
+ * F. 상담 예약 실패
+ * F1. 상담 예약 실패 - 상담 기록부가 등록되어 있지 않음
+ * F2. 상담 예약 실패 - 상담자가 등록되어 있지 않음
+ * F3. 상담 예약 실패 - 파일 업로드 실패(파일 시스템 에러)
+ */
+
 @ExtendWith(MockitoExtension.class)
 class ReserveServiceUnitTest {
 
@@ -42,14 +50,6 @@ class ReserveServiceUnitTest {
     @Mock
     FileUploadService fileUploadUtils;
     @Mock MemberQueryableRepo memberQueryableRepo;
-
-    /** 테스트 케이스 (Validator 테스트는 분리하여 진행)
-     * S. 상담 예약 성공
-     * F. 상담 예약 실패
-        * F1. 상담 예약 실패 - 상담 기록부가 등록되어 있지 않음
-        * F2. 상담 예약 실패 - 상담자가 등록되어 있지 않음
-        * F3. 상담 예약 실패 - 파일 업로드 실패(파일 시스템 에러)
-     */
 
     @Test
     @DisplayName("S. 예약 성공")

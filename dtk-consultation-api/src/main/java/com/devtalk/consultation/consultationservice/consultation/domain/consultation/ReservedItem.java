@@ -50,6 +50,7 @@ public class ReservedItem extends LinkItem {
                 .content(content)
                 .attachedFileList(attachedFileList)
                 .cost(Money.of(cost))
+                .status(ProcessStatus.ACCEPT_WAIT)
                 .build();
     }
 }

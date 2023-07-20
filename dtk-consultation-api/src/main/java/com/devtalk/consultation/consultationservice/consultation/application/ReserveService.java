@@ -25,10 +25,10 @@ import static com.devtalk.consultation.consultationservice.global.error.ErrorCod
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ReserveService implements ReserveUseCase {
+    private final ConsultationValidator consultationValidator;
+    private final FileUploadService fileUploadService;
     private final ConsultationRepo consultationRepo;
     private final MemberQueryableRepo memberQueryableRepo;
-    private final ConsultationValidator consultationValidator;
-    private final FileUploadService fileUploadUtils;
 
     @Transactional
     public void reserve(ReservationReq reservationReq) {
@@ -57,7 +57,7 @@ public class ReserveService implements ReserveUseCase {
     }
 
     private List<AttachedFile> uploadAttachedFileList(List<MultipartFile> attachedFileList) {
-        List<BaseFile> baseFileList = fileUploadUtils.uploadFileList(attachedFileList);
+        List<BaseFile> baseFileList = fileUploadService.uploadFileList(attachedFileList);
         List<AttachedFile> uploadedAttachedFileList = new ArrayList<>();
 
         baseFileList.stream().forEach(baseFile -> {

@@ -1,7 +1,7 @@
 package com.devtalk.consultation.consultationservice.consultation.application.validator;
 
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.client.ProductServiceClient;
-import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.LinkItemQueryableRepository;
+import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.LinkItemQueryableRepo;
 import com.devtalk.consultation.consultationservice.global.error.execption.DuplicationException;
 import com.devtalk.consultation.consultationservice.global.error.execption.InvalidInputException;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import static com.devtalk.consultation.consultationservice.global.error.ErrorCod
 public class ConsultationValidator {
 
     private final ProductServiceClient productServiceClient;
-    private final LinkItemQueryableRepository linkItemQueryableRepository;
+    private final LinkItemQueryableRepo linkItemQueryableRepo;
     private final FileValidator fileValidator;
 
     // TODO: MaxUploadSizeExceededException 예외 처리해주기
@@ -49,7 +49,7 @@ public class ConsultationValidator {
             throw new InvalidInputException(INVALID_RESERVATION_REQUEST);
         }
 
-        if(linkItemQueryableRepository.existsByProductIdInReservedItem(reservationReq.getProductId()) == true) {
+        if(linkItemQueryableRepo.existsByProductIdInReservedItem(reservationReq.getProductId()) == true) {
             throw new DuplicationException(DUPLICATED_RESERVATION);
         }
     }
