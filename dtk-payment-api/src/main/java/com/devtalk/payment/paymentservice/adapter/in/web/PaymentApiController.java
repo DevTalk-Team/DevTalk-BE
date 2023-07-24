@@ -45,7 +45,7 @@ class PaymentApiController {
 
     @GetMapping("/{consultationId}")
     public ResponseEntity<PaymentOutput.PaymentInfoOutput> getPaymentInfo(
-            @PathVariable("consultationId") String consultationId){
+            @PathVariable("consultationId") Long consultationId){
         Payment paymentSearchRes = paymentUseCase.searchPaymentInfo(consultationId);
 
         PaymentOutput.PaymentInfoOutput paymentInfoOutput

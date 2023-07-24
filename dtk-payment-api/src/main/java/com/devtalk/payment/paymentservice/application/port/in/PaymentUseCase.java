@@ -4,5 +4,5 @@ import com.devtalk.payment.paymentservice.application.port.in.dto.PaymentRes;
 import com.devtalk.payment.paymentservice.domain.payment.Payment;
 
 public interface PaymentUseCase {
-    Payment searchPaymentInfo(String consultationId);
+    Payment searchPaymentInfo(Long consultationId);
 }

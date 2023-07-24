@@ -8,7 +8,7 @@ public class PaymentInput {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @Getter
     public static class PaymentRequestInput{
-        private String consultationId;
+        private Long consultationId;
         private String consultationType;
         private Integer cost;
     //    private String paymentPGID;

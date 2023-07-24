@@ -15,7 +15,7 @@ public class PaymentRes {
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @Getter
     public static class PaymentSearchRes{
-        private String paymentId;
+        private Long paymentId;
         private Consultation consultationId;
         private String impUid;
         private String paymentPgId;

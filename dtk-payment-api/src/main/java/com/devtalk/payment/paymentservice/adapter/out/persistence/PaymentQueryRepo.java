@@ -5,6 +5,7 @@ import com.devtalk.payment.paymentservice.application.port.out.repository.Paymen
 import com.devtalk.payment.paymentservice.domain.payment.Payment;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -13,11 +14,10 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 class PaymentQueryRepo implements PaymentQueryableRepo {
-
     private final EntityManager em;
 
     @Override
-    public Optional<Payment> findByConsultationId(String consultationId) {
+    public Optional<Payment> findByConsultationId(Long consultationId) {
         return Optional.ofNullable(
                     em.createQuery(
                 "select p from Payment p " +

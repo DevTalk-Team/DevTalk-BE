@@ -13,12 +13,12 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-class PaymentService implements PaymentUseCase {
+public class PaymentService implements PaymentUseCase {
     private final PaymentRepo paymentRepo;
     private final EmailUseCase emailUseCase;
 
     @Override
-    public Payment searchPaymentInfo(String consultationId) {
+    public Payment searchPaymentInfo(Long consultationId) {
         return paymentRepo.findByConsultationId(consultationId)
                 .orElseThrow(()-> new NotFoundException(ErrorCode.NOT_FOUND_CONSULTATION));
     }

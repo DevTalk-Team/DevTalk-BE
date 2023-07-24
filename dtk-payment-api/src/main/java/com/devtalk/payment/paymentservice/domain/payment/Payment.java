@@ -4,27 +4,29 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Builder
 public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false, unique = true)
     private Long id;
 
-    // 결제ID
-    @Column(nullable = false, unique = true)
-    private String paymentId;
+//    // 결제ID
+//    @Column(nullable = false, unique = true)
+//    private String paymentId;
 
     // 예약ID
 //    @OneToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "consultation_id")
     @Column(nullable = false)
-    private String consultationId;
+    private Long consultationId;
 
     // 거래고유 번호
     @Column(nullable = false)
@@ -41,7 +43,7 @@ public class Payment {
     // 결제 일시
     @Column(nullable = false, updatable = false, insertable = false)
     @ColumnDefault(value = "CURRENT_TIMESTAMP")
-    private Date paidAt;
+    private LocalDateTime paidAt;
 
     // 결제 상태
     @Column(nullable = false)

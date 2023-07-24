@@ -11,7 +11,7 @@ public class PaymentReq {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @Getter
     public static class PaymentServiceReq {
-        private String consultationId;
+        private Long consultationId;
         private String consultationType;
         private Integer cost;
         private String paymentPgId;

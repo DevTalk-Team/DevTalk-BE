@@ -5,4 +5,5 @@ import com.devtalk.payment.paymentservice.domain.consultation.Consultation;
 public interface ConsultationUseCase {
     String getEmailHtmlConsultationPaidInfo(Consultation consultation);
 
+    Consultation searchConsultationInfo(Long consultationId);
 }
