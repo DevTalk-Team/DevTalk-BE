@@ -1,13 +1,16 @@
-package com.devtalk.payment.paymentservice.domain;
+package com.devtalk.payment.paymentservice.domain.refund;
 
+import com.devtalk.payment.paymentservice.domain.consultation.Consultation;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.util.Date;
 
 @Entity
-@Table(name = "refund")
-@Data
+@Table
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Refund {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,12 +21,15 @@ public class Refund {
     private String refundId;
 
     // 결제ID
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "payment_id")
     @Column(nullable = false)
     private String paymentId;
 
     // 예약ID
-    @Column(nullable = false)
-    private String consultationId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "consultation_id")
+    private Consultation consultationId;
 
     // 환불 사유
     @Column(nullable = false, length = 100)

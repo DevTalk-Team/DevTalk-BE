@@ -1,11 +1,25 @@
 package com.devtalk.payment.paymentservice.adapter.in.web.dto;
 
-import com.devtalk.payment.paymentservice.domain.Payment;
-import lombok.Data;
+import com.devtalk.payment.paymentservice.application.port.in.dto.PaymentRes;
+import com.devtalk.payment.paymentservice.domain.payment.Payment;
+import lombok.*;
 
-@Data
+import java.util.Optional;
+
 public class PaymentOutput {
-    private String code;
-    private String message;
-    private Payment result;
+    // 결제 요청에 대한 응답으로 쓸 수 있도록 ModelMapper가 이 형태로 PaymentRes를 mapping해줄 예정
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @Data
+    public static class PaymentInfoOutput{
+        private String code;
+        private String message;
+        private Payment result;
+
+        public PaymentInfoOutput(String code, String message, Payment result) {
+            this.code = code;
+            this.message = message;
+            this.result = result;
+        }
+    }
 }

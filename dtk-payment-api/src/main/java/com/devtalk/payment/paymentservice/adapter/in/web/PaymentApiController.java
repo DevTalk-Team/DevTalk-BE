@@ -1,8 +1,12 @@
 package com.devtalk.payment.paymentservice.adapter.in.web;
 
+import com.devtalk.payment.paymentservice.adapter.in.web.dto.PaymentInput;
+import com.devtalk.payment.paymentservice.adapter.in.web.dto.PaymentOutput;
 import com.devtalk.payment.paymentservice.application.port.in.PaymentUseCase;
 import com.devtalk.payment.paymentservice.application.port.in.dto.PaymentRes;
+import com.devtalk.payment.paymentservice.domain.payment.Payment;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,15 +33,25 @@ class PaymentApiController {
     }
 
     @PostMapping
-    public String requestPayment() {
-        return "hello";
+    public ResponseEntity<PaymentOutput> requestPayment(@RequestBody PaymentInput input) {
+        // 1. PaymentUseCase의 서비스를 호출해 포트원에 결제 하고자 하는 정보를 보낸다.
+        // 2. 호출 받은 서비스는 포트원에서 처리 된 결과를 paymentOutput 형태로 반환한다. (트랜잭션을 적용할것)
+        // 3. 결제가 성공했다면 PaymentUseCase의 이메일 서비스를 호출해 사용자에게 이메일을 전송한다
+
+        PaymentOutput paymentOutput = null;
+
+        return ResponseEntity.status(HttpStatus.OK).body(paymentOutput);
     }
 
     @GetMapping("/{consultationId}")
-    public ResponseEntity<PaymentRes> getPayment(@PathVariable("consultationId") String consultationId){
-        PaymentRes paymentRes = paymentUseCase.getPaymentInfoByConsultationId(consultationId);
+    public ResponseEntity<PaymentOutput.PaymentInfoOutput> getPaymentInfo(
+            @PathVariable("consultationId") String consultationId){
+        Payment paymentSearchRes = paymentUseCase.searchPaymentInfo(consultationId);
 
-        return ResponseEntity.status(HttpStatus.OK).body(paymentRes);
+        PaymentOutput.PaymentInfoOutput paymentInfoOutput
+                = new PaymentOutput.PaymentInfoOutput("0301", "조회 성공", paymentSearchRes);
+
+        return ResponseEntity.status(HttpStatus.OK).body(paymentInfoOutput);
     }
 
     @DeleteMapping("/{paymentId}")

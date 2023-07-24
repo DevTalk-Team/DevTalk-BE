@@ -2,10 +2,8 @@ package com.devtalk.payment.paymentservice.application.port.out.repository;
 
 import com.devtalk.payment.paymentservice.domain.payment.Payment;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
-
-public interface PaymentQueryableRepo{
-    Optional<Payment> findByConsultationId(String consultationId);
+@Repository
+public interface PaymentRepo extends JpaRepository<Payment, Long>, PaymentQueryableRepo {
 }

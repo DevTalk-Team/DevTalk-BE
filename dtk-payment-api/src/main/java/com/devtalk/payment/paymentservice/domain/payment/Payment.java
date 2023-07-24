@@ -1,14 +1,16 @@
-package com.devtalk.payment.paymentservice.domain;
+package com.devtalk.payment.paymentservice.domain.payment;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.util.Date;
 
 @Entity
-@Table(name = "payment")
-@Data
+@Table
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,6 +21,8 @@ public class Payment {
     private String paymentId;
 
     // 예약ID
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "consultation_id")
     @Column(nullable = false)
     private String consultationId;
 

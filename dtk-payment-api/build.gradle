@@ -23,6 +23,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 //    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
@@ -31,7 +32,14 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
     implementation 'org.modelmapper:modelmapper:3.1.1'
-    
+    //thymeleaf
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+    // mockito
+    testImplementation 'org.mockito:mockito-core:5.2.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.2.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
+
 }
 
 dependencyManagement {

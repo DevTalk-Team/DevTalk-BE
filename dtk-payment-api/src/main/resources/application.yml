@@ -28,6 +28,18 @@ spring:
   sql:
     init:
       mode: always
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: zktl3575@gmail.com
+    password: rlpnksihwennslbu
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          starttls:
+            enable: true
 
 #eureka:
 #  instance:
@@ -37,3 +49,6 @@ spring:
 #    fetch-registry: true
 #    service-url:
 #      defaultZone: http://localhost:8761/eureka
+
+# 이메일 SMTP 앱 비밀번호
+# rlpnksihwennslbu
