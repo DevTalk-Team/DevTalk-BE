@@ -1,30 +1,21 @@
 package com.devtalk.member.memberservice.member.adapter.in.web;
 
-import com.devtalk.member.memberservice.member.adapter.in.web.dto.CounseleeSignUpInput;
-import com.devtalk.member.memberservice.member.adapter.in.web.dto.CounseleeSignUpOutput;
+import com.devtalk.member.memberservice.global.SuccessResponseNoResult;
+import com.devtalk.member.memberservice.member.adapter.in.web.dto.ConsultantSignUpInput;
+import com.devtalk.member.memberservice.member.adapter.in.web.dto.ConsulterSignUpInput;
 import com.devtalk.member.memberservice.member.application.port.in.SignUpUseCase;
-import com.devtalk.member.memberservice.member.application.port.in.dto.CounseleeSignUpReq;
-import com.devtalk.member.memberservice.member.domain.Counselee;
+import com.devtalk.member.memberservice.member.application.port.in.dto.SignUpReq;
+import com.devtalk.member.memberservice.member.domain.RoleType;
 import jakarta.validation.Valid;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-/**
- * http request를 Java 객체로 매핑
- * 권한 검사
- * 입력 유효성 검증
- * 입력 값을 Use Case용 입력모델로 매핑
- * 유스케이스 호출
- * 유스케이스 결과를 http로 매핑
- * http response 반환
- */
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+import static com.devtalk.member.memberservice.global.SuccessCode.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,19 +23,49 @@ public class SignUpApiController {
 
     private final SignUpUseCase signUpUseCase;
 
-    /* 멘티 회원가입 */
-    @PostMapping("/counselee")
-    public ResponseEntity<CounseleeSignUpOutput> counseleeSignUp(@Valid @RequestBody CounseleeSignUpInput input, BindingResult bindingResult) {
-        //command(req) 생성
-        CounseleeSignUpReq req = new CounseleeSignUpReq(input.getEmail(), input.getPassword(), input.getPhoneNumber(), input.getBirthDate());
-
-        //usecase 함수 호출
-        signUpUseCase.signUp(req);
-
-        CounseleeSignUpOutput output = new CounseleeSignUpOutput("0111", "멘티 회원가입 성공");
-
-        return ResponseEntity.ok().body(output);
+    /* 이메일 중복 확인 */
+    @GetMapping("/members/check-email")
+    public SuccessResponseNoResult isDuplicatedEmail(@Email @RequestParam String email) {
+        signUpUseCase.checkDuplicatedEmail(email);
+        return new SuccessResponseNoResult(CHECK_EMAIL_DUPLICATION_SUCCESS);
     }
 
+    /* 이메일 인증 */
+
+    /* 멘티 회원가입 */
+    @PostMapping("/consulter")
+    @ResponseStatus(HttpStatus.CREATED)
+    public SuccessResponseNoResult consulterSignUp(@Valid @RequestBody ConsulterSignUpInput input) {
+        SignUpReq req = SignUpReq.builder()
+                .roleType(RoleType.CONSULTER)
+                .email(input.getEmail())
+                .password(input.getPassword())
+                .checkPassword(input.getCheckPassword())
+                .name(input.getName())
+                .phoneNumber(input.getPhoneNumber())
+                .birthDate(LocalDate.parse(input.getBirthDate(), DateTimeFormatter.ISO_DATE))
+                .field(input.getField())
+                .build();
+        signUpUseCase.consulterSignUp(req);
+        return new SuccessResponseNoResult(CONSULTER_SIGNUP_SUCCESS);
+    }
+
+    /* 전문가 회원가입 */
+    @PostMapping("/consultant")
+    @ResponseStatus(HttpStatus.CREATED)
+    public SuccessResponseNoResult consultantSignUp(@Valid @RequestBody ConsultantSignUpInput input) {
+        SignUpReq req = SignUpReq.builder()
+                .roleType(RoleType.CONSULTANT)
+                .email(input.getEmail())
+                .password(input.getPassword())
+                .checkPassword(input.getCheckPassword())
+                .name(input.getName())
+                .phoneNumber(input.getPhoneNumber())
+                .company(input.getCompany())
+                .field(input.getField())
+                .build();
+        signUpUseCase.consultantSignUp(req);
+        return new SuccessResponseNoResult(CONSULTANT_SIGNUP_SUCCESS);
+    }
 
 }

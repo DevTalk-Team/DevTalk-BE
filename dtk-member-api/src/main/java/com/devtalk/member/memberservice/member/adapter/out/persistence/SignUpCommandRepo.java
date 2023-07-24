@@ -1,7 +1,7 @@
 package com.devtalk.member.memberservice.member.adapter.out.persistence;
 
-import com.devtalk.member.memberservice.member.application.port.out.repository.CounseleeCommandableRepo;
-import com.devtalk.member.memberservice.member.domain.Counselee;
+import com.devtalk.member.memberservice.member.application.port.out.repository.SignUpCommandableRepo;
+import com.devtalk.member.memberservice.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -16,13 +16,17 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class CounseleeCommandRepo implements CounseleeCommandableRepo {
+public class SignUpCommandRepo implements SignUpCommandableRepo {
 
-    private final CounseleeJpaRepo repository;
+    private final MemberJpaRepo repository;
 
     @Override
-    public void save(Counselee domain) {
-        CounseleeJpaEntity jpaEntity = new CounseleeJpaEntity(domain.getEmail(), domain.getPassword(), domain.getPhoneNumber(), domain.getBirthDate());
-        repository.save(jpaEntity);
+    public void save(Member member) {
+        repository.save(member);
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return repository.existsByEmail(email);
     }
 }
