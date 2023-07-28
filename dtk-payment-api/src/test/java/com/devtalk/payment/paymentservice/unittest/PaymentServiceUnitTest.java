@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,7 +37,7 @@ class PaymentServiceUnitTest {
         Payment paymentInfoRes = paymentService.searchPaymentInfo(1L);
 
         // then
-        assert(paymentInfoRes).equals(paymentInfo);
+        assertThat(paymentInfoRes).isEqualTo(paymentInfo);
     }
 
     private Payment getPaymentInfo(){

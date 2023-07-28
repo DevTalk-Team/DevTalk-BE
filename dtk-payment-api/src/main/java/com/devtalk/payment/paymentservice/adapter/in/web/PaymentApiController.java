@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static com.devtalk.payment.paymentservice.adapter.in.web.dto.PaymentOutput.*;
+
 /*
  * 웹 어댑터의 책임
  * - http 요청을 자바 객체로 매핑하기
@@ -44,12 +46,14 @@ class PaymentApiController {
     }
 
     @GetMapping("/{consultationId}")
-    public ResponseEntity<PaymentOutput.PaymentInfoOutput> getPaymentInfo(
+    public ResponseEntity<PaymentInfoOutput> getPaymentInfo(
             @PathVariable("consultationId") Long consultationId){
         Payment paymentSearchRes = paymentUseCase.searchPaymentInfo(consultationId);
 
-        PaymentOutput.PaymentInfoOutput paymentInfoOutput
-                = new PaymentOutput.PaymentInfoOutput("0301", "조회 성공", paymentSearchRes);
+        // PaymentInfoOutput.of(paymentSearchRes);
+
+        PaymentInfoOutput paymentInfoOutput
+                = new PaymentInfoOutput("0301", "조회 성공", paymentSearchRes);
 
         return ResponseEntity.status(HttpStatus.OK).body(paymentInfoOutput);
     }
