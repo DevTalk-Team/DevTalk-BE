@@ -44,7 +44,7 @@ class PaymentServiceUnitTest {
         return Payment.builder()
                 .id(1L)
                 .paymentPgId("KAKAO")
-                .impUid("imp_001")
+                .paymentUid("imp_001")
                 .cost(10000)
                 .paidAt(LocalDateTime.now())
                 .consultationId(1L)

@@ -1,5 +1,6 @@
 package com.devtalk.payment.paymentservice.domain.payment;
 
+import com.devtalk.payment.paymentservice.domain.consultation.Consultation;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -18,23 +19,14 @@ public class Payment {
     @Column(nullable = false, unique = true)
     private Long id;
 
-//    // 결제ID
-//    @Column(nullable = false, unique = true)
-//    private String paymentId;
-
     // 예약ID
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "consultation_id")
-    @Column(nullable = false)
-    private Long consultationId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "consultation_id")
+    private Consultation consultation;
 
     // 거래고유 번호
     @Column(nullable = false)
-    private String impUid;
-
-    // 결제 PG사 코드
-    @Column(nullable = false)
-    private String paymentPgId;
+    private String paymentUid;
 
     // 결제 금액
     @Column(nullable = false)
@@ -49,4 +41,16 @@ public class Payment {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;
+
+    @Builder
+    public Payment(Integer cost, PaymentStatus status, LocalDateTime paidAt) {
+        this.cost = cost;
+        this.status = status;
+        this.paidAt = paidAt;
+    }
+
+    public void changePaymentBySuccess(PaymentStatus status, String paymentUid) {
+        this.status = status;
+        this.paymentUid = paymentUid;
+    }
 }
