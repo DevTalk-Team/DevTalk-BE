@@ -1,37 +1,47 @@
 package com.devtalk.product.productservice.product.domain.member;
 
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import lombok.*;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@DiscriminatorValue("CONSULTER")
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "type")
 @SuperBuilder
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Consultant extends Member {
+public class Consultant {
 
-    private String occupation;
+    @Id
+    @Column(nullable = false, unique = true)
+    private Long id;
 
-    private Integer career;
-    /**
-     * 상담 서비스에 전문가가 존재하지 않을 때만 생성함
-     */
-    public static Consultant createConsulter(Long memberId, String loginId, String name, RoleType roleType,
-                                             String occupation, Integer career) {
+    @Column(nullable = false, length = 20)
+    private int Nf2f;
+
+    @Column(nullable = false, length = 20)
+    private int f2f;
+
+    @Column(nullable = false, length = 20)
+    private String area;
+    public static Consultant createConsultant(Long memberId, int Nf2f, int f2f,
+                                              String area) {
         return Consultant.builder()
                 .id(memberId)
-                .loginId(loginId)
-                .name(name)
-                .role(roleType)
-                .occupation(occupation)
-                .career(career)
+                .Nf2f(Nf2f)
+                .f2f(f2f)
+                .area(area)
                 .build();
     }
-
+    public int getPrice(String type) {
+        if (type == "Nf2f") {
+            return this.Nf2f;
+        }
+        else {
+            return this.f2f;
+        }
+    }
 }
 
-//카테고리 3개 테이블 분리
-//datetime localdatetime list r

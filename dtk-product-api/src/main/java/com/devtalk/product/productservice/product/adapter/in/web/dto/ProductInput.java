@@ -1,11 +1,11 @@
 package com.devtalk.product.productservice.product.adapter.in.web.dto;
 
-import com.devtalk.product.productservice.product.application.port.in.dto.RegistProdReq;
-import jakarta.validation.constraints.NotBlank;
+import com.devtalk.product.productservice.product.application.port.in.dto.ProductReq;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
+
+import static com.devtalk.product.productservice.product.application.port.in.dto.ProductReq.*;
 
 
 public class ProductInput {
@@ -15,36 +15,59 @@ public class ProductInput {
     @Getter
     public static class RegistrationInput{
 
-        @NotBlank
-        private LocalDateTime reservationAt;
+        private static String status;
 
-        @NotBlank
-        private int type;
+        //상담시간
+        private static LocalDateTime reservationAt;
 
-        @NotBlank
-        private String status;
+        //상담유형
+        private static String type;
 
-        @NotBlank
-        private List<Integer> buttonStates;
+        //상담 지역
+        private static String area;
+
+        //가격
+        private static int price;
 
 
-        public RegistProdReq toReq(Long consultantId){
+        public static RegistProdReq toReq(Long consultantId){
             return RegistProdReq.builder()
                     .consultantId(consultantId)
-                    .reservationAt(reservationAt)
-                    .type(calculateProductType(buttonStates))
                     .status(status)
+                    .reservationAt(reservationAt)
+                    .type(type)
+                    .area(area)
+                    .price(price)
                     .build();
         }
+    }
 
-        private int calculateProductType(List<Integer> buttonStates) {
-            int productType = 0;
-            for (int i = 0; i < buttonStates.size(); i++) {
-                if (buttonStates.get(i) == 1) {
-                    productType += (int) Math.pow(2, i);
-                }
-            }
-            return productType;
+    public static class UpdateInput{
+
+        private static String status;
+
+        //상담시간
+        private static LocalDateTime reservationAt;
+
+        //상담유형
+        private static String type;
+
+        //상담 지역
+        private static String area;
+
+        //가격
+        private static int price;
+
+
+        public static UpdateProdReq toReq(Long consultantId){
+            return UpdateProdReq.builder()
+                    .consultantId(consultantId)
+                    .status(status)
+                    .reservationAt(reservationAt)
+                    .type(type)
+                    .area(area)
+                    .price(price)
+                    .build();
         }
     }
 }

@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Builder
@@ -27,38 +26,51 @@ public class Product {
     @JoinColumn(name = "consultant_id")
     private Consultant consultant;
 
+    //상태
+    @Column(name = "status")
+    private String status;
+
+
+
     //상담시간
     @Column(name = "reservation_at")
     private LocalDateTime reservationAt;
 
     //상담유형
     @Column(name = "type")
-    private int type;
+    private String type;
+
+    //상담 지역
+    @Column(name = "area")
+    private String area;
 
     //가격
     @Column(name = "price")
     private int price;
 
-    //카테고리
-    @Column(name = "category")
-    private String category;
-
-    //상태
-    @Column(name = "status")
-    private String status;
-
-    //매칭ID
-    @Column(name = "matching_id")
-    private Long matchingId;
-
-    public static Product registProduct(Consultant consultant,
-                                        LocalDateTime reservationAt, int type,
-                                        String status){
+    public static Product registProduct(Consultant consultant, LocalDateTime reservationAt, String type){
         return Product.builder()
                 .consultant(consultant)
+                .status("예약 대기")
                 .reservationAt(reservationAt)
                 .type(type)
-                .status(status)
+                .area(consultant.getArea())
+                .price(0)
                 .build();
+    }
+
+    public static Product reserveProduct(Consultant consultant, String status, LocalDateTime reservationAt, String type, String area, int price){
+        return Product.builder()
+                .consultant(consultant)
+                .status(status)
+                .reservationAt(reservationAt)
+                .type(type)
+                .area(consultant.getArea())
+                .price(consultant.getPrice(type))
+                .build();
+    }
+
+    public static Product searchProduct(Long consultationid) {
+        return null;
     }
 }
