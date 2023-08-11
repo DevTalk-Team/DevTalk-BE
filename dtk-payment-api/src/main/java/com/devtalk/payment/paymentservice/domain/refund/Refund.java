@@ -1,5 +1,6 @@
 package com.devtalk.payment.paymentservice.domain.refund;
 
+import com.devtalk.payment.paymentservice.domain.BaseEntity;
 import com.devtalk.payment.paymentservice.domain.consultation.Consultation;
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,7 +12,7 @@ import java.util.Date;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Refund {
+public class Refund extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -1,47 +1,65 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <!-- jQuery -->
-  <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
-  <!-- iamport.payment.js -->
-  <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
-  <script>
-    var IMP = window.IMP;
-    IMP.init("imp67671220");
+    <meta charset="UTF-8">
+    <title>데브톡</title>
+    <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script>
+        var IMP = window.IMP;
+        IMP.init("imp67671220");
 
-    var today = new Date();
-    var hours = today.getHours(); // 시
-    var minutes = today.getMinutes();  // 분
-    var seconds = today.getSeconds();  // 초
-    var milliseconds = today.getMilliseconds();
-    var makeMerchantUid = hours +  minutes + seconds + milliseconds;
+        function requestPay() {
+            var consultationId = '[[${paymentServiceReq.consultationId}]]';
+            var consultationType = '[[${paymentServiceReq.consultationType}]]';
+            var cost = [[${paymentServiceReq.cost}]];
+            var consulter = '[[${paymentServiceReq.consulter}]]';
+            var consulterEmail = '[[${paymentServiceReq.consulterEmail}]]';
 
-
-    function requestPay() {
-      IMP.request_pay({
-        pg : 'kcp',
-        pay_method : 'card',
-        merchant_uid: "IMP"+makeMerchantUid,
-        name : '15분 전화상담',
-        amount : 1,
-        buyer_email : 'Iamport@chai.finance',
-        buyer_name : '아임포트 기술지원팀',
-        buyer_tel : '010-1234-5678',
-        buyer_addr : '서울특별시 강남구 삼성동',
-        buyer_postcode : '123-456'
-      }, function (rsp) { // callback
-        if (rsp.success) {
-          console.log(rsp);
-        } else {
-          console.log(rsp);
+            IMP.request_pay({
+                    pg: 'html5_inicis.INIpayTest',
+                    pay_method: 'card',
+                    merchant_uid: consultationId, // 주문 번호
+                    name: consultationType, // 상품 이름
+                    amount: cost, // 상품 가격
+                    buyer_email: consulterEmail, // 구매자 이메일
+                    buyer_name: consulter, // 구매자 이름
+                    buyer_tel: '010-1234-5678', // 임의의 값
+                    buyer_postcode: '123-456', // 임의의 값
+                },
+                function (rsp) {
+                    if (rsp.success) {
+                        alert('call back!!: ' + JSON.stringify(rsp));
+                        // 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우
+                        // jQuery로 HTTP 요청
+                        jQuery.ajax({
+                            url: "/payment/" + consultationId,
+                            method: "POST",
+                            headers: {"Content-Type": "application/json"},
+                            data: JSON.stringify({
+                                "payment_uid": rsp.imp_uid,      // 결제 고유번호
+                                "order_uid": rsp.merchant_uid   // 주문번호
+                            })
+                        }).done(function (response) {
+                            console.log(response);
+                            // 가맹점 서버 결제 API 성공시 로직
+                            //alert('Please, Check your payment result page!!' + rsp);
+                            alert('결제 완료!' + rsp);
+                            window.location.href = "/success-payment";
+                        })
+                    } else {
+                        alert("success? "+ rsp.success+ ", 결제에 실패하였습니다. 에러 내용: " + JSON.stringify(rsp));
+                        alert('결제 실패!' + rsp);
+                        window.location.href = "/fail-payment";
+                    }
+                });
         }
-      });
-    }
-  </script>
-  <meta charset="UTF-8">
-  <title>Sample Payment</title>
+    </script>
 </head>
 <body>
-<button onclick="requestPay()">결제하기</button> <!-- 결제하기 버튼 생성 -->
+    <h1>결제 페이지</h1>
+    <button th:with="paymentServiceReq = ${paymentServiceReq}" onclick="requestPay()">
+        결제하기
+    </button>
 </body>
 </html>

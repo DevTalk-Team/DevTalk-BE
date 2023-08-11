@@ -1,6 +1,8 @@
 package com.devtalk.payment.paymentservice.unittest;
 
+import com.devtalk.payment.paymentservice.application.ConsultationService;
 import com.devtalk.payment.paymentservice.application.PaymentService;
+import com.devtalk.payment.paymentservice.application.port.out.repository.ConsultationRepo;
 import com.devtalk.payment.paymentservice.application.port.out.repository.PaymentRepo;
 import com.devtalk.payment.paymentservice.domain.consultation.Consultation;
 import com.devtalk.payment.paymentservice.domain.consultation.ProcessStatus;
@@ -43,11 +45,10 @@ class PaymentServiceUnitTest {
     private Payment getPaymentInfo(){
         return Payment.builder()
                 .id(1L)
-                .paymentPgId("KAKAO")
                 .paymentUid("imp_001")
                 .cost(10000)
                 .paidAt(LocalDateTime.now())
-                .consultationId(1L)
+                .consultation(getConsultationInfo())
                 .status(PaymentStatus.PAID)
                 .build();
     }

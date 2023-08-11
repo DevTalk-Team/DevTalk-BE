@@ -1,5 +1,6 @@
 package com.devtalk.payment.paymentservice.domain.payment;
 
+import com.devtalk.payment.paymentservice.domain.BaseEntity;
 import com.devtalk.payment.paymentservice.domain.consultation.Consultation;
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,19 +14,19 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Builder
-public class Payment {
+public class Payment extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, unique = true)
     private Long id;
 
     // 예약ID
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "consultation_id")
     private Consultation consultation;
 
     // 거래고유 번호
-    @Column(nullable = false)
+    @Column
     private String paymentUid;
 
     // 결제 금액
@@ -33,7 +34,7 @@ public class Payment {
     private Integer cost;
 
     // 결제 일시
-    @Column(nullable = false, updatable = false, insertable = false)
+    @Column(updatable = false)
     @ColumnDefault(value = "CURRENT_TIMESTAMP")
     private LocalDateTime paidAt;
 
@@ -49,8 +50,9 @@ public class Payment {
         this.paidAt = paidAt;
     }
 
-    public void changePaymentBySuccess(PaymentStatus status, String paymentUid) {
+    public void changePaymentBySuccess(PaymentStatus status, String paymentUid, LocalDateTime paidAt) {
         this.status = status;
         this.paymentUid = paymentUid;
+        this.paidAt = paidAt;
     }
 }

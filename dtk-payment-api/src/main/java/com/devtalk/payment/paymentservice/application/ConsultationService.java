@@ -15,6 +15,7 @@ import org.thymeleaf.context.Context;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+public
 class ConsultationService implements ConsultationUseCase {
     private final ConsultationRepo consultationRepo;
     private final TemplateEngine templateEngine;

@@ -23,4 +23,11 @@ public class PaymentRes {
         private Date paidAt;
         private PaymentStatus status;
     }
+
+    @AllArgsConstructor
+    @Getter
+    public static class PaymentRequestRes{
+        private Long paymentId;
+        private String paymentUid;
+    }
 }

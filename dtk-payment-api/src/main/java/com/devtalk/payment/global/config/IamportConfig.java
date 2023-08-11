@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class PaymentConfig {
+public class IamportConfig {
 
     String apiKey = "7728611378883883";
     String secretKey = "Aa8S38F7UhKtohATUSV9ILy7BExATIjJg9naXorRMox6AqcGl7ycVkbCAC6WXMoxX0oymhfPhjuaAB6m";

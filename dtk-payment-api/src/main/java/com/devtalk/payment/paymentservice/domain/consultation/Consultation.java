@@ -1,5 +1,6 @@
 package com.devtalk.payment.paymentservice.domain.consultation;
 
+import com.devtalk.payment.paymentservice.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Builder
-public class Consultation {
+public class Consultation extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, unique = true)
@@ -23,8 +24,8 @@ public class Consultation {
 //    private String consultationId;
 
     // 예약 번호
-    @Column(nullable = false)
-    private String consultationUid;
+//    @Column(nullable = false)
+//    private String consultationUid;
 
     // 의뢰자 이름
     @Column(nullable = false)
@@ -57,10 +58,9 @@ public class Consultation {
     private ProcessStatus processStatus;
 
     @Builder
-    public Consultation(String consultationUid, String consulter, String consulterEmail
+    public Consultation(String consulter, String consulterEmail
                         , String consultant, String consultationType, Integer cost,
                         LocalDateTime consultationAt, ProcessStatus processStatus) {
-        this.consultationUid = consultationUid;
         this.consulter = consulter;
         this.consulterEmail = consulterEmail;
         this.consultant = consultant;

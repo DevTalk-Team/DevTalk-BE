@@ -3,17 +3,23 @@ package com.devtalk.payment.paymentservice.adapter.in.web;
 import com.devtalk.payment.paymentservice.adapter.in.web.dto.PaymentInput;
 import com.devtalk.payment.paymentservice.adapter.in.web.dto.PaymentOutput;
 import com.devtalk.payment.paymentservice.application.port.in.PaymentUseCase;
+import com.devtalk.payment.paymentservice.application.port.in.dto.PaymentReq;
 import com.devtalk.payment.paymentservice.application.port.in.dto.PaymentRes;
 import com.devtalk.payment.paymentservice.domain.payment.Payment;
 import com.siot.IamportRestClient.IamportClient;
+import com.siot.IamportRestClient.response.IamportResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import static com.devtalk.payment.paymentservice.adapter.in.web.dto.PaymentOutput.*;
+import static com.devtalk.payment.paymentservice.application.port.in.dto.PaymentReq.*;
+import static com.devtalk.payment.paymentservice.application.port.in.dto.PaymentRes.*;
 
 /*
  * 웹 어댑터의 책임
@@ -26,45 +32,71 @@ import static com.devtalk.payment.paymentservice.adapter.in.web.dto.PaymentOutpu
  * - http 응답을 반환하기
  * */
 @Controller
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/payment")
 class PaymentApiController {
     private final PaymentUseCase paymentUseCase;
-    private IamportClient iamportClient;
 
-    @GetMapping("/hello")
-    public String home() {
+    // 결제할 상품 조회
+    @GetMapping("/{consultationId}")
+    public String payment(@PathVariable("consultationId") Long consultationId, Model model){
+        PaymentServiceReq paymentServiceReq = paymentUseCase.requestPaymentForm(consultationId);
+        model.addAttribute("paymentServiceReq", paymentServiceReq);
+
         return "index";
     }
 
-    @PostMapping
-    public ResponseEntity<PaymentOutput> requestPayment(@RequestBody PaymentInput input) {
-        // 1. PaymentUseCase의 서비스를 호출해 포트원에 결제 하고자 하는 정보를 보낸다.
-        // 2. 호출 받은 서비스는 포트원에서 처리 된 결과를 paymentOutput 형태로 반환한다. (트랜잭션을 적용할것)
-        // 3. 결제가 성공했다면 PaymentUseCase의 이메일 서비스를 호출해 사용자에게 이메일을 전송한다
+    // 결제 버튼 누를시 요청
+    @PostMapping("/{consultationId}")
+    public ResponseEntity<PaymentOutput> requestPayment(@PathVariable("consultationId") Long consultationId) {
+        // 포트원에 결제 요청
+        paymentUseCase.requestPayment(consultationId);
 
-        iamportClient = new IamportClient("REST_API_KEY", "REST_API_SECRET");
-
-        PaymentOutput paymentOutput = null;
-
+        // 반환 값
+        Payment paymentInfo = paymentUseCase.searchPaymentInfo(consultationId);
+        PaymentRequestRes paymentRequestRes = new PaymentRequestRes(paymentInfo.getId(), paymentInfo.getPaymentUid());
+        PaymentOutput paymentOutput
+                = new PaymentOutput("0300", "결제 성공", paymentRequestRes);
         return ResponseEntity.status(HttpStatus.OK).body(paymentOutput);
     }
 
-    @GetMapping("/{consultationId}")
-    public ResponseEntity<PaymentInfoOutput> getPaymentInfo(
+    @PostMapping
+    public ResponseEntity<IamportResponse<com.siot.IamportRestClient.response.Payment>>
+    validationPayment(@RequestBody PaymentCallbackReq request) {
+        IamportResponse<com.siot.IamportRestClient.response.Payment> iamportResponse =
+                paymentUseCase.paymentByCallback(request);
+        log.info("결제 응답={}", iamportResponse.getResponse().toString());
+
+        return ResponseEntity.status(HttpStatus.OK).body(iamportResponse);
+    }
+
+    @GetMapping("/{consultationId}/info")
+    public ResponseEntity<PaymentOutput> getPaymentInfo(
             @PathVariable("consultationId") Long consultationId){
         Payment paymentSearchRes = paymentUseCase.searchPaymentInfo(consultationId);
 
         // PaymentInfoOutput.of(paymentSearchRes);
 
-        PaymentInfoOutput paymentInfoOutput
-                = new PaymentInfoOutput("0301", "조회 성공", paymentSearchRes);
+        PaymentOutput paymentOutput
+                = new PaymentOutput("0301", "조회 성공", paymentSearchRes);
 
-        return ResponseEntity.status(HttpStatus.OK).body(paymentInfoOutput);
+        return ResponseEntity.status(HttpStatus.OK).body(paymentOutput);
     }
 
     @DeleteMapping("/{paymentId}")
     public String cancelPayment(){
         return "hello";
+    }
+
+    // test
+    @GetMapping("/success-payment")
+    public String successPaymentPage() {
+        return "success-payment";
+    }
+
+    @GetMapping("/fail-payment")
+    public String failPaymentPage() {
+        return "fail-payment";
     }
 }

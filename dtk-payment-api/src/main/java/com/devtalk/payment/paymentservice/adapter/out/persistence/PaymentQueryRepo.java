@@ -21,10 +21,12 @@ class PaymentQueryRepo implements PaymentQueryableRepo {
         return Optional.ofNullable(
                     em.createQuery(
                 "select p from Payment p " +
-                        "where p.consultationId = :consultationId", Payment.class)
+                        "where p.consultation = :consultationId", Payment.class)
                         .setParameter("consultationId", consultationId)
                         .getSingleResult()
         );
     }
+
+
 
 }
