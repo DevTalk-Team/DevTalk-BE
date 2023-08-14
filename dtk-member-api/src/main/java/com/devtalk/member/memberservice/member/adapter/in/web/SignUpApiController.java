@@ -3,6 +3,7 @@ package com.devtalk.member.memberservice.member.adapter.in.web;
 import com.devtalk.member.memberservice.global.SuccessResponseNoResult;
 import com.devtalk.member.memberservice.member.adapter.in.web.dto.ConsultantSignUpInput;
 import com.devtalk.member.memberservice.member.adapter.in.web.dto.ConsulterSignUpInput;
+import com.devtalk.member.memberservice.member.application.MailService;
 import com.devtalk.member.memberservice.member.application.port.in.SignUpUseCase;
 import com.devtalk.member.memberservice.member.application.port.in.dto.SignUpReq;
 import com.devtalk.member.memberservice.member.domain.RoleType;
@@ -22,6 +23,7 @@ import static com.devtalk.member.memberservice.global.SuccessCode.*;
 public class SignUpApiController {
 
     private final SignUpUseCase signUpUseCase;
+    private final MailService mailService;
 
     /* 이메일 중복 확인 */
     @GetMapping("/members/check-email")
@@ -31,6 +33,10 @@ public class SignUpApiController {
     }
 
     /* 이메일 인증 */
+    @GetMapping("/members/auth-code")
+    public void sendMail() {
+        mailService.sendMail("pkl4693@naver.com");
+    }
 
     /* 멘티 회원가입 */
     @PostMapping("/consulter")

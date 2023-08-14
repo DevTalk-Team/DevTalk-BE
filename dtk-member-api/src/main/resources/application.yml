@@ -19,6 +19,20 @@ spring:
   config:
     import: "optional:configserver:"
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: "pkl4693@gmail.com"
+    password: "kwwcwycpxomzyicu"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+
+
 eureka:
   client:
     register-with-eureka: true
