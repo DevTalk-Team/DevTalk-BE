@@ -20,6 +20,8 @@ public enum ErrorCode {
     CONSULTANT_DUPLICATED_EMAIL(CONFLICT, "01131", "이미 가입된 이메일입니다."),
     CONSULTANT_INVALID_VALUE_EMAIL(BAD_REQUEST, "01132", "이메일 형식이 아닙니다."),
     CONSULTANT_PASSWORD_MISMATCHING(CONFLICT, "01133", "비밀번호가 일치하지 않습니다."),
+
+    AUTH_CODE_MISMATCHING(CONFLICT, "01134", "인증번호가 일치하지 않습니다."),
     ;
 
     private final HttpStatus httpStatus;

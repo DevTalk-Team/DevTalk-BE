@@ -3,7 +3,7 @@ package com.devtalk.member.memberservice.member.adapter.in.web;
 import com.devtalk.member.memberservice.global.SuccessResponseNoResult;
 import com.devtalk.member.memberservice.member.adapter.in.web.dto.ConsultantSignUpInput;
 import com.devtalk.member.memberservice.member.adapter.in.web.dto.ConsulterSignUpInput;
-import com.devtalk.member.memberservice.member.application.MailService;
+import com.devtalk.member.memberservice.member.application.EmailService;
 import com.devtalk.member.memberservice.member.application.port.in.SignUpUseCase;
 import com.devtalk.member.memberservice.member.application.port.in.dto.SignUpReq;
 import com.devtalk.member.memberservice.member.domain.RoleType;
@@ -23,7 +23,7 @@ import static com.devtalk.member.memberservice.global.SuccessCode.*;
 public class SignUpApiController {
 
     private final SignUpUseCase signUpUseCase;
-    private final MailService mailService;
+    private final EmailService emailService;
 
     /* 이메일 중복 확인 */
     @GetMapping("/members/check-email")
@@ -32,10 +32,19 @@ public class SignUpApiController {
         return new SuccessResponseNoResult(CHECK_EMAIL_DUPLICATION_SUCCESS);
     }
 
-    /* 이메일 인증 */
+    /* 이메일 인증 코드 보내기 */
     @GetMapping("/members/auth-code")
-    public void sendMail() {
-        mailService.sendMail("pkl4693@naver.com");
+    public SuccessResponseNoResult sendMail(@Email @RequestParam String email) {
+        emailService.sendMail(email);
+        return new SuccessResponseNoResult(SENDING_AUTH_CODE_SUCCESS);
+    }
+
+    /* 인증 코드 확인 */
+    @PostMapping("/members/auth-code")
+    public SuccessResponseNoResult verifyAuthCode(@Email @RequestParam String email,
+                                                  @RequestParam String authCode) {
+        emailService.verifyAuthCode(email, authCode);
+        return new SuccessResponseNoResult(AUTH_CODE_SUCCESS);
     }
 
     /* 멘티 회원가입 */
