@@ -2,6 +2,7 @@ package com.devtalk.payment.paymentservice.unittest;
 
 import com.devtalk.payment.paymentservice.application.ConsultationService;
 import com.devtalk.payment.paymentservice.application.PaymentService;
+import com.devtalk.payment.paymentservice.application.port.in.dto.PaymentRes;
 import com.devtalk.payment.paymentservice.application.port.out.repository.ConsultationRepo;
 import com.devtalk.payment.paymentservice.application.port.out.repository.PaymentRepo;
 import com.devtalk.payment.paymentservice.domain.consultation.Consultation;
@@ -18,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import static com.devtalk.payment.paymentservice.application.port.in.dto.PaymentRes.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
@@ -36,7 +38,7 @@ class PaymentServiceUnitTest {
         given(paymentRepo.findByConsultationId(anyLong())).willReturn(Optional.of(paymentInfo));
 
         // when
-        Payment paymentInfoRes = paymentService.searchPaymentInfo(1L);
+        PaymentSearchRes paymentInfoRes = paymentService.searchPaymentInfo(1L);
 
         // then
         assertThat(paymentInfoRes).isEqualTo(paymentInfo);

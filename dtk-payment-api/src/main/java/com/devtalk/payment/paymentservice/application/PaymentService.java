@@ -1,6 +1,6 @@
 package com.devtalk.payment.paymentservice.application;
 
-import com.devtalk.payment.global.error.ErrorCode;
+import com.devtalk.payment.global.code.ErrorCode;
 import com.devtalk.payment.global.error.exception.NotFoundException;
 import com.devtalk.payment.paymentservice.application.port.in.ConsultationUseCase;
 import com.devtalk.payment.paymentservice.application.port.in.EmailUseCase;
@@ -21,9 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import static com.devtalk.payment.paymentservice.application.port.in.dto.PaymentReq.*;
+import static com.devtalk.payment.paymentservice.application.port.in.dto.PaymentRes.*;
 
 @Service
 @Transactional
@@ -73,7 +73,8 @@ public class PaymentService implements PaymentUseCase {
             // 결제 단건 조회 (포트원)
             IamportResponse<com.siot.IamportRestClient.response.Payment> iamportResponse = iamportClient.paymentByImpUid(request.getPaymentUid());
             // 예약 내역 조회
-            Payment payment = searchPaymentInfo(request.getConsultationId());
+            Payment payment = paymentRepo.findByConsultationId(request.getConsultationId())
+                    .orElseThrow(()-> new NotFoundException(ErrorCode.NOT_FOUND_CONSULTATION));
             // 결제 완료가 아니면
             if (!iamportResponse.getResponse().getStatus().equals("paid")) {
                 // 임시 결제 삭제
@@ -111,8 +112,17 @@ public class PaymentService implements PaymentUseCase {
     }
 
     @Override
-    public Payment searchPaymentInfo(Long consultationId) {
-        return paymentRepo.findByConsultationId(consultationId)
+    public PaymentSearchRes searchPaymentInfo(Long consultationId) {
+        Payment payment = paymentRepo.findByConsultationId(consultationId)
                 .orElseThrow(()-> new NotFoundException(ErrorCode.NOT_FOUND_CONSULTATION));
+
+        return PaymentSearchRes.builder()
+                .paymentUid(payment.getPaymentUid())
+                .paymentId(payment.getId())
+                .status(payment.getStatus())
+                .consultationId(payment.getConsultation())
+                .paidAt(payment.getPaidAt())
+                .cost(payment.getCost())
+                .build();
     }
 }

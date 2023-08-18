@@ -1,9 +1,8 @@
 package com.devtalk.payment.paymentservice.application;
 
-import com.devtalk.payment.global.error.ErrorCode;
+import com.devtalk.payment.global.code.ErrorCode;
 import com.devtalk.payment.global.error.exception.NotFoundException;
 import com.devtalk.payment.paymentservice.application.port.in.ConsultationUseCase;
-import com.devtalk.payment.paymentservice.application.port.out.repository.ConsultationQueryableRepo;
 import com.devtalk.payment.paymentservice.application.port.out.repository.ConsultationRepo;
 import com.devtalk.payment.paymentservice.domain.consultation.Consultation;
 import lombok.RequiredArgsConstructor;

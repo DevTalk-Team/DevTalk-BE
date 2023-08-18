@@ -1,5 +1,7 @@
 package com.devtalk.payment.global.vo;
 
+import org.springframework.http.ResponseEntity;
+
 public class ResponseData<T> {
     private String code;
     private String message;
@@ -10,4 +12,9 @@ public class ResponseData<T> {
         this.message = message;
         this.result = result;
     }
+//
+//    public static ResponseEntity toResponseEntity() {
+//
+//    }
+
 }

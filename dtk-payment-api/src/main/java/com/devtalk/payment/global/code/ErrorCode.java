@@ -1,4 +1,4 @@
-package com.devtalk.payment.global.error;
+package com.devtalk.payment.global.code;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

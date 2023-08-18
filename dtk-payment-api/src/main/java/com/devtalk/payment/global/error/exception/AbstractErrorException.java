@@ -1,6 +1,6 @@
 package com.devtalk.payment.global.error.exception;
 
-import com.devtalk.payment.global.error.ErrorCode;
+import com.devtalk.payment.global.code.ErrorCode;
 import lombok.Getter;
 
 @Getter
