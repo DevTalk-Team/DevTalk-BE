@@ -47,12 +47,6 @@ public class PaymentService implements PaymentUseCase {
     private final PaymentProperty paymentProperty;
 //    private final IamportConfig iamportConfig;
 
-//    @Value("${imp_key}")
-//    private String impKey = "7728611378883883";
-//    @Value("${imp_secret}")
-//    private String impSecret = "Aa8S38F7UhKtohATUSV9ILy7BExATIjJg9naXorRMox6AqcGl7ycVkbCAC6WXMoxX0oymhfPhjuaAB6m";
-//    private String impUid = "imp67671220";
-
     // 결제 토큰 생성 (포트원 API사용을 위해 필요함)
     @Override
     public String getToken() {
