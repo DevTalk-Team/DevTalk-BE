@@ -1,17 +1,28 @@
 package com.devtalk.payment.global.config;
 
-import com.siot.IamportRestClient.IamportClient;
-import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class IamportConfig {
+    @Value("${portone.imp_key}")
+    private String impKey;
 
-    String apiKey = "7728611378883883";
-    String secretKey = "Aa8S38F7UhKtohATUSV9ILy7BExATIjJg9naXorRMox6AqcGl7ycVkbCAC6WXMoxX0oymhfPhjuaAB6m";
+    @Value("${portone.imp_secret}")
+    private String impSecret;
 
-    @Bean
-    public IamportClient iamportClient() {
-        return new IamportClient(apiKey, secretKey);
+//    public IamportConfig(
+//            @Value("${portone.imp_key}") String impKey,
+//            @Value("${portone.imp_secret}") String impSecret){
+//        this.impKey = impKey;
+//        this.impSecret = impSecret;
+//    }
+
+    public String getImpKey() {
+        return impKey;
+    }
+
+    public String getImpSecret() {
+        return impSecret;
     }
 }

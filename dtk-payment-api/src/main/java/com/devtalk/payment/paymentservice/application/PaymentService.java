@@ -1,6 +1,7 @@
 package com.devtalk.payment.paymentservice.application;
 
 import com.devtalk.payment.global.code.ErrorCode;
+import com.devtalk.payment.global.config.IamportConfig;
 import com.devtalk.payment.global.error.exception.NotFoundException;
 import com.devtalk.payment.paymentservice.application.port.in.ConsultationUseCase;
 import com.devtalk.payment.paymentservice.application.port.in.EmailUseCase;
@@ -9,6 +10,9 @@ import com.devtalk.payment.paymentservice.application.port.out.repository.Paymen
 import com.devtalk.payment.paymentservice.domain.consultation.Consultation;
 import com.devtalk.payment.paymentservice.domain.payment.Payment;
 import com.devtalk.payment.paymentservice.domain.payment.PaymentStatus;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.request.CancelData;
@@ -17,10 +21,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
 
-import java.io.IOException;
+import java.io.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.devtalk.payment.paymentservice.application.port.in.dto.PaymentReq.*;
 import static com.devtalk.payment.paymentservice.application.port.in.dto.PaymentRes.*;
@@ -33,9 +42,89 @@ public class PaymentService implements PaymentUseCase {
     private final PaymentRepo paymentRepo;
     private final ConsultationUseCase consultationUseCase;
     private final EmailUseCase emailUseCase;
+    private final IamportConfig iamportConfig;
 
-    // TODO: config로 관리해야함
-    IamportClient iamportClient = new IamportClient("7728611378883883", "Aa8S38F7UhKtohATUSV9ILy7BExATIjJg9naXorRMox6AqcGl7ycVkbCAC6WXMoxX0oymhfPhjuaAB6m");
+//    @Value("${imp_key}")
+//    private String impKey = "7728611378883883";
+//    @Value("${imp_secret}")
+//    private String impSecret = "Aa8S38F7UhKtohATUSV9ILy7BExATIjJg9naXorRMox6AqcGl7ycVkbCAC6WXMoxX0oymhfPhjuaAB6m";
+//    private String impUid = "imp67671220";
+
+    // 결제 토큰 생성 (포트원 API사용을 위해 필요함)
+    @Override
+    public String getToken() {
+        String impKey = iamportConfig.getImpKey();
+        String impSecret = iamportConfig.getImpSecret();
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("imp_key", impKey);
+        params.put("imp_secret", impSecret);
+
+        WebClient wc = WebClient.create("https://api.iamport.kr/users/getToken");
+        String response = wc.post()
+                .bodyValue(params)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+
+        try {
+            // ObjectMapper를 사용하여 JSON 파싱
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode node = objectMapper.readTree(response);
+            String accessToken = node.get("response").get("access_token").asText();
+            return accessToken;
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public String getPaymentLink(String token, Long consultationId) {
+        Map<String, Object> paymentInfo = new HashMap<>();
+        paymentInfo.put("title", "테스트가맹점");
+        paymentInfo.put("user_code", "imp67671220");
+        paymentInfo.put("amount", 10000);
+        paymentInfo.put("merchant_uid", "merchant_" + System.currentTimeMillis());  // unique merchant_uid
+        paymentInfo.put("name", "결제링크 테스트");
+        paymentInfo.put("tax_free", "면세공급가액");
+        paymentInfo.put("currency", "KRW");
+        paymentInfo.put("language", "ko");
+        paymentInfo.put("custom_data", "json_object");
+        paymentInfo.put("notice_url", "결제 결과를 받을 url");
+
+        List<Map<String, String>> payMethods = new ArrayList<>();
+        Map<String, String> cardMethod = new HashMap<>();
+        cardMethod.put("pg", "INIpayTest");
+        cardMethod.put("pay_method", "card");
+        cardMethod.put("label", "신용/체크카드");
+        payMethods.add(cardMethod);
+
+        Map<String, String> naverPayMethod = new HashMap<>();
+        naverPayMethod.put("pg", "INIpayTest");
+        naverPayMethod.put("pay_method", "naverpay");
+        naverPayMethod.put("label", "네이버페이");
+        payMethods.add(naverPayMethod);
+
+        // Add other payment methods
+
+        paymentInfo.put("pay_methods", payMethods);
+
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("payment_info", paymentInfo);
+        requestBody.put("expired_at", 1699999999);
+
+        WebClient wc = WebClient.create("https://api.iamport.co/api/supplements/v1/link/payment");
+
+        String response = wc.post()
+                .header("Authorization", "Bearer " + token)
+                .bodyValue(requestBody)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+
+        return response;
+    }
 
     @Override
     public PaymentServiceReq requestPaymentForm(Long consultationId) {
@@ -58,23 +147,27 @@ public class PaymentService implements PaymentUseCase {
 
         // 임시 결제 정보를 저장
         paymentRepo.save(Payment.builder()
-                        .consultation(consultation)
-                        .paymentUid(null)
-                        .cost(consultation.getCost())
-                        .paidAt(null)
-                        .status(PaymentStatus.READY)
-                        .build());
+                .consultation(consultation)
+                .paymentUid(null)
+                .cost(consultation.getCost())
+                .paidAt(null)
+                .status(PaymentStatus.READY)
+                .build());
     }
 
     // 결제 검증
     @Override
     public IamportResponse<com.siot.IamportRestClient.response.Payment> paymentByCallback(PaymentCallbackReq request) {
-        try{
+        String impKey = iamportConfig.getImpKey();
+        String impSecret = iamportConfig.getImpSecret();
+
+        IamportClient iamportClient = new IamportClient(impKey, impSecret);
+        try {
             // 결제 단건 조회 (포트원)
             IamportResponse<com.siot.IamportRestClient.response.Payment> iamportResponse = iamportClient.paymentByImpUid(request.getPaymentUid());
             // 예약 내역 조회
             Payment payment = paymentRepo.findByConsultationId(request.getConsultationId())
-                    .orElseThrow(()-> new NotFoundException(ErrorCode.NOT_FOUND_CONSULTATION));
+                    .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_CONSULTATION));
             // 결제 완료가 아니면
             if (!iamportResponse.getResponse().getStatus().equals("paid")) {
                 // 임시 결제 삭제
@@ -114,7 +207,7 @@ public class PaymentService implements PaymentUseCase {
     @Override
     public PaymentSearchRes searchPaymentInfo(Long consultationId) {
         Payment payment = paymentRepo.findByConsultationId(consultationId)
-                .orElseThrow(()-> new NotFoundException(ErrorCode.NOT_FOUND_CONSULTATION));
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_CONSULTATION));
 
         return PaymentSearchRes.builder()
                 .paymentUid(payment.getPaymentUid())
