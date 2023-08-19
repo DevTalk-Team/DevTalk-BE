@@ -31,6 +31,11 @@ class PaymentServiceUnitTest {
     @Mock PaymentRepo paymentRepo;
 
     @Test
+    void 토큰생성(){
+        System.out.println(paymentService.getToken());
+    }
+
+    @Test
     @DisplayName("조회 성공")
     void 결제상세_조회성공(){
         // given

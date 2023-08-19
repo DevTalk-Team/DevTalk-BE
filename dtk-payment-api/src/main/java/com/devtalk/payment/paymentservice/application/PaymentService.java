@@ -2,6 +2,7 @@ package com.devtalk.payment.paymentservice.application;
 
 import com.devtalk.payment.global.code.ErrorCode;
 import com.devtalk.payment.global.config.IamportConfig;
+import com.devtalk.payment.global.config.property.PaymentProperty;
 import com.devtalk.payment.global.error.exception.NotFoundException;
 import com.devtalk.payment.paymentservice.application.port.in.ConsultationUseCase;
 import com.devtalk.payment.paymentservice.application.port.in.EmailUseCase;
@@ -42,7 +43,9 @@ public class PaymentService implements PaymentUseCase {
     private final PaymentRepo paymentRepo;
     private final ConsultationUseCase consultationUseCase;
     private final EmailUseCase emailUseCase;
-    private final IamportConfig iamportConfig;
+
+    private final PaymentProperty paymentProperty;
+//    private final IamportConfig iamportConfig;
 
 //    @Value("${imp_key}")
 //    private String impKey = "7728611378883883";
@@ -53,8 +56,8 @@ public class PaymentService implements PaymentUseCase {
     // 결제 토큰 생성 (포트원 API사용을 위해 필요함)
     @Override
     public String getToken() {
-        String impKey = iamportConfig.getImpKey();
-        String impSecret = iamportConfig.getImpSecret();
+        String impKey = paymentProperty.getImpKey();
+        String impSecret = paymentProperty.getImpSecret();
 
         Map<String, Object> params = new HashMap<>();
         params.put("imp_key", impKey);
@@ -158,8 +161,8 @@ public class PaymentService implements PaymentUseCase {
     // 결제 검증
     @Override
     public IamportResponse<com.siot.IamportRestClient.response.Payment> paymentByCallback(PaymentCallbackReq request) {
-        String impKey = iamportConfig.getImpKey();
-        String impSecret = iamportConfig.getImpSecret();
+        String impKey = paymentProperty.getImpKey();
+        String impSecret = paymentProperty.getImpSecret();
 
         IamportClient iamportClient = new IamportClient(impKey, impSecret);
         try {

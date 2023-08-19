@@ -1,6 +1,8 @@
 package com.devtalk.payment.global.config;
 
+import com.devtalk.payment.global.config.property.PaymentProperty;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
@@ -17,6 +19,11 @@ public class IamportConfig {
 //        this.impKey = impKey;
 //        this.impSecret = impSecret;
 //    }
+
+    @Bean
+    public PaymentProperty init() {
+        return new PaymentProperty(impKey, impSecret);
+    }
 
     public String getImpKey() {
         return impKey;
