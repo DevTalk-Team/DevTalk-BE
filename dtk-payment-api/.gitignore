@@ -5,6 +5,9 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+## 커스텀 ###
+/src/main/resources/application.yml
+
 ### STS ###
 .apt_generated
 .classpath
