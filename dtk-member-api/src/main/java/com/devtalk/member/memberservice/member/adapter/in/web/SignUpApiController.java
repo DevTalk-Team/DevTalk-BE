@@ -1,6 +1,6 @@
 package com.devtalk.member.memberservice.member.adapter.in.web;
 
-import com.devtalk.member.memberservice.global.SuccessResponseNoResult;
+import com.devtalk.member.memberservice.global.success.SuccessResponseNoResult;
 import com.devtalk.member.memberservice.member.adapter.in.web.dto.SignUpInput;
 import com.devtalk.member.memberservice.member.application.port.in.SignUpUseCase;
 import com.devtalk.member.memberservice.member.application.port.in.dto.SignUpReq;
@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import static com.devtalk.member.memberservice.global.SuccessCode.*;
+import static com.devtalk.member.memberservice.global.success.SuccessCode.*;
 import static com.devtalk.member.memberservice.member.application.port.in.dto.SignUpReq.toReq;
 
 @RestController

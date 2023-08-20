@@ -1,4 +1,4 @@
-package com.devtalk.member.memberservice.global;
+package com.devtalk.member.memberservice.global.success;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
