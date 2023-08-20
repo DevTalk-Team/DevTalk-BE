@@ -38,6 +38,7 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    runtimeOnly 'com.h2database:h2'
 
     // File 관련
     implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'

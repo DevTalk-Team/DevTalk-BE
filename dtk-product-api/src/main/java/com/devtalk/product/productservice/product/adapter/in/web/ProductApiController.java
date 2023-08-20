@@ -2,56 +2,63 @@ package com.devtalk.product.productservice.product.adapter.in.web;
 
 import com.devtalk.product.productservice.product.adapter.in.web.dto.ProductInput;
 import com.devtalk.product.productservice.product.application.port.in.ProductUseCase;
-import com.devtalk.product.productservice.product.application.port.in.RegistUseCase;
+import com.devtalk.product.productservice.product.application.port.in.dto.ProductReq;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import static com.devtalk.product.productservice.product.adapter.in.web.dto.ProductInput.*;
 
 
+@EnableDiscoveryClient
 @RestController
-@RequestMapping("/api")
+@Slf4j
+@RequestMapping("/api/v1/products")
 @RequiredArgsConstructor
 
 public class ProductApiController {
-    private final ProductUseCase registUseCase;
+    private final ProductUseCase productUseCase;
 
-    //상품등록API
-    @PostMapping("/v1/products/register")
-    public ResponseEntity<?> registProduct(@RequestBody @Validated ProductInput.RegistrationInput registrationInput,
-                                           @PathVariable Long consultantId)
+    //상품등록API - 완료
+    @PostMapping("/register")
+    public ResponseEntity<?> registProduct(@RequestBody @Validated RegistrationInput registrationInput,
+                                           @RequestParam Long loggedInUserId)
     {
-        registUseCase.registProduct(registrationInput.toReq(consultantId));
-
+        productUseCase.registProduct(registrationInput.toReq(loggedInUserId));
         return ResponseEntity.ok().build();
     }
 
-    //상품조회API
-    @GetMapping("/v1/products/search?consultation={consultationid}")
-    public ResponseEntity<?> searchProduct(@PathVariable Long consultationid)
+    //상담사별상품조회API - 완료
+    @GetMapping("search?consultantId={consultantId}")
+    public ResponseEntity<?> searchList(@PathVariable Long consultantId)
     {
-        registUseCase.searchProduct(consultationid);
-        return ResponseEntity.ok().build();
-    }
-    //상담사별상품조회API
-    @GetMapping("/v1/products/search?consultant={consultant}")
-    public ResponseEntity<?> searchList(@PathVariable Long consultant)
-    {
-        registUseCase.searchList(consultant);
+        productUseCase.searchList(consultantId);
         return ResponseEntity.ok().build();
     }
 
-    //상품수정API
-    @PutMapping("/v1/products/update")
-    public ResponseEntity<?> updateProduct(@RequestBody @Validated RegistrationInput productInput,
-                                           @PathVariable Long consultantId)
+    //상품예약API - 진행 중
+    @PostMapping("reservation/productId={productId}")
+    public ResponseEntity<?> reserveProduct(@RequestBody @Validated ReservationInput reservationInput,
+                                            @PathVariable Long productId)
     {
-        registUseCase.updateProduct(UpdateInput.toReq(consultantId));
+        productUseCase.reserveProduct(reservationInput.toReq(productId));
         return ResponseEntity.ok().build();
     }
+
+    //상품조회API - 진행 중
+//    @GetMapping("search?consultation={consultationid}")
+//    public ResponseEntity<?> searchProduct(@PathVariable Long consultationId)
+//    {
+//        registUseCase.searchProduct(consultationId);
+//        return ResponseEntity.ok().build();
+
+
+//    }
     //상품삭제API
-    @DeleteMapping("/v1/products/register")
+    @DeleteMapping("delete")
     public ResponseEntity<?> deleteProduct(@RequestParam Long consultationid)
     {
         registUseCase.deleteProduct(consultationid);

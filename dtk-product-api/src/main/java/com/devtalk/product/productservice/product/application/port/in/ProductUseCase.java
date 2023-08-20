@@ -2,18 +2,22 @@ package com.devtalk.product.productservice.product.application.port.in;
 
 import com.devtalk.product.productservice.product.application.port.in.dto.ProductReq;
 import com.devtalk.product.productservice.product.domain.product.Product;
+import com.devtalk.product.productservice.product.domain.product.ReservedProduct;
 
 import java.util.List;
 
 public interface ProductUseCase {
     void registProduct(ProductReq.RegistProdReq registProdReq);
 
-    Product searchProduct(Long consultationid);
+    List<Product> searchList(Long consultantId);
 
-    void deleteProduct(Long consultationid);
+    void reserveProduct(ProductReq.ReserveProdReq reserveProdReq);
 
-    List<Product> searchList(Long consultant);
+  //  Product searchProduct(ProductReq.ReserveProdReq reserveProdReq);
 
 
-    void updateProduct(ProductReq.UpdateProdReq updateProdReq);
+
+    //void deleteReservation(ProductReq.deleteProdReq deleteProdReq);
+
+//    ReservedProduct searchReservation(ProductReq productReq);중
 }

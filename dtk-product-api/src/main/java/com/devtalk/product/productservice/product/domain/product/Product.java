@@ -1,76 +1,59 @@
 package com.devtalk.product.productservice.product.domain.product;
 
+import com.devtalk.product.productservice.global.vo.BaseTime;
 import com.devtalk.product.productservice.product.domain.member.Consultant;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Table(name = "product")
-@AllArgsConstructor
-@NoArgsConstructor
-public class Product {
+public class Product extends BaseTime {
     //상품ID
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "product_id")
     private Long Id;
 
     //상담자ID
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "consultant_id")
+    @JoinColumn(name = "consultant_id", nullable = false)
     private Consultant consultant;
 
     //상태
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     private String status;
 
-
-
     //상담시간
-    @Column(name = "reservation_at")
+    @Column(name = "reservation_at", nullable = false)
     private LocalDateTime reservationAt;
 
     //상담유형
     @Column(name = "type")
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private ConsultationType type;
 
-    //상담 지역
-    @Column(name = "area")
-    private String area;
-
-    //가격
-    @Column(name = "price")
-    private int price;
-
-    public static Product registProduct(Consultant consultant, LocalDateTime reservationAt, String type){
+    public static Product registProduct(Consultant consultant, LocalDateTime reservationAt, ConsultationType type){
         return Product.builder()
                 .consultant(consultant)
-                .status("예약 대기")
+                .status("예약 가능")
                 .reservationAt(reservationAt)
                 .type(type)
-                .area(consultant.getArea())
-                .price(0)
+                .build();
+    }
+    public static Product unavailableProduct(Consultant consultant, LocalDateTime reservationAt, ConsultationType type){
+        return Product.builder()
+                .consultant(consultant)
+                .status("예약 불가")
+                .reservationAt(reservationAt)
+                .type(type)
                 .build();
     }
 
-    public static Product reserveProduct(Consultant consultant, String status, LocalDateTime reservationAt, String type, String area, int price){
-        return Product.builder()
-                .consultant(consultant)
-                .status(status)
-                .reservationAt(reservationAt)
-                .type(type)
-                .area(consultant.getArea())
-                .price(consultant.getPrice(type))
-                .build();
-    }
 
-    public static Product searchProduct(Long consultationid) {
-        return null;
-    }
 }

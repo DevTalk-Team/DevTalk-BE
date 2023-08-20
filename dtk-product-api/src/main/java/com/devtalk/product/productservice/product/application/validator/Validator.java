@@ -10,9 +10,9 @@ public class Validator {
     public void validate(ProductReq.RegistProdReq registProdReq){
 
     }
-    public void validate(ProductReq.UpdateProdReq updateProdReq){
-
-    }
+//    public void validate(ProductReq.UpdateProdReq updateProdReq){
+//
+//    }
 
     public void validate(Long consultantid){
 

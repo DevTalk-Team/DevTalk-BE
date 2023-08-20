@@ -2,7 +2,7 @@
 //
 //import com.devtalk.product.productservice.integrationtest.setup.ConsultantSetUp;
 //import com.devtalk.product.productservice.product.adapter.in.web.ProductApiController;
-//import com.devtalk.product.productservice.product.application.RegistService;
+//import com.devtalk.product.productservice.product.application.ProductService;
 //import com.devtalk.product.productservice.product.application.port.out.repository.ConsultantQueryableRepo;
 //import com.devtalk.product.productservice.product.application.port.out.repository.ProductRepo;
 //import com.devtalk.product.productservice.product.application.validator.Validator;
@@ -18,6 +18,7 @@
 //import java.time.LocalDateTime;
 //
 //import static com.devtalk.product.productservice.product.adapter.in.web.dto.ProductInput.*;
+//import static com.devtalk.product.productservice.product.domain.product.ConsultationType.NF2F;
 //
 //@SpringBootTest
 //@TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -27,8 +28,8 @@
 //public class ProductApiControllerTest {
 //    private ProductApiController productApiController;
 //
-//    //@Autowired
-//    //private Product product;
+//
+//    private Product product;
 //    @Autowired
 //    private  Validator validator;
 //    @Autowired
@@ -40,7 +41,7 @@
 //
 //    @BeforeAll
 //    void setUp(){
-//    //    productApiController = new ProductApiController(new RegistService(product, validator, consultantQueryableRepo, productRepo));
+//        productApiController = new ProductApiController(new ProductService(product, validator, consultantQueryableRepo, productRepo));
 //    }
 //
 //    @Test
@@ -48,17 +49,21 @@
 //    void 상품등록성공() throws Exception{
 //
 //        //given
-//        Consultant consultant = consultantSetUp.saveConsultant(1L, "exLoginId1", "홍길동");
+//        Consultant consultant = consultantSetUp.saveConsultant(1L, 30000, 50000, "서울시 강");
 //
 //        RegistrationInput registrationInput = RegistrationInput.builder()
+//                .consultantId(consultant.getId())
+//                .status("예약 가능")
 //                .reservationAt(LocalDateTime.now().plusDays(1))
-//                .type(5)
-//                .status("등록 완료")
+//                .type(NF2F)
+//                .area(" ")
+//                .price(0)
 //                .build();
 //
 //        //when
 //        productApiController.registProduct(registrationInput, consultant.getId());
 //
 //        //then
+//
 //    }
 //}

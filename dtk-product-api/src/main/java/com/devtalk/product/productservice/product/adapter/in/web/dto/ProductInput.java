@@ -1,9 +1,11 @@
 package com.devtalk.product.productservice.product.adapter.in.web.dto;
 
 import com.devtalk.product.productservice.product.application.port.in.dto.ProductReq;
+import com.devtalk.product.productservice.product.domain.product.ConsultationType;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static com.devtalk.product.productservice.product.application.port.in.dto.ProductReq.*;
 
@@ -14,59 +16,57 @@ public class ProductInput {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @Getter
     public static class RegistrationInput{
+        private Long consultantId;
 
-        private static String status;
+        private  String status;
 
         //상담시간
-        private static LocalDateTime reservationAt;
+        private  LocalDateTime reservationAt;
 
         //상담유형
-        private static String type;
-
-        //상담 지역
-        private static String area;
-
-        //가격
-        private static int price;
+        private ConsultationType type;
 
 
-        public static RegistProdReq toReq(Long consultantId){
+        public  RegistProdReq toReq(Long consultantId){
             return RegistProdReq.builder()
                     .consultantId(consultantId)
                     .status(status)
                     .reservationAt(reservationAt)
                     .type(type)
-                    .area(area)
-                    .price(price)
                     .build();
         }
     }
+    @Builder
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @Getter
+    public static class ReservationInput {
+        private Long productId;
 
-    public static class UpdateInput{
+        private Long consultantId;
 
-        private static String status;
+        private Long consulterId;
+        private String status;
 
-        //상담시간
-        private static LocalDateTime reservationAt;
+        private LocalDateTime reservationAt;
 
-        //상담유형
-        private static String type;
+        private ConsultationType type;
 
-        //상담 지역
-        private static String area;
+        private Long price;
 
-        //가격
-        private static int price;
+        private String area;
 
 
-        public static UpdateProdReq toReq(Long consultantId){
-            return UpdateProdReq.builder()
+        public ReserveProdReq toReq(Long productId) {
+            return ReserveProdReq.builder()
                     .consultantId(consultantId)
+                    .consulterId(consulterId)
+                    .productId(productId)
                     .status(status)
                     .reservationAt(reservationAt)
                     .type(type)
-                    .area(area)
                     .price(price)
+                    .area(area)
                     .build();
         }
     }

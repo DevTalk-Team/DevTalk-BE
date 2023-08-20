@@ -1,47 +1,48 @@
 package com.devtalk.product.productservice.product.domain.member;
 
+import com.devtalk.product.productservice.product.domain.product.ConsultationType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "type")
+@DiscriminatorValue("CONSULTER")
 @SuperBuilder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Consultant {
+public class Consultant extends Member {
 
-    @Id
-    @Column(nullable = false, unique = true)
-    private Long id;
+    private int NF2F;
 
-    @Column(nullable = false, length = 20)
-    private int Nf2f;
+    private int F2F;
 
-    @Column(nullable = false, length = 20)
-    private int f2f;
-
-    @Column(nullable = false, length = 20)
     private String area;
-    public static Consultant createConsultant(Long memberId, int Nf2f, int f2f,
-                                              String area) {
+
+    public static Consultant createConsulter(Long memberId, String loginId, String name, RoleType roleType,
+                                             int NF2F, int F2F, String area) {
         return Consultant.builder()
                 .id(memberId)
-                .Nf2f(Nf2f)
-                .f2f(f2f)
+                .loginId(loginId)
+                .name(name)
+                .role(roleType)
+                .NF2F(NF2F)
+                .F2F(F2F)
                 .area(area)
                 .build();
     }
-    public int getPrice(String type) {
-        if (type == "Nf2f") {
-            return this.Nf2f;
+    public int getPrice(ConsultationType type) {
+        if (type == ConsultationType.NF2F) {
+            return this.NF2F;
         }
-        else {
-            return this.f2f;
+        else if (type == ConsultationType.F2F){
+            return this.F2F;
         }
+        else
+            return 0;
     }
 }
 

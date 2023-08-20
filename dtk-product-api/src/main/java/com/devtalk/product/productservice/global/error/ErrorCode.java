@@ -16,13 +16,14 @@ public enum ErrorCode {
     /**
      * Consultation
      */
-    INVALID_RESERVATION_REQUEST(CONFLICT, "02001", "잘못된 예약 요청입니다."),
-    EXCESS_FILE_LIST_COUNT(CONFLICT, "02002", "최대 허용 파일 개수를 초과하였습니다."),
-    EXCESS_FILE_LIST_SIZE(CONFLICT, "02003", "파일 리스트의 최대 허용 사이즈를를 초과하였습니다."),
-    UNSUPPORTED_FILE_EXTENSION(CONFLICT, "02004", "허용되지 않는 확장자를 가진 파일이 입력되었습니다."),
-    NOT_FOUND_CONSULTATION(NOT_FOUND, "02005", "등록되지 않은 회원의 요청입니다."),
-    NOT_FOUND_CONSULTANT(NOT_FOUND, "02006", "해당 전문가가 등록되어 있지 않습니다."),
-    DUPLICATED_RESERVATION(CONFLICT, "02007", "이미 예약된 상담입니다.");
+
+
+
+    REGIST_PRODUCT(CONFLICT, "05011", "상품등록에 실패하였습니다."),
+    NOT_FOUND_CONSULTATION(NOT_FOUND, "05021", "상품조회에 실패하였습니다.."),
+    NOT_FOUND_CONSULTANT(NOT_FOUND, "05031", "상담사별 상품조회에 실패하였습니다."),
+    UPDATE_RESERVATION(CONFLICT, "05041", "상품수정에 실패하였습니다."),
+    DELETE_RESERVATION(CONFLICT, "05041", "상품조회에실패하였습니다.");
 
 
 

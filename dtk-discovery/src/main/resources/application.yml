@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: EurekaDiscoveryService
+    name: dtk-discovery
 
 eureka:
   client:
