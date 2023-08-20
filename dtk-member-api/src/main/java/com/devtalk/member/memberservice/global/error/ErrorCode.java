@@ -22,6 +22,8 @@ public enum ErrorCode {
     CONSULTANT_PASSWORD_MISMATCHING(CONFLICT, "01133", "비밀번호가 일치하지 않습니다."),
 
     AUTH_CODE_MISMATCHING(CONFLICT, "01134", "인증번호가 일치하지 않습니다."),
+    MEMBER_NOT_FOUND(CONFLICT, "01141", "일치하는 회원 정보가 없습니다."),
+    WRONG_PASSWORD(CONFLICT, "01142", "비밀번호를 잘못 입력하였습니다."),
     ;
 
     private final HttpStatus httpStatus;

@@ -3,6 +3,7 @@ package com.devtalk.member.memberservice.member.application;
 import com.devtalk.member.memberservice.global.error.ErrorCode;
 import com.devtalk.member.memberservice.global.error.exception.AuthCodeMismatchingException;
 import com.devtalk.member.memberservice.global.util.RedisUtil;
+import com.devtalk.member.memberservice.member.application.port.in.VerifyEmailUseCase;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
@@ -16,19 +17,28 @@ import java.io.UnsupportedEncodingException;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class EmailService {
+public class VerifyEmailService implements VerifyEmailUseCase {
 
     private final JavaMailSender javaMailSender;
     private final RedisUtil redisUtil;
-    private int authCode;
+
+    /* 인증코드 메일 발송 */
+    @Override
+    public void sendAuthCode(String email) {
+        // 기존 인증 키가 있으면 삭제
+        if (redisUtil.existData(email)) {
+            redisUtil.deleteData(email);
+        }
+        javaMailSender.send(createMessage(email));
+    }
 
     /* 인증번호 생성 */
-    public int createAuthCode() {
+    int createAuthCode() {
         return (int) (Math.random() * 888888) + 111111;
     }
 
     /* 메일 생성 */
-    public MimeMessage createMessage(String email) {
+    MimeMessage createMessage(String email) {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
         try {
@@ -49,16 +59,8 @@ public class EmailService {
         return mimeMessage;
     }
 
-    /* 메일 발송 */
-    public void sendMail(String email) {
-        // 기존 인증 키가 있으면 삭제
-        if (redisUtil.existData(email)) {
-            redisUtil.deleteData(email);
-        }
-        javaMailSender.send(createMessage(email));
-    }
-
     /* 인증코드 일치 확인 */
+    @Override
     public void verifyAuthCode(String email, String authCode) {
         if (isVerify(email, authCode)) {
             throw new AuthCodeMismatchingException(ErrorCode.AUTH_CODE_MISMATCHING);

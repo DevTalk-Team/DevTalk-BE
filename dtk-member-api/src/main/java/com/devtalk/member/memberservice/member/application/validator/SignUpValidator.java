@@ -4,7 +4,7 @@ import com.devtalk.member.memberservice.global.error.ErrorCode;
 import com.devtalk.member.memberservice.global.error.exception.DuplicationException;
 import com.devtalk.member.memberservice.global.error.exception.PasswordMismatchingException;
 import com.devtalk.member.memberservice.member.application.port.in.dto.SignUpReq;
-import com.devtalk.member.memberservice.member.application.port.out.repository.SignUpCommandableRepo;
+import com.devtalk.member.memberservice.member.application.port.out.repository.MemberRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SignUpValidator {
 
-    private final SignUpCommandableRepo signUpCommandableRepo;
+    private final MemberRepo memberRepo;
 
     public void validate(SignUpReq req) {
         checkDuplicatedEmail(req.getEmail());
@@ -23,7 +23,7 @@ public class SignUpValidator {
 
     /* 이메일 중복 확인 */
     public void checkDuplicatedEmail(String email) {
-        if (signUpCommandableRepo.existsByEmail(email)) {
+        if (memberRepo.existsByEmail(email)) {
             throw new DuplicationException(ErrorCode.DUPLICATED_EMAIL);
         }
     }

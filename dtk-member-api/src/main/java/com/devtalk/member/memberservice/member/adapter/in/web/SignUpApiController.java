@@ -1,29 +1,41 @@
 package com.devtalk.member.memberservice.member.adapter.in.web;
 
 import com.devtalk.member.memberservice.global.SuccessResponseNoResult;
-import com.devtalk.member.memberservice.member.adapter.in.web.dto.ConsultantSignUpInput;
-import com.devtalk.member.memberservice.member.adapter.in.web.dto.ConsulterSignUpInput;
-import com.devtalk.member.memberservice.member.application.EmailService;
+import com.devtalk.member.memberservice.member.adapter.in.web.dto.SignUpInput;
 import com.devtalk.member.memberservice.member.application.port.in.SignUpUseCase;
 import com.devtalk.member.memberservice.member.application.port.in.dto.SignUpReq;
-import com.devtalk.member.memberservice.member.domain.RoleType;
+import com.devtalk.member.memberservice.member.domain.member.RoleType;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
 import static com.devtalk.member.memberservice.global.SuccessCode.*;
+import static com.devtalk.member.memberservice.member.application.port.in.dto.SignUpReq.toReq;
 
 @RestController
 @RequiredArgsConstructor
 public class SignUpApiController {
 
     private final SignUpUseCase signUpUseCase;
-    private final EmailService emailService;
+
+    /* 멘티 회원가입 */
+    @PostMapping("/consulter")
+    @ResponseStatus(HttpStatus.CREATED)
+    public SuccessResponseNoResult consulterSignUp(@Valid @RequestBody SignUpInput input) {
+        SignUpReq req = toReq(input, RoleType.CONSULTER);
+        signUpUseCase.signUp(req);
+        return new SuccessResponseNoResult(CONSULTER_SIGNUP_SUCCESS);
+    }
+    /* 전문가 회원가입 */
+    @PostMapping("/consultant")
+    @ResponseStatus(HttpStatus.CREATED)
+    public SuccessResponseNoResult consultantSignUp(@Valid @RequestBody SignUpInput input) {
+        SignUpReq req = toReq(input, RoleType.CONSULTANT);
+        signUpUseCase.signUp(req);
+        return new SuccessResponseNoResult(CONSULTANT_SIGNUP_SUCCESS);
+    }
 
     /* 이메일 중복 확인 */
     @GetMapping("/members/check-email")
@@ -31,56 +43,4 @@ public class SignUpApiController {
         signUpUseCase.checkDuplicatedEmail(email);
         return new SuccessResponseNoResult(CHECK_EMAIL_DUPLICATION_SUCCESS);
     }
-
-    /* 이메일 인증 코드 보내기 */
-    @GetMapping("/members/auth-code")
-    public SuccessResponseNoResult sendMail(@Email @RequestParam String email) {
-        emailService.sendMail(email);
-        return new SuccessResponseNoResult(SENDING_AUTH_CODE_SUCCESS);
-    }
-
-    /* 인증 코드 확인 */
-    @PostMapping("/members/auth-code")
-    public SuccessResponseNoResult verifyAuthCode(@Email @RequestParam String email,
-                                                  @RequestParam String authCode) {
-        emailService.verifyAuthCode(email, authCode);
-        return new SuccessResponseNoResult(AUTH_CODE_SUCCESS);
-    }
-
-    /* 멘티 회원가입 */
-    @PostMapping("/consulter")
-    @ResponseStatus(HttpStatus.CREATED)
-    public SuccessResponseNoResult consulterSignUp(@Valid @RequestBody ConsulterSignUpInput input) {
-        SignUpReq req = SignUpReq.builder()
-                .roleType(RoleType.CONSULTER)
-                .email(input.getEmail())
-                .password(input.getPassword())
-                .checkPassword(input.getCheckPassword())
-                .name(input.getName())
-                .phoneNumber(input.getPhoneNumber())
-                .birthDate(LocalDate.parse(input.getBirthDate(), DateTimeFormatter.ISO_DATE))
-                .field(input.getField())
-                .build();
-        signUpUseCase.consulterSignUp(req);
-        return new SuccessResponseNoResult(CONSULTER_SIGNUP_SUCCESS);
-    }
-
-    /* 전문가 회원가입 */
-    @PostMapping("/consultant")
-    @ResponseStatus(HttpStatus.CREATED)
-    public SuccessResponseNoResult consultantSignUp(@Valid @RequestBody ConsultantSignUpInput input) {
-        SignUpReq req = SignUpReq.builder()
-                .roleType(RoleType.CONSULTANT)
-                .email(input.getEmail())
-                .password(input.getPassword())
-                .checkPassword(input.getCheckPassword())
-                .name(input.getName())
-                .phoneNumber(input.getPhoneNumber())
-                .company(input.getCompany())
-                .field(input.getField())
-                .build();
-        signUpUseCase.consultantSignUp(req);
-        return new SuccessResponseNoResult(CONSULTANT_SIGNUP_SUCCESS);
-    }
-
 }
