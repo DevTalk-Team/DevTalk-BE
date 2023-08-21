@@ -39,7 +39,10 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
-    runtimeOnly 'com.h2database:h2'
+    // mariaDB
+    implementation 'org.mariadb.jdbc:mariadb-java-client:3.1.4'
+
+
     implementation 'org.modelmapper:modelmapper:3.1.1'
     //thymeleaf
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
@@ -61,6 +64,11 @@ dependencies {
     // https://mvnrepository.com/artifact/com.squareup.retrofit2/converter-gson
     implementation group: 'com.squareup.retrofit2', name: 'converter-gson', version: '2.3.0'
 
+    // ⭐ Spring boot 3.x이상에서 QueryDsl 패키지를 정의하는 방법
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 }
 
 dependencyManagement {
@@ -71,4 +79,19 @@ dependencyManagement {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+// === ⭐ QueryDsl 빌드 옵션 (선택) ===
+def querydslDir = "$buildDir/generated/querydsl"
+
+sourceSets {
+    main.java.srcDirs += [ querydslDir ]
+}
+
+tasks.withType(JavaCompile) {
+    options.annotationProcessorGeneratedSourcesDirectory = file(querydslDir)
+}
+
+clean.doLast {
+    file(querydslDir).deleteDir()
 }

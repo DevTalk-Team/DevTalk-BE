@@ -1,5 +1,7 @@
 package com.devtalk.payment.paymentservice.adapter.in.web;
 
+import com.devtalk.payment.global.code.SuccessCode;
+import com.devtalk.payment.global.vo.SuccessResponse;
 import com.devtalk.payment.paymentservice.adapter.in.web.dto.PaymentOutput;
 import com.devtalk.payment.paymentservice.application.port.in.PaymentUseCase;
 import com.siot.IamportRestClient.response.IamportResponse;
@@ -31,21 +33,27 @@ import static com.devtalk.payment.paymentservice.application.port.in.dto.Payment
 class PaymentApiController {
     private final PaymentUseCase paymentUseCase;
 
-    // 결제 flow 1: 결제 해야할 예약ID를 클라이언트로부터 요청 받는다.
-    // payment()는 예약ID에 해당하는 상담 정보를 index.html의 자바스크립트 객체 부분에서 초기화 시키고 반환한다.
-    // 사용자가 결제 버튼을 누르면 포트원 페이지가 호출된다
+    // 결제 링크 요청
+    @GetMapping("/{consultationId}/link")
+    public ResponseEntity<?> getPaymentLink(@PathVariable("consultationId") Long consultationId){
+        String paymentLink = paymentUseCase.getPaymentLink(consultationId);
+
+        return SuccessResponse.toResponseEntity(SuccessCode.GET_PAYMENT_LINK_SUCCESS, paymentLink);
+    }
+
+    // TEST: 결제 버튼 페이지
     @GetMapping("/{consultationId}")
     public String payment(@PathVariable("consultationId") Long consultationId, Model model){
-        PaymentServiceReq paymentServiceReq = paymentUseCase.requestPaymentForm(consultationId);
-        model.addAttribute("paymentServiceReq", paymentServiceReq);
+        String paymentLink = paymentUseCase.getPaymentLink(consultationId);
+        model.addAttribute("paymentLink", paymentLink);
 
-        return "index";
+        return "payment-button";
     }
 
     // 결제 flow 2: 결제 버튼을 누르면 requestPayment를 호출한다.
     // requestPayment는 금액 위변조 확인 및 결제 상태 저장을 위해 결제DB에 임시 결제 정보를 저장한다.
     @PostMapping("/{consultationId}")
-    public ResponseEntity<PaymentOutput> requestPayment(@PathVariable("consultationId") Long consultationId) {
+    public ResponseEntity<?> requestPayment(@PathVariable("consultationId") Long consultationId) {
         // 포트원에 결제 정보 확인 요청
         paymentUseCase.requestPayment(consultationId);
 
@@ -73,14 +81,11 @@ class PaymentApiController {
 
     // 결제 내역 조회
     @GetMapping("/{consultationId}/info")
-    public ResponseEntity<PaymentOutput> getPaymentInfo(
+    public ResponseEntity<?> getPaymentInfo(
             @PathVariable("consultationId") Long consultationId){
         PaymentSearchRes paymentSearchRes = paymentUseCase.searchPaymentInfo(consultationId);
 
-        PaymentOutput paymentOutput
-                = new PaymentOutput("0301", "조회 성공", paymentSearchRes);
-
-        return ResponseEntity.status(HttpStatus.OK).body(paymentOutput);
+        return SuccessResponse.toResponseEntity(SuccessCode.GET_PAYMENT_INFO_SUCCESS, paymentSearchRes);
     }
 
     @DeleteMapping("/{paymentId}")

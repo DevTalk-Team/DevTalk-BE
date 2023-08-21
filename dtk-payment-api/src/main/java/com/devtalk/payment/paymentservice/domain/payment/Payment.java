@@ -35,7 +35,6 @@ public class Payment extends BaseEntity {
 
     // 결제 일시
     @Column(updatable = false)
-    @ColumnDefault(value = "CURRENT_TIMESTAMP")
     private LocalDateTime paidAt;
 
     // 결제 상태

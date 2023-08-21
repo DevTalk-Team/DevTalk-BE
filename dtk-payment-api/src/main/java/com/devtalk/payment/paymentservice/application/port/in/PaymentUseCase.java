@@ -11,10 +11,10 @@ import static com.devtalk.payment.paymentservice.application.port.in.dto.Payment
 public interface PaymentUseCase {
     String getToken();
 
-    String getPaymentLink(String token, Long consultationId);
+    String getPaymentLink(Long consultationId);
 
-    // 결제 요청 폼 초기화
-    PaymentServiceReq requestPaymentForm(Long consultationId);
+    // 임시 결제 정보 생성
+    void createPaymentInfo(Long consultationId);
 
     // 결제 요청 서비스
     void requestPayment(Long consultationId);
