@@ -16,9 +16,9 @@ public class FindProfileApiController {
     private final FindProfileUseCase findProfileUseCase;
 
     @PostMapping("/find-email")
-    public SuccessResponse findEmail(@RequestParam String name, @RequestParam String phoneNumber) {
+    public SuccessResponse<String> findEmail(@RequestParam String name, @RequestParam String phoneNumber) {
         String findEmail = findProfileUseCase.findEmail(name, phoneNumber);
-        return new SuccessResponse(SuccessCode.FIND_EMAIL_SUCCESS, findEmail);
+        return new SuccessResponse<>(SuccessCode.FIND_EMAIL_SUCCESS, findEmail);
     }
 
     @GetMapping("/send-password")
