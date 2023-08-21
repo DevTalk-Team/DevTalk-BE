@@ -1,11 +1,8 @@
 package com.devtalk.member.memberservice.member.adapter.out.persistence;
 
 import com.devtalk.member.memberservice.member.application.port.out.repository.MemberQueryableRepo;
-import com.devtalk.member.memberservice.member.domain.member.Member;
-import com.devtalk.member.memberservice.member.domain.member.QMember;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
