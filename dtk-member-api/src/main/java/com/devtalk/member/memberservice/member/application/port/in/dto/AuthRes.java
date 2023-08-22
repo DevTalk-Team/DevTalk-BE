@@ -1,7 +1,7 @@
 package com.devtalk.member.memberservice.member.application.port.in.dto;
 
-import com.devtalk.member.memberservice.member.adapter.in.web.dto.LogInInput;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
 
 public class AuthRes {
 

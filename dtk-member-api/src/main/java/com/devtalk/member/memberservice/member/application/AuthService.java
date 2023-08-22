@@ -2,12 +2,10 @@ package com.devtalk.member.memberservice.member.application;
 
 import com.devtalk.member.memberservice.global.error.exception.MemberNotFoundException;
 import com.devtalk.member.memberservice.global.error.exception.PasswordMismatchingException;
-import com.devtalk.member.memberservice.global.jwt.AuthDto;
 import com.devtalk.member.memberservice.global.jwt.JwtTokenProvider;
 import com.devtalk.member.memberservice.member.application.port.in.AuthUseCase;
 import com.devtalk.member.memberservice.member.application.port.in.dto.AuthReq;
 import com.devtalk.member.memberservice.member.application.port.in.dto.AuthRes;
-import com.devtalk.member.memberservice.member.application.port.in.dto.TokenDto;
 import com.devtalk.member.memberservice.member.application.port.out.repository.MemberRepo;
 import com.devtalk.member.memberservice.member.domain.member.Member;
 import jakarta.transaction.Transactional;
