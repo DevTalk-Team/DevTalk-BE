@@ -3,10 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>결제 버튼 테스트</title>
+    <script>
+        function handlePaymentLink() {
+            const paymentLink = document.getElementById('paymentLink').value;
+
+            if(paymentLink) {
+                console.log('결제하기 버튼 클릭됨. 링크로 이동:', paymentLink);
+                window.location.href = paymentLink;
+            } else {
+                console.log('결제 링크가 존재하지 않음');
+            }
+        }
+    </script>
 </head>
 <body>
-  <button th:with="paymentServiceReq = ${paymentServiceReq}" onclick="requestPay()">
-    결제하기
-  </button>
+<input type="hidden" id="paymentLink" th:value="${paymentLink}" />
+<button onclick="handlePaymentLink()">결제하기</button>
 </body>
 </html>
