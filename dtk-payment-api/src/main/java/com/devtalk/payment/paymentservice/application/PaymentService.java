@@ -28,6 +28,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import static com.devtalk.payment.paymentservice.application.port.in.dto.PaymentReq.*;
 import static com.devtalk.payment.paymentservice.application.port.in.dto.PaymentRes.*;
@@ -148,14 +149,13 @@ public class PaymentService implements PaymentUseCase {
     }
 
     // 결제 서비스에 예약 정보가 저장될때 임시 결제 정보도 같이 저장되어야한다.
-
-
     @Override
     public void requestPayment(Long consultationId) {
         Consultation consultation = consultationUseCase.searchConsultationInfo(consultationId);
 
         // 임시 결제 정보를 저장
         paymentRepo.save(Payment.builder()
+                        .paymentId(UUID.randomUUID().toString())
                 .consultation(consultation)
                 .paymentUid(null)
                 .cost(consultation.getCost())
@@ -220,7 +220,7 @@ public class PaymentService implements PaymentUseCase {
 
         return PaymentSearchRes.builder()
                 .paymentUid(payment.getPaymentUid())
-                .paymentId(payment.getId())
+                .paymentId(payment.getPaymentId())
                 .status(payment.getStatus())
                 .consultationId(payment.getConsultation())
                 .paidAt(payment.getPaidAt())
