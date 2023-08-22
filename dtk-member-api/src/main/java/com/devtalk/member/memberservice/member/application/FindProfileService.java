@@ -1,7 +1,7 @@
 package com.devtalk.member.memberservice.member.application;
 
 import com.devtalk.member.memberservice.member.application.port.in.FindProfileUseCase;
-import com.devtalk.member.memberservice.member.application.port.out.repository.MemberQueryableRepo;
+import com.devtalk.member.memberservice.member.application.port.out.repository.MemberRepo;
 import com.devtalk.member.memberservice.member.application.validator.FindProfileValidator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -14,13 +14,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class FindProfileService implements FindProfileUseCase {
 
-    private final MemberQueryableRepo memberQueryableRepo;
+    private final MemberRepo memberRepo;
     private final FindProfileValidator validator;
 
     @Override
     public String findEmail(String name, String phoneNumber) {
         validator.findEmailValidate(name, phoneNumber);
-        return memberQueryableRepo.findEmailByNameAndPhoneNumber(name, phoneNumber);
+        return memberRepo.findEmailByNameAndPhoneNumber(name, phoneNumber);
     }
 
     @Override

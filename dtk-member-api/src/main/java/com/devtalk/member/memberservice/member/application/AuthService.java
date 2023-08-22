@@ -50,6 +50,5 @@ public class AuthService implements AuthUseCase {
 
     @Override
     public void logout() {
-
     }
 }

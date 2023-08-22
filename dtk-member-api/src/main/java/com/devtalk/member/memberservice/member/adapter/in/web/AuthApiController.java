@@ -26,6 +26,4 @@ public class AuthApiController {
         AuthRes.LogInRes res = authUseCase.login(req);
         return new SuccessResponse<>(LOGIN_SUCCESS, res);
     }
-
-
 }
