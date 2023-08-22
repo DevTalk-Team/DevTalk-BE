@@ -21,9 +21,15 @@ public enum ErrorCode {
     CONSULTANT_INVALID_VALUE_EMAIL(BAD_REQUEST, "01132", "이메일 형식이 아닙니다."),
     CONSULTANT_PASSWORD_MISMATCHING(CONFLICT, "01133", "비밀번호가 일치하지 않습니다."),
 
+    /* AUTH */
     AUTH_CODE_MISMATCHING(CONFLICT, "01134", "인증번호가 일치하지 않습니다."),
     MEMBER_NOT_FOUND(CONFLICT, "01141", "일치하는 회원 정보가 없습니다."),
     WRONG_PASSWORD(CONFLICT, "01142", "비밀번호를 잘못 입력하였습니다."),
+    AUTH_FAIL(UNAUTHORIZED, "01143", "인증 실패"),
+
+    INCORRECT_SIGNATURE(BAD_REQUEST, "01151", "잘못된 서명입니다."),
+    EXPIRED_TOKEN(BAD_REQUEST, "01151", "만료된 토큰"),
+    UNSUPPORTED_TOKEN(BAD_REQUEST, "01151", "지원되지 않는 토큰"),
     ;
 
     private final HttpStatus httpStatus;
