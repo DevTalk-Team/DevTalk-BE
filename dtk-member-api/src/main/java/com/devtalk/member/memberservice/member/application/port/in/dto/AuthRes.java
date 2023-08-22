@@ -1,0 +1,15 @@
+package com.devtalk.member.memberservice.member.application.port.in.dto;
+
+import lombok.Builder;
+import lombok.Getter;
+
+public class AuthRes {
+
+    @Getter
+    @Builder
+    public static class LogInRes {
+        private TokenDto tokenDto;
+
+    }
+
+}
