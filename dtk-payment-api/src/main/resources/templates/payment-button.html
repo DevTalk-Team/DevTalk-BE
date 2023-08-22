@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>결제 버튼 테스트</title>
+</head>
+<body>
+  <button th:with="paymentServiceReq = ${paymentServiceReq}" onclick="requestPay()">
+    결제하기
+  </button>
+</body>
+</html>
