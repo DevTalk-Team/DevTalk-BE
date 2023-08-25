@@ -14,4 +14,6 @@ public class AuthRes {
         private String email; // refreshToken 키 값 (redis)
     }
 
+    public class LogOutRes {
+    }
 }

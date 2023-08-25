@@ -77,6 +77,13 @@ public class AuthService implements AuthUseCase {
     }
 
     @Override
-    public void logout() {
+    public void logout(String token) {
+        // access token black list에 저장
+        Long expiration = jwtTokenProvider.getExpiration(token);
+        redisUtil.setDataExpire(token, "logout", expiration);
+        // refresh token 삭제
+        String email = jwtTokenProvider.getEmail(token);
+        redisUtil.deleteData(email);
     }
+
 }

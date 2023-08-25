@@ -55,7 +55,7 @@ public class JwtTokenProvider implements InitializingBean {
     }
 
     /* 토큰 생성 */
-    @Transactional
+    /*@Transactional
     public TokenDto createToken(String email, String authorities) {
         log.info("[createToken] 토큰 생성 시작");
         Claims claims = Jwts.claims();
@@ -81,7 +81,7 @@ public class JwtTokenProvider implements InitializingBean {
 
         log.info("[createToken] 토큰 생성 완료");
         return new TokenDto(accessToken, refreshToken);
-    }
+    }*/
 
     @Transactional
     public String generateToken(Authentication authentication, Long tokenValidity) {
@@ -92,15 +92,13 @@ public class JwtTokenProvider implements InitializingBean {
         log.info("[createToken] 토큰 생성 시작");
         Claims claims = Jwts.claims();
         claims.put("email", authentication.getName());
-
-        Date now = new Date();
-        Date expiration = new Date(now.getTime() + tokenValidity);
+        claims.put("auth", authorities);
 
         return Jwts.builder()
                 .setSubject(authentication.getName())
-                .claim("auth", authorities)
-                .setIssuedAt(now)
-                .setExpiration(expiration)
+                .setClaims(claims)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + tokenValidity * 1000))
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
     }
@@ -132,6 +130,16 @@ public class JwtTokenProvider implements InitializingBean {
         return email;
     }
 
+    public Long getExpiration(String token) {
+        Date expiration = Jwts.parser()
+                .setSigningKey(key)
+                .parseClaimsJws(token)
+                .getBody()
+                .getExpiration();
+        Long now = new Date().getTime();
+        return expiration.getTime() - now;
+    }
+
     /* 토큰 검증 */
     public boolean validateToken(String token) {
         log.info("[validateToken] 토큰 유효 체크 시작");
@@ -149,6 +157,14 @@ public class JwtTokenProvider implements InitializingBean {
         } catch (IllegalArgumentException e) {
             throw e;
         }
+    }
+
+    public String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
+        if (bearerToken != null && bearerToken.startsWith(BEARER)) {
+            return bearerToken.substring(7);
+        }
+        return null;
     }
 
     public String getRefreshToken(String email) {
