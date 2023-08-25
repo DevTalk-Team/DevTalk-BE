@@ -2,6 +2,7 @@ package com.devtalk.member.memberservice.global.jwt;
 
 import com.devtalk.member.memberservice.global.error.ErrorCode;
 import com.devtalk.member.memberservice.global.error.exception.TokenException;
+import com.devtalk.member.memberservice.global.util.RedisUtil;
 import com.devtalk.member.memberservice.member.application.port.in.dto.TokenDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -12,11 +13,13 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -25,20 +28,22 @@ public class JwtTokenProvider implements InitializingBean {
     public static final String BEARER = "Bearer ";
 
     private final MemberDetailsService memberDetailsService;
+    private final RedisUtil redisUtil;
     private final String secretKey;
-    private final long accessTokenValidity;
-    private final long refreshTokenValidity;
+    private final Long accessTokenValidity;
+    private final Long refreshTokenValidity;
 
     private Key key;
 
     public JwtTokenProvider(@Value("${jwt.token.secret}") String secretKey,
-                            @Value("${jwt.token.access-token-validity-in-seconds}") long accessTokenValidity,
-                            @Value("${jwt.token.refresh-token-validity-in-seconds}") long refreshTokenValidity,
-                            MemberDetailsService memberDetailsService) {
+                            @Value("${jwt.token.access-token-validity-in-seconds}") Long accessTokenValidity,
+                            @Value("${jwt.token.refresh-token-validity-in-seconds}") Long refreshTokenValidity,
+                            MemberDetailsService memberDetailsService, RedisUtil redisUtil) {
         this.secretKey = secretKey;
         this.accessTokenValidity = accessTokenValidity;
         this.refreshTokenValidity = refreshTokenValidity;
         this.memberDetailsService = memberDetailsService;
+        this.redisUtil = redisUtil;
     }
 
     @Override
@@ -50,7 +55,7 @@ public class JwtTokenProvider implements InitializingBean {
     }
 
     /* 토큰 생성 */
-    @Transactional
+    /*@Transactional
     public TokenDto createToken(String email, String authorities) {
         log.info("[createToken] 토큰 생성 시작");
         Claims claims = Jwts.claims();
@@ -76,6 +81,34 @@ public class JwtTokenProvider implements InitializingBean {
 
         log.info("[createToken] 토큰 생성 완료");
         return new TokenDto(accessToken, refreshToken);
+    }*/
+
+    @Transactional
+    public String generateToken(Authentication authentication, Long tokenValidity) {
+        String authorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
+        log.info("[createToken] 토큰 생성 시작");
+        Claims claims = Jwts.claims();
+        claims.put("email", authentication.getName());
+        claims.put("auth", authorities);
+
+        return Jwts.builder()
+                .setSubject(authentication.getName())
+                .setClaims(claims)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + tokenValidity * 1000))
+                .signWith(key, SignatureAlgorithm.HS512)
+                .compact();
+    }
+
+    public String generateAccessToken(Authentication authentication) {
+        return generateToken(authentication, accessTokenValidity);
+    }
+
+    public String generateRefreshToken(Authentication authentication) {
+        return generateToken(authentication, refreshTokenValidity);
     }
 
     /* 토큰으로부터 정보 추출 */
@@ -83,7 +116,7 @@ public class JwtTokenProvider implements InitializingBean {
         log.info("[getAuthentication] 토큰 인증 정보 조회 시작");
         MemberDetails memberDetails = memberDetailsService.loadUserByUsername(getEmail(token));
         log.info("[getAuthentication] 토큰 인증 정보 조회 완료, UserDetails email : {}", memberDetails.getUsername());
-        return new UsernamePasswordAuthenticationToken(memberDetails, "", memberDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(memberDetails, token, memberDetails.getAuthorities());
     }
 
     public String getEmail(String token) {
@@ -97,9 +130,14 @@ public class JwtTokenProvider implements InitializingBean {
         return email;
     }
 
-    public String resolveToken(HttpServletRequest request) {
-        log.info("[resolveToken] HTTP 헤더에서 Token 값 추출");
-        return request.getHeader("X-AUTH-TOKEN");
+    public Long getExpiration(String token) {
+        Date expiration = Jwts.parser()
+                .setSigningKey(key)
+                .parseClaimsJws(token)
+                .getBody()
+                .getExpiration();
+        Long now = new Date().getTime();
+        return expiration.getTime() - now;
     }
 
     /* 토큰 검증 */
@@ -121,6 +159,19 @@ public class JwtTokenProvider implements InitializingBean {
         }
     }
 
-    // Filter에서 사용
-//    public boolean validateAccessToken
+    public String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
+        if (bearerToken != null && bearerToken.startsWith(BEARER)) {
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
+
+    public String getRefreshToken(String email) {
+        String refreshToken = redisUtil.getData(email);
+        if (refreshToken == null) {
+            throw new TokenException(ErrorCode.UNSUPPORTED_TOKEN);
+        }
+        return refreshToken;
+    }
 }

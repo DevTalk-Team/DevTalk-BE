@@ -1,6 +1,5 @@
 package com.devtalk.member.memberservice.member.application.port.in.dto;
 
-import com.devtalk.member.memberservice.global.jwt.AuthDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
