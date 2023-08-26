@@ -20,12 +20,8 @@ public class Consultation extends BaseEntity {
     private Long id;
 
     // 예약ID
-//    @Column(nullable = false, unique = true)
-//    private String consultationId;
-
-    // 예약 번호
-//    @Column(nullable = false)
-//    private String consultationUid;
+    @Column(nullable = false, unique = true)
+    private String consultationId;
 
     // 의뢰자 이름
     @Column(nullable = false)
