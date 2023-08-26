@@ -1,0 +1,69 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: config-service
+  cloud:
+    config:
+      server:
+        git:
+          uri: git@github.com:DevTalk-Team/DevTalk-Config.git
+          default-label: master
+          ignore-local-ssh-settings: true
+          private-key: |
+            -----BEGIN RSA PRIVATE KEY-----
+            Proc-Type: 4,ENCRYPTED
+            DEK-Info: AES-128-CBC,0B448ECCD2C5E795A90CD74B778B8D25
+              
+            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
+            -----END RSA PRIVATE KEY-----
+          passphrase: 12345
