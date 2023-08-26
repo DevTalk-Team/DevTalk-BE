@@ -21,37 +21,37 @@ spring:
             postLogger: true
       routes:
         - id: dtk-board-api
-          uri: http://localhost:8081/
+          uri: lb://BOARD-SERVICE
           predicates:
             - Path=/dtk-board-api/**
         - id: config
-          uri: http://localhost:8082/
+          uri: lb://CONFIG-SERVICE
           predicates:
             - Path=/config/**
           filters:
             - AddRequestHeader=second-request, second-request-header
             - AddResponseHeader=second-response, second-response-header
         - id: dtk-consultation-api
-          uri: http://localhost:8083/
+          uri: lb://CONSULTATION-SERVICE
           predicates:
             - Path=/dtk-consultation-api/**
         - id: discovery
-          uri: http://localhost:8084/
+          uri: lb://DISCOVERY-SERVICE
           predicates:
             - Path=/discovery/**
         - id: dtk-gateway
-          uri: http://localhost:8085/
+          uri: lb://GATEWAY-SERVICE
           predicates:
             - Path=/dtk-gateway/**
         - id: dtk-member-api
-          uri: http://localhost:8086/
+          uri: lb://MEMBER-SERVICE
           predicates:
             - Path=/dtk-member-api/**
         - id: dtk-payment-api
-          uri: http://localhost:8087/
+          uri: lb://PAYMENT-SERVICE
           predicates:
             - Path=/dtk-payment-api/**
         - id: dtk-product-api
-          uri: http://localhost:8088/
+          uri: lb://PRODUCT-SERVICE
           predicates:
             - Path=/dtk-product-api/**
