@@ -1,6 +1,7 @@
 package com.devtalk.product.productservice.product.domain.member;
 
 import com.devtalk.product.productservice.product.domain.product.ConsultationType;
+import com.devtalk.product.productservice.product.domain.product.ReservedType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -34,11 +35,11 @@ public class Consultant extends Member {
                 .area(area)
                 .build();
     }
-    public int getPrice(ConsultationType type) {
-        if (type == ConsultationType.NF2F) {
+    public int getPrice(ReservedType reservedType) {
+        if (reservedType == ReservedType.NF2F) {
             return this.NF2F;
         }
-        else if (type == ConsultationType.F2F){
+        else if (reservedType == ReservedType.F2F){
             return this.F2F;
         }
         else

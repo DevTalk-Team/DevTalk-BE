@@ -21,9 +21,15 @@ public enum ErrorCode {
 
     REGIST_PRODUCT(CONFLICT, "05011", "상품등록에 실패하였습니다."),
     NOT_FOUND_CONSULTATION(NOT_FOUND, "05021", "상품조회에 실패하였습니다.."),
-    NOT_FOUND_CONSULTANT(NOT_FOUND, "05031", "상담사별 상품조회에 실패하였습니다."),
+    NOT_FOUND_CONSULTANT(NOT_FOUND, "05031", "상담사 조회를 실패하였습니다."),
+    NOT_FOUND_CONSULTER(NOT_FOUND, "05032", "내담자 조회를 실패하였습니다."),
+
+
     UPDATE_RESERVATION(CONFLICT, "05041", "상품수정에 실패하였습니다."),
+    NOT_FOUND_RESERVED_DETAILS(NOT_FOUND, "05051", "예약 세부 정보를 찾을 수 없습니다."),
     DELETE_RESERVATION(CONFLICT, "05041", "상품조회에실패하였습니다.");
+
+
 
 
 
