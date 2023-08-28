@@ -136,7 +136,16 @@ public class PaymentService implements PaymentUseCase {
 
     @Override
     public void updatePaymentStatus(WebhookReq webhookReq) {
+        String paymentUid = webhookReq.getImp_uid();
+        Long consultationId = Long.parseLong(webhookReq.getMerchant_uid());
+        String status = webhookReq.getStatus();
 
+        if (status.equals("paid")) {
+            Payment payment = paymentRepo.findByConsultationId(consultationId)
+                    .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_CONSULTATION));
+
+            payment.changePaymentBySuccess(paymentUid, PaymentStatus.PAID, LocalDateTime.now());
+        }
     }
 
     // 결제 검증
@@ -177,7 +186,7 @@ public class PaymentService implements PaymentUseCase {
             }
 
             // 결제 상태 변경
-            payment.changePaymentBySuccess(PaymentStatus.PAID, iamportResponse.getResponse().getImpUid(), LocalDateTime.now());
+            payment.changePaymentBySuccess(iamportResponse.getResponse().getImpUid(), PaymentStatus.PAID, LocalDateTime.now());
 
             return iamportResponse;
 

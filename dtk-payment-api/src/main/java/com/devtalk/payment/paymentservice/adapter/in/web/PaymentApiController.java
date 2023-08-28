@@ -2,17 +2,12 @@ package com.devtalk.payment.paymentservice.adapter.in.web;
 
 import com.devtalk.payment.global.code.SuccessCode;
 import com.devtalk.payment.global.vo.SuccessResponse;
-import com.devtalk.payment.paymentservice.adapter.in.web.dto.PaymentInput;
 import com.devtalk.payment.paymentservice.adapter.in.web.dto.PaymentInput.WebhookInput;
-import com.devtalk.payment.paymentservice.adapter.in.web.dto.PaymentOutput;
 import com.devtalk.payment.paymentservice.application.port.in.PaymentUseCase;
-import com.google.gson.JsonObject;
 import com.siot.IamportRestClient.response.IamportResponse;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -38,6 +33,7 @@ import static com.devtalk.payment.paymentservice.application.port.in.dto.Payment
 @RequestMapping("/payment")
 class PaymentApiController {
     private final PaymentUseCase paymentUseCase;
+    private final ModelMapper modelMapper;
 
     // 결제 링크 요청
     @GetMapping("/{consultationId}/link")
@@ -59,10 +55,7 @@ class PaymentApiController {
     @PostMapping("/webhook")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void portoneWebhook(@RequestBody WebhookInput webhookInput) {
-        ModelMapper mapper = new ModelMapper();
-        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-
-        WebhookReq webhookReq = mapper.map(webhookInput, WebhookReq.class);
+        WebhookReq webhookReq = modelMapper.map(webhookInput, WebhookReq.class);
         paymentUseCase.updatePaymentStatus(webhookReq);
 
         String impUid = webhookInput.getImp_uid();

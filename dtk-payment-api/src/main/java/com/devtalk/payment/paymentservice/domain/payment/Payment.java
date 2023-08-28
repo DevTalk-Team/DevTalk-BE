@@ -42,7 +42,7 @@ public class Payment extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;
 
-    public void changePaymentBySuccess(PaymentStatus status, String paymentUid, LocalDateTime paidAt) {
+    public void changePaymentBySuccess(String paymentUid, PaymentStatus status, LocalDateTime paidAt) {
         this.status = status;
         this.paymentUid = paymentUid;
         this.paidAt = paidAt;
