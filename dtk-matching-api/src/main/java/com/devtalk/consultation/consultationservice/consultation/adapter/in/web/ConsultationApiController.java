@@ -63,8 +63,14 @@ public class ConsultationApiController {
     }
 
     @GetMapping("/v1/consulter/{consulterId}/consultations/{consultationId}")
-    public ResponseEntity<SuccessResponse> searchConsultationByConsulter(@PathVariable Long consulterId,
+    public ResponseEntity<SuccessResponse> searchConsultationDetailsByConsulter(@PathVariable Long consulterId,
                                                                          @PathVariable Long consultationId) {
-        return SuccessResponse.toResponseEntity(SuccessCode.CONSULTER_CONSULTATION_SEARCH_SUCCESS, searchUseCase.searchConsultationDetailsBy(consulterId, consultationId));
+        return SuccessResponse.toResponseEntity(SuccessCode.CONSULTER_CONSULTATION_DETAIL_SEARCH_SUCCESS, searchUseCase.searchConsultationDetailsBy(consulterId, consultationId));
+    }
+
+    @GetMapping("/v1/consulter/{consulterId}/canceled-consultations/{consultationId}")
+    public ResponseEntity<SuccessResponse> searchCanceledConsultationByConsulter(@PathVariable Long consulterId,
+                                                                                 @PathVariable Long consultationId) {
+        return SuccessResponse.toResponseEntity(SuccessCode.CONSULTER_CANCELED_CONSULTATION_SEARCH_SUCCESS, searchUseCase.searchCanceledConsultationDetailsBy(consulterId, consultationId));
     }
 }

@@ -40,4 +40,15 @@ public class ConsultationRes {
                     .build();
         }
     }
+
+
+    @AllArgsConstructor
+    @Getter
+    public static class CancellationReasonRes {
+        private String reason;
+
+        public static CancellationReasonRes of(ConsultationCancellation consultationCancellation) {
+            return new CancellationReasonRes(consultationCancellation.getCanceledReason());
+        }
+    }
 }

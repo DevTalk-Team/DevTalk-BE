@@ -2,6 +2,8 @@ package com.devtalk.consultation.consultationservice.consultation.adapter.out.pe
 
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.ConsultationQueryableRepo;
 import com.devtalk.consultation.consultationservice.consultation.domain.consultation.Consultation;
+import com.devtalk.consultation.consultationservice.consultation.domain.consultation.ConsultationCancellation;
+import com.devtalk.consultation.consultationservice.consultation.domain.consultation.QConsultationCancellation;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -11,6 +13,7 @@ import java.util.Optional;
 
 import static com.devtalk.consultation.consultationservice.consultation.domain.consultation.ProcessStatus.*;
 import static com.devtalk.consultation.consultationservice.consultation.domain.consultation.QConsultation.*;
+import static com.devtalk.consultation.consultationservice.consultation.domain.consultation.QConsultationCancellation.*;
 
 @Repository
 @RequiredArgsConstructor
@@ -57,6 +60,19 @@ public class ConsultationQueryRepo implements ConsultationQueryableRepo {
                 .from(consultation)
                 .where(consultation.consulterId.eq(consulterId))
                 .fetch();
+    }
+
+    @Override
+    public Optional<ConsultationCancellation> findCancellationByConsultationId(Long consultationId, Long consulterId) {
+        return Optional.ofNullable(
+                queryFactory
+                .select(consultationCancellation)
+                .from(consultationCancellation)
+                        .join(consultationCancellation.consultation, consultation)
+                .where(consultationCancellation.consultation.id.eq(consultationId).and(
+                        consultation.consulterId.eq(consulterId)
+                ))
+                .fetchFirst());
     }
 
 }

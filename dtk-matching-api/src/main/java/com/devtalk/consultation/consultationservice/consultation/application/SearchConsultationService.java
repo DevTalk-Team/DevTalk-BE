@@ -1,11 +1,12 @@
 package com.devtalk.consultation.consultationservice.consultation.application;
 
 import com.devtalk.consultation.consultationservice.consultation.application.port.in.SearchConsultationUseCase;
-import com.devtalk.consultation.consultationservice.consultation.application.port.in.dto.ConsultationRes;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.ConsultationQueryableRepo;
 import com.devtalk.consultation.consultationservice.consultation.domain.consultation.Consultation;
+import com.devtalk.consultation.consultationservice.consultation.domain.consultation.ConsultationCancellation;
 import com.devtalk.consultation.consultationservice.global.error.ErrorCode;
 import com.devtalk.consultation.consultationservice.global.error.execption.NotFoundException;
+import com.devtalk.consultation.consultationservice.global.error.execption.UnAuthorizedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,4 +34,13 @@ public class SearchConsultationService implements SearchConsultationUseCase {
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_CONSULTATION));
         return ConsultationSearchRes.of(findConsultation);
     }
+
+    @Override
+    public CancellationReasonRes searchCanceledConsultationDetailsBy(Long consulterId, Long consultationId) {
+        ConsultationCancellation consultationCancellation = consultationQueryableRepo.findCancellationByConsultationId(consultationId, consulterId)
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND_CONSULTATION));
+
+        return CancellationReasonRes.of(consultationCancellation);
+    }
+
 }
