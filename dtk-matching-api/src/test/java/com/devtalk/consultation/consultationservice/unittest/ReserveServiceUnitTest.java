@@ -2,7 +2,7 @@ package com.devtalk.consultation.consultationservice.unittest;
 
 import com.devtalk.consultation.consultationservice.consultation.application.ReserveConsultationService;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.ConsultationRepo;
-import com.devtalk.consultation.consultationservice.consultation.application.validator.ConsultationValidator;
+import com.devtalk.consultation.consultationservice.consultation.application.validator.ConsultationReservationValidator;
 import com.devtalk.consultation.consultationservice.consultation.domain.consultation.ProcessMean;
 import com.devtalk.consultation.consultationservice.consultation.domain.member.Consultant;
 import com.devtalk.consultation.consultationservice.consultation.domain.member.Consulter;
@@ -40,7 +40,8 @@ class ReserveServiceUnitTest {
     @InjectMocks
     ReserveConsultationService reserveService;
 
-    @Mock ConsultationValidator consultationValidator;
+    @Mock
+    ConsultationReservationValidator consultationValidator;
     @Mock ConsultationRepo consultationRepo;
     @Mock FileUploadService fileUploadUtils;
 
@@ -57,7 +58,7 @@ class ReserveServiceUnitTest {
         List<MultipartFile> attachedFileList = List.of(attachedFile1, attachedFile2);
         ReservationReq reservationReq = getReservationReq(consulter.getId(), consultant.getId(), productId, attachedFileList);
 
-        willDoNothing().given(consultationValidator).validate(reservationReq);
+        willDoNothing().given(consultationValidator).validateReservation(reservationReq);
         given(fileUploadUtils.uploadFileList(reservationReq.getAttachedFileList())).willReturn(convertToBaseFile(attachedFileList));
 
         given(consultationRepo.save(any())).willReturn(any());
@@ -82,7 +83,7 @@ class ReserveServiceUnitTest {
         List<MultipartFile> attachedFileList = List.of(attachedFile1, attachedFile2);
         ReservationReq reservationReq = getReservationReq(consulter.getId(), consultant.getId(), productId, attachedFileList);
 
-        willDoNothing().given(consultationValidator).validate(reservationReq);
+        willDoNothing().given(consultationValidator).validateReservation(reservationReq);
 
         given(fileUploadUtils.uploadFileList(reservationReq.getAttachedFileList())).willThrow(FileException.class);
 
