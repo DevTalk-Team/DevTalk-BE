@@ -27,8 +27,16 @@ public class PaymentReq {
     @Getter
     // 결제가 이루어진 후 서버가 전달받는 데이터
     public static class PaymentCallbackReq {
-        private String paymentUid; // 결제 고유 번호
+        private String paymentUid; // 포트원 결제 고유 번호
         private Long consultationId; // 매칭 고유 번호
+    }
+
+    @NoArgsConstructor
+    @Getter
+    public static class WebhookReq{
+        private String imp_uid;
+        private String merchant_uid;
+        private String status;
     }
 
 }

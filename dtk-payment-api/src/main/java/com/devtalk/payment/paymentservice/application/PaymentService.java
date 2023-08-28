@@ -1,6 +1,7 @@
 package com.devtalk.payment.paymentservice.application;
 
 import com.devtalk.payment.global.code.ErrorCode;
+import com.devtalk.payment.global.config.property.PaymentProperty;
 import com.devtalk.payment.global.error.exception.NotFoundException;
 import com.devtalk.payment.paymentservice.application.port.in.ConsultationUseCase;
 import com.devtalk.payment.paymentservice.application.port.in.EmailUseCase;
@@ -16,11 +17,8 @@ import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.request.CancelData;
 import com.siot.IamportRestClient.response.IamportResponse;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -28,9 +26,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.io.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.devtalk.payment.paymentservice.application.port.in.dto.PaymentReq.*;
@@ -44,7 +40,10 @@ public class PaymentService implements PaymentUseCase {
     private final PaymentRepo paymentRepo;
     private final ConsultationUseCase consultationUseCase;
     private final EmailUseCase emailUseCase;
+
     private final PaymentProperty paymentProperty;
+
+    private String impUid = "imp67671220";
 
     // 결제 토큰 생성 (포트원 API사용을 위해 필요함)
     @Override
@@ -76,39 +75,43 @@ public class PaymentService implements PaymentUseCase {
     }
 
     @Override
-    public String getPaymentLink(String token, Long consultationId) {
-        Map<String, Object> paymentInfo = new HashMap<>();
-        paymentInfo.put("title", "테스트가맹점");
-        paymentInfo.put("user_code", "imp67671220");
-        paymentInfo.put("amount", 10000);
-        paymentInfo.put("merchant_uid", "merchant_" + System.currentTimeMillis());  // unique merchant_uid
-        paymentInfo.put("name", "결제링크 테스트");
-        paymentInfo.put("tax_free", "면세공급가액");
-        paymentInfo.put("currency", "KRW");
-        paymentInfo.put("language", "ko");
-        paymentInfo.put("custom_data", "json_object");
-        paymentInfo.put("notice_url", "결제 결과를 받을 url");
-
-        List<Map<String, String>> payMethods = new ArrayList<>();
-        Map<String, String> cardMethod = new HashMap<>();
-        cardMethod.put("pg", "INIpayTest");
-        cardMethod.put("pay_method", "card");
-        cardMethod.put("label", "신용/체크카드");
-        payMethods.add(cardMethod);
-
-        Map<String, String> naverPayMethod = new HashMap<>();
-        naverPayMethod.put("pg", "INIpayTest");
-        naverPayMethod.put("pay_method", "naverpay");
-        naverPayMethod.put("label", "네이버페이");
-        payMethods.add(naverPayMethod);
-
+    public String getPaymentLink(Long consultationId) {
+        String webhookUrl = "https://101d-211-213-255-27.ngrok-free.app/payment/webhook";
+        String token = getToken();
+        Consultation consultation = consultationUseCase.searchConsultationInfo(consultationId);
+        String paymentInfo = String.format(
+                "{" +
+                        "\"title\":\"데브톡 - %s\"," +
+                        "\"user_code\":\"%s\"," +
+                        "\"amount\":%d," +
+                        "\"merchant_uid\":\"%s\"," +
+                        "\"name\":\"%s\"," +
+                        "\"currency\":\"KRW\"," +
+                        "\"buyer_name\":\"%s\"," +
+                        "\"buyer_tel\":\"010-1234-1234\"," +
+                        "\"buyer_email\":\"%s\"," +
+                        "\"custom_data\":\"json_object\"," +
+                        "\"notice_url\":\"%s\"," +
+                        "\"pay_methods\":[" +
+                        "{\"pg\":\"html5_inicis.INIpayTest\",\"pay_method\":\"card\",\"label\":\"신용/체크카드\"}," +
+                        "{\"pg\":\"html5_inicis.INIpayTest\",\"pay_method\":\"naverpay\",\"label\":\"네이버페이\"}," +
+                        "{\"pg\":\"html5_inicis.INIpayTest\",\"pay_method\":\"kakaopay\",\"label\":\"카카오페이\"}" +
+//                        "{\"pg\":\"iamporttest_3\",\"pay_method\":\"tosspayments\",\"label\":\"토스페이\"}" +
+                        "]" +
+                        "}",
+                            consultation.getConsultationType(),
+                            impUid,
+                            consultation.getCost(),
+                            consultation.getId(),
+                            consultation.getConsultationType(),
+                            consultation.getConsulter(),
+                            consultation.getConsulterEmail(),
+                            webhookUrl);
         // Add other payment methods
-
-        paymentInfo.put("pay_methods", payMethods);
 
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("payment_info", paymentInfo);
-        requestBody.put("expired_at", 1699999999);
+        requestBody.put("expired_at", (System.currentTimeMillis()/1000 + 1800));
 
         WebClient wc = WebClient.create("https://api.iamport.co/api/supplements/v1/link/payment");
 
@@ -119,36 +122,26 @@ public class PaymentService implements PaymentUseCase {
                 .bodyToMono(String.class)
                 .block();
 
-        return response;
+        try {
+            // ObjectMapper를 사용하여 JSON 파싱
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode node = objectMapper.readTree(response);
+            String paymentLink = node.get("shortenedUrl").asText();
+            return paymentLink;
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
-    public PaymentServiceReq requestPaymentForm(Long consultationId) {
-        Consultation consultation = consultationUseCase.searchConsultationInfo(consultationId);
+    public void updatePaymentStatus(WebhookReq webhookReq) {
+        String paymentUid = webhookReq.getImp_uid();
+        Long consultationId = Long.parseLong(webhookReq.getMerchant_uid());
+        String status = webhookReq.getStatus();
 
-        return PaymentServiceReq.builder()
-                .consultationId(consultation.getId())
-                .consulter(consultation.getConsulter())
-                .consulterEmail(consultation.getConsulterEmail())
-                .consultant(consultation.getConsultant())
-                .consultationType(consultation.getConsultationType())
-                .cost(consultation.getCost())
-                .consultationAt(consultation.getConsultationAt())
-                .build();
-    }
-
-    @Override
-    public void requestPayment(Long consultationId) {
-        Consultation consultation = consultationUseCase.searchConsultationInfo(consultationId);
-
-        // 임시 결제 정보를 저장
-        paymentRepo.save(Payment.builder()
-                .consultation(consultation)
-                .paymentUid(null)
-                .cost(consultation.getCost())
-                .paidAt(null)
-                .status(PaymentStatus.READY)
-                .build());
+        Payment payment = paymentRepo.findByConsultationId(consultationId)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_CONSULTATION));
     }
 
     // 결제 검증
@@ -207,37 +200,10 @@ public class PaymentService implements PaymentUseCase {
 
         return PaymentSearchRes.builder()
                 .paymentUid(payment.getPaymentUid())
-                .paymentId(payment.getId())
                 .status(payment.getStatus())
                 .consultationId(payment.getConsultation())
                 .paidAt(payment.getPaidAt())
                 .cost(payment.getCost())
                 .build();
-    }
-}
-@Component
-@NoArgsConstructor
-class PaymentProperty {
-
-    @Value("${portone.imp_key}")
-    private String impKey;
-
-    @Value("${portone.imp_secret}")
-    private String impSecret;
-
-    public PaymentProperty(
-            @Value("${portone.imp_key}") String fileListMaxSize,
-            @Value("{portone.imp_secret}") String fileListMaxCount) {
-        this.impKey = fileListMaxSize;
-        this.impSecret = fileListMaxCount;
-    }
-
-
-    public String getImpKey() {
-        return impKey;
-    }
-
-    public String getImpSecret() {
-        return impSecret;
     }
 }
