@@ -16,8 +16,11 @@ import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.request.CancelData;
 import com.siot.IamportRestClient.response.IamportResponse;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -210,5 +213,31 @@ public class PaymentService implements PaymentUseCase {
                 .paidAt(payment.getPaidAt())
                 .cost(payment.getCost())
                 .build();
+    }
+}
+@Component
+@NoArgsConstructor
+class PaymentProperty {
+
+    @Value("${portone.imp_key}")
+    private String impKey;
+
+    @Value("${portone.imp_secret}")
+    private String impSecret;
+
+    public PaymentProperty(
+            @Value("${portone.imp_key}") String fileListMaxSize,
+            @Value("{portone.imp_secret}") String fileListMaxCount) {
+        this.impKey = fileListMaxSize;
+        this.impSecret = fileListMaxCount;
+    }
+
+
+    public String getImpKey() {
+        return impKey;
+    }
+
+    public String getImpSecret() {
+        return impSecret;
     }
 }

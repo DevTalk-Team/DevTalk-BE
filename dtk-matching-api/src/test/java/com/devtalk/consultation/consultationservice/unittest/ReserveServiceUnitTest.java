@@ -1,9 +1,8 @@
 package com.devtalk.consultation.consultationservice.unittest;
 
-import com.devtalk.consultation.consultationservice.consultation.application.ReserveService;
+import com.devtalk.consultation.consultationservice.consultation.application.ReserveConsultationService;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.ConsultationRepo;
 import com.devtalk.consultation.consultationservice.consultation.application.validator.ConsultationValidator;
-import com.devtalk.consultation.consultationservice.consultation.domain.consultation.Consultation;
 import com.devtalk.consultation.consultationservice.consultation.domain.consultation.ProcessMean;
 import com.devtalk.consultation.consultationservice.consultation.domain.member.Consultant;
 import com.devtalk.consultation.consultationservice.consultation.domain.member.Consulter;
@@ -38,7 +37,8 @@ import static org.mockito.BDDMockito.*;
 @ExtendWith(MockitoExtension.class)
 class ReserveServiceUnitTest {
 
-    @InjectMocks ReserveService reserveService;
+    @InjectMocks
+    ReserveConsultationService reserveService;
 
     @Mock ConsultationValidator consultationValidator;
     @Mock ConsultationRepo consultationRepo;
