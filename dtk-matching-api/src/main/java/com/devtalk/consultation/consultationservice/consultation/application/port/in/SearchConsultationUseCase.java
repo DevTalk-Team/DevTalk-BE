@@ -4,7 +4,10 @@ import com.devtalk.consultation.consultationservice.consultation.application.por
 
 import java.util.List;
 
+import static com.devtalk.consultation.consultationservice.consultation.application.port.in.dto.ConsultationRes.*;
+
 public interface SearchConsultationUseCase {
 
-    List<ConsultationRes.ConsultationSearchRes> searchConsultationBy(Long consulterId);
+    List<ConsultationSearchRes> searchConsultationBy(Long consulterId);
+    ConsultationSearchRes searchConsultationDetailsBy(Long consultationId, Long consulterId);
 }

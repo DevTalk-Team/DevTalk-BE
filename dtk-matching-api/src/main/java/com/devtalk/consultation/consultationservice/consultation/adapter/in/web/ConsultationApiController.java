@@ -4,6 +4,7 @@ import com.devtalk.consultation.consultationservice.consultation.application.por
 import com.devtalk.consultation.consultationservice.consultation.application.port.in.ModifyConsultationUseCase;
 import com.devtalk.consultation.consultationservice.consultation.application.port.in.ReserveConsultationUseCase;
 import com.devtalk.consultation.consultationservice.consultation.application.port.in.SearchConsultationUseCase;
+import com.devtalk.consultation.consultationservice.consultation.application.port.in.dto.ConsultationRes;
 import com.devtalk.consultation.consultationservice.global.vo.SuccessCode;
 import com.devtalk.consultation.consultationservice.global.vo.SuccessResponse;
 import com.devtalk.consultation.consultationservice.global.vo.SuccessResponseWithoutResult;
@@ -13,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import static com.devtalk.consultation.consultationservice.consultation.adapter.in.web.dto.ConsultationInput.*;
+import static com.devtalk.consultation.consultationservice.consultation.application.port.in.dto.ConsultationRes.*;
 
 @RestController
 @RequestMapping("/api")
@@ -56,7 +58,13 @@ public class ConsultationApiController {
     }
 
     @GetMapping("/v1/consulter/{consulterId}/consultations")
-    public ResponseEntity<?> searchConsultationByConsulter(@PathVariable Long consulterId) {
+    public ResponseEntity<SuccessResponse> searchConsultationByConsulter(@PathVariable Long consulterId) {
         return SuccessResponse.toResponseEntity(SuccessCode.CONSULTER_CONSULTATION_SEARCH_SUCCESS, searchUseCase.searchConsultationBy(consulterId));
+    }
+
+    @GetMapping("/v1/consulter/{consulterId}/consultations/{consultationId}")
+    public ResponseEntity<SuccessResponse> searchConsultationByConsulter(@PathVariable Long consulterId,
+                                                                         @PathVariable Long consultationId) {
+        return SuccessResponse.toResponseEntity(SuccessCode.CONSULTER_CONSULTATION_SEARCH_SUCCESS, searchUseCase.searchConsultationDetailsBy(consulterId, consultationId));
     }
 }
