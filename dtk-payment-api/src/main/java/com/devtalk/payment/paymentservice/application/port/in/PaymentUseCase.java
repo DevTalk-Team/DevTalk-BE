@@ -1,5 +1,7 @@
 package com.devtalk.payment.paymentservice.application.port.in;
 
+import com.devtalk.payment.paymentservice.adapter.in.web.dto.PaymentInput;
+import com.devtalk.payment.paymentservice.adapter.in.web.dto.PaymentInput.WebhookInput;
 import com.devtalk.payment.paymentservice.application.port.in.dto.PaymentReq;
 import com.devtalk.payment.paymentservice.application.port.in.dto.PaymentRes;
 import com.devtalk.payment.paymentservice.domain.payment.Payment;
@@ -13,11 +15,7 @@ public interface PaymentUseCase {
 
     String getPaymentLink(Long consultationId);
 
-    // 임시 결제 정보 생성
-    void createPaymentInfo(Long consultationId);
-
-    // 결제 요청 서비스
-    void requestPayment(Long consultationId);
+    void updatePaymentStatus(WebhookReq webhookReq);
 
     PaymentSearchRes searchPaymentInfo(Long consultationId);
 

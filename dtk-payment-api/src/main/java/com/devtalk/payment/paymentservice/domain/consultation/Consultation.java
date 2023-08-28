@@ -19,10 +19,6 @@ public class Consultation extends BaseEntity {
     @Column(nullable = false, unique = true)
     private Long id;
 
-    // 예약ID
-    @Column(nullable = false, unique = true)
-    private String consultationId;
-
     // 의뢰자 이름
     @Column(nullable = false)
     private String consulter;

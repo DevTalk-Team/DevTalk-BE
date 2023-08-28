@@ -37,8 +37,35 @@ public class KafkaConsumer {
     @KafkaListener(topics = "consultation-topic")
     public void receiveConsultationInfo(String kafkaMessage) {
         log.info("Kafka Message: " + kafkaMessage);
-
 //        Map<Object, Object> map = new HashMap<>();
+
+        Consultation consultation = null;
+        try{
+            // 카프카로 받은 메시지를 JSON 형태로 변환하기 위한 과정
+            consultation = deserializeMapper().readValue(kafkaMessage, Consultation.class);
+//            map = mapper.readValue(kafkaMessage, new TypeReference<Map<Object, Object>>() {});
+        } catch (JsonProcessingException ex){
+            ex.printStackTrace();
+        }
+        dataSynchronization(consultation);
+    }
+
+    private void dataSynchronization(Consultation consultation) {
+        // 카프카로 받은 예약 정보를 저장
+        consultationRepo.save(consultation);
+//        consultationRepo.save((Consultation) map);
+        // Payment에 임시 결제 정보 생성
+//        Consultation consultation = consultationUseCase.searchConsultationInfo(((Consultation) map).getId());
+        paymentRepo.save(Payment.builder()
+                .consultation(consultation)
+                .paymentUid(null)
+                .cost(consultation.getCost())
+                .paidAt(null)
+                .status(PaymentStatus.READY)
+                .build());
+    }
+
+    public ObjectMapper deserializeMapper(){
         SimpleModule simpleModule = new SimpleModule();
         simpleModule.addDeserializer(LocalDateTime.class, new CustomLocalDateTimeDeserializer());
 
@@ -47,26 +74,6 @@ public class KafkaConsumer {
         mapper.registerModule(simpleModule);
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
-        Consultation consultation = null;
-        try{
-            // 카프카로 받은 메시지를 JSON 형태로 변환하기 위한 과정
-            consultation = mapper.readValue(kafkaMessage, Consultation.class);
-//            map = mapper.readValue(kafkaMessage, new TypeReference<Map<Object, Object>>() {});
-        } catch (JsonProcessingException ex){
-            ex.printStackTrace();
-        }
-        // 카프카로 받은 예약 정보를 저장
-        consultationRepo.save(consultation);
-//        consultationRepo.save((Consultation) map);
-        // Payment에 임시 결제 정보 생성
-//        Consultation consultation = consultationUseCase.searchConsultationInfo(((Consultation) map).getId());
-        paymentRepo.save(Payment.builder()
-                .paymentId(UUID.randomUUID().toString())
-                .consultation(consultation)
-                .paymentUid(null)
-                .cost(consultation.getCost())
-                .paidAt(null)
-                .status(PaymentStatus.READY)
-                .build());
+        return mapper;
     }
 }

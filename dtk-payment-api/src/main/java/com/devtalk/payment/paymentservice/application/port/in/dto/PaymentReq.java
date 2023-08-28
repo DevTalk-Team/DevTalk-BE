@@ -31,4 +31,12 @@ public class PaymentReq {
         private Long consultationId; // 매칭 고유 번호
     }
 
+    @NoArgsConstructor
+    @Getter
+    public static class WebhookReq{
+        private String imp_uid;
+        private String merchant_uid;
+        private String status;
+    }
+
 }

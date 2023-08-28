@@ -36,6 +36,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
+
 //    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -56,15 +57,10 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
 
     // 아임포트 관련 //
-    // https://mvnrepository.com/artifact/com.github.iamport/iamport-rest-client-java
     implementation group: 'com.github.iamport', name: 'iamport-rest-client-java', version: '0.2.22'
-    // https://mvnrepository.com/artifact/com.squareup.retrofit2/adapter-rxjava2
     implementation group: 'com.squareup.retrofit2', name: 'adapter-rxjava2', version: '2.9.0'
-    // https://mvnrepository.com/artifact/com.google.code.gson/gson
-    implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
-    // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.9'
     implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.9.3'
-    // https://mvnrepository.com/artifact/com.squareup.retrofit2/converter-gson
     implementation group: 'com.squareup.retrofit2', name: 'converter-gson', version: '2.3.0'
 
     // ⭐ Spring boot 3.x이상에서 QueryDsl 패키지를 정의하는 방법

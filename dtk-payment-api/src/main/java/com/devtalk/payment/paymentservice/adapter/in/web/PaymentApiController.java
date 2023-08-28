@@ -2,11 +2,17 @@ package com.devtalk.payment.paymentservice.adapter.in.web;
 
 import com.devtalk.payment.global.code.SuccessCode;
 import com.devtalk.payment.global.vo.SuccessResponse;
+import com.devtalk.payment.paymentservice.adapter.in.web.dto.PaymentInput;
+import com.devtalk.payment.paymentservice.adapter.in.web.dto.PaymentInput.WebhookInput;
 import com.devtalk.payment.paymentservice.adapter.in.web.dto.PaymentOutput;
 import com.devtalk.payment.paymentservice.application.port.in.PaymentUseCase;
+import com.google.gson.JsonObject;
 import com.siot.IamportRestClient.response.IamportResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -41,7 +47,7 @@ class PaymentApiController {
         return SuccessResponse.toResponseEntity(SuccessCode.GET_PAYMENT_LINK_SUCCESS, paymentLink);
     }
 
-    // TEST: 결제 버튼 페이지
+    // TODO : TEST: 결제 버튼 페이지
     @GetMapping("/{consultationId}")
     public String payment(@PathVariable("consultationId") Long consultationId, Model model){
         String paymentLink = paymentUseCase.getPaymentLink(consultationId);
@@ -50,19 +56,21 @@ class PaymentApiController {
         return "payment-button";
     }
 
-    // 결제 flow 2: 결제 버튼을 누르면 requestPayment를 호출한다.
-    // requestPayment는 금액 위변조 확인 및 결제 상태 저장을 위해 결제DB에 임시 결제 정보를 저장한다.
-    @PostMapping("/{consultationId}")
-    public ResponseEntity<?> requestPayment(@PathVariable("consultationId") Long consultationId) {
-        // 포트원에 결제 정보 확인 요청
-        paymentUseCase.requestPayment(consultationId);
+    @PostMapping("/webhook")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void portoneWebhook(@RequestBody WebhookInput webhookInput) {
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
-        // 반환 값
-        PaymentSearchRes paymentInfo = paymentUseCase.searchPaymentInfo(consultationId);
-        PaymentServiceRes paymentServiceRes = new PaymentServiceRes(paymentInfo.getPaymentId(), paymentInfo.getPaymentUid());
-        PaymentOutput paymentOutput
-                = new PaymentOutput("0300", "결제 성공", paymentServiceRes);
-        return ResponseEntity.status(HttpStatus.OK).body(paymentOutput);
+        WebhookReq webhookReq = mapper.map(webhookInput, WebhookReq.class);
+        paymentUseCase.updatePaymentStatus(webhookReq);
+
+        String impUid = webhookInput.getImp_uid();
+        String merchantUid = webhookInput.getMerchant_uid();
+
+        System.out.println("포트원 웹훅");
+        System.out.println(impUid);
+        System.out.println(merchantUid);
     }
 
     // 결제 flow 3: 결제 검증

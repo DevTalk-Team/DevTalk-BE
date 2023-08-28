@@ -20,10 +20,6 @@ public class Payment extends BaseEntity {
     @Column(nullable = false, unique = true)
     private Long id;
 
-    // 결제 고유 UUID
-    @Column(nullable = false, unique = true)
-    private String paymentId;
-
     // 예약ID
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "consultation_id")
@@ -45,13 +41,6 @@ public class Payment extends BaseEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;
-
-    @Builder
-    public Payment(Integer cost, PaymentStatus status, LocalDateTime paidAt) {
-        this.cost = cost;
-        this.status = status;
-        this.paidAt = paidAt;
-    }
 
     public void changePaymentBySuccess(PaymentStatus status, String paymentUid, LocalDateTime paidAt) {
         this.status = status;
