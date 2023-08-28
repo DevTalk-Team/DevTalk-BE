@@ -4,9 +4,7 @@ import com.devtalk.consultation.consultationservice.consultation.application.por
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.ConsultationQueryableRepo;
 import com.devtalk.consultation.consultationservice.consultation.domain.consultation.Consultation;
 import com.devtalk.consultation.consultationservice.consultation.domain.consultation.ConsultationCancellation;
-import com.devtalk.consultation.consultationservice.global.error.ErrorCode;
 import com.devtalk.consultation.consultationservice.global.error.execption.NotFoundException;
-import com.devtalk.consultation.consultationservice.global.error.execption.UnAuthorizedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,8 +34,16 @@ public class SearchConsultationService implements SearchConsultationUseCase {
     }
 
     @Override
-    public CancellationReasonRes searchCanceledConsultationDetailsBy(Long consulterId, Long consultationId) {
-        ConsultationCancellation consultationCancellation = consultationQueryableRepo.findCancellationByConsultationId(consultationId, consulterId)
+    public CancellationReasonRes searchCanceledConsultationDetailsByConsulter(Long consulterId, Long consultationId) {
+        ConsultationCancellation consultationCancellation = consultationQueryableRepo.findCancellationByConsultationIdAndConsulterId(consultationId, consulterId)
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND_CONSULTATION));
+
+        return CancellationReasonRes.of(consultationCancellation);
+    }
+
+    @Override
+    public CancellationReasonRes searchCanceledConsultationDetailsByConsultant(Long consultantId, Long consultationId) {
+        ConsultationCancellation consultationCancellation = consultationQueryableRepo.findCancellationByConsultationIdAndConsultantId(consultationId, consultantId)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_CONSULTATION));
 
         return CancellationReasonRes.of(consultationCancellation);

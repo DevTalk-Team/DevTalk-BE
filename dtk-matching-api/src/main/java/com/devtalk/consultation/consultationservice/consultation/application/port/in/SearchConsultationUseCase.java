@@ -10,5 +10,6 @@ public interface SearchConsultationUseCase {
 
     List<ConsultationSearchRes> searchConsultationBy(Long consulterId);
     ConsultationSearchRes searchConsultationDetailsBy(Long consultationId, Long consulterId);
-    CancellationReasonRes searchCanceledConsultationDetailsBy(Long consulterId, Long consultationId);
+    CancellationReasonRes searchCanceledConsultationDetailsByConsulter(Long consulterId, Long consultationId);
+    CancellationReasonRes searchCanceledConsultationDetailsByConsultant(Long consultantId, Long consultationId);
 }

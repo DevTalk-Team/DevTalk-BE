@@ -63,7 +63,7 @@ public class ConsultationQueryRepo implements ConsultationQueryableRepo {
     }
 
     @Override
-    public Optional<ConsultationCancellation> findCancellationByConsultationId(Long consultationId, Long consulterId) {
+    public Optional<ConsultationCancellation> findCancellationByConsultationIdAndConsulterId(Long consultationId, Long consulterId) {
         return Optional.ofNullable(
                 queryFactory
                 .select(consultationCancellation)
@@ -73,6 +73,19 @@ public class ConsultationQueryRepo implements ConsultationQueryableRepo {
                         consultation.consulterId.eq(consulterId)
                 ))
                 .fetchFirst());
+    }
+
+    @Override
+    public Optional<ConsultationCancellation> findCancellationByConsultationIdAndConsultantId(Long consultationId, Long consultantId) {
+        return Optional.ofNullable(
+                queryFactory
+                        .select(consultationCancellation)
+                        .from(consultationCancellation)
+                        .join(consultationCancellation.consultation, consultation)
+                        .where(consultationCancellation.consultation.id.eq(consultationId).and(
+                                consultation.consultantId.eq(consultantId)
+                        ))
+                        .fetchFirst());
     }
 
 }

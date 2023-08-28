@@ -14,5 +14,6 @@ public interface ConsultationQueryableRepo {
 
     List<Consultation> findAllByConsulterId(Long consulterId);
 
-    Optional<ConsultationCancellation> findCancellationByConsultationId(Long consultationId, Long consulterId);
+    Optional<ConsultationCancellation> findCancellationByConsultationIdAndConsulterId(Long consultationId, Long consulterId);
+    Optional<ConsultationCancellation> findCancellationByConsultationIdAndConsultantId(Long consultationId, Long consultantId);
 }
