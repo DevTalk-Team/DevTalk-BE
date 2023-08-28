@@ -1,6 +1,5 @@
 package com.devtalk.consultation.consultationservice.consultation.adapter.in.web.dto;
 
-import com.devtalk.consultation.consultationservice.consultation.application.port.in.dto.ConsultationReq;
 import com.devtalk.consultation.consultationservice.consultation.domain.consultation.ProcessMean;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
@@ -74,5 +73,30 @@ public class ConsultationInput {
         }
     }
 
+    @AllArgsConstructor
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @Getter
+    public static class CancellationOfConsulterInput {
+
+        @NotBlank @Size(max = 100)
+        private String reason;
+
+        public CancellationOfConsulterReq toReq(Long consulterId, Long consultationId) {
+            return new CancellationOfConsulterReq(consulterId, consultationId, reason);
+        }
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @Getter
+    public static class CancellationOfConsultantInput {
+
+        @NotBlank @Size(max = 100)
+        private String reason;
+
+        public CancellationOfConsultantReq toReq(Long consultantId, Long consultationId) {
+            return new CancellationOfConsultantReq(consultantId, consultationId, reason);
+        }
+    }
 
 }

@@ -1,0 +1,48 @@
+spring:
+  application:
+    name: member-service
+  h2:
+    console:
+      enabled: true
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:tcp://localhost/~/dtkmember
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+  config:
+    import: "optional:configserver:"
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: "pkl4693@gmail.com"
+    password: "kwwcwycpxomzyicu"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+jwt:
+  token:
+    secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
+    access-token-validity-in-seconds: 60 #1800	# 초
+    refresh-token-validity-in-seconds: 259200	# 초
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka

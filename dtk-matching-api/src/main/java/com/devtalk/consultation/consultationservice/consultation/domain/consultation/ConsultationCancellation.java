@@ -2,12 +2,10 @@ package com.devtalk.consultation.consultationservice.consultation.domain.consult
 
 import com.devtalk.consultation.consultationservice.global.vo.BaseTime;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
+@Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -26,4 +24,16 @@ public class ConsultationCancellation extends BaseTime {
 
     @Column(nullable = false, length = 500)
     private String canceledReason;
+
+    public static ConsultationCancellation createConsultationCancellation(Long productId, String canceledReason) {
+        return ConsultationCancellation.builder()
+                .productId(productId)
+                .canceledReason(canceledReason)
+                .build();
+
+    }
+
+    public void setConsultation(Consultation consultation) {
+        this.consultation = consultation;
+    }
 }
