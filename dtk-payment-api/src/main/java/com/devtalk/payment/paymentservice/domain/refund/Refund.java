@@ -2,6 +2,7 @@ package com.devtalk.payment.paymentservice.domain.refund;
 
 import com.devtalk.payment.paymentservice.domain.BaseEntity;
 import com.devtalk.payment.paymentservice.domain.consultation.Consultation;
+import com.devtalk.payment.paymentservice.domain.payment.Payment;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,15 +18,11 @@ public class Refund extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 환불ID
-    @Column(nullable = false, unique = true)
-    private String refundId;
-
     // 결제ID
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "payment_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "payment_id")
     @Column(nullable = false)
-    private String paymentId;
+    private Payment paymentId;
 
     // 예약ID
     @OneToOne(fetch = FetchType.LAZY)

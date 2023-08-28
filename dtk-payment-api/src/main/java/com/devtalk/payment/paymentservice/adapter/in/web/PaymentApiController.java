@@ -57,27 +57,7 @@ class PaymentApiController {
     public void portoneWebhook(@RequestBody WebhookInput webhookInput) {
         WebhookReq webhookReq = modelMapper.map(webhookInput, WebhookReq.class);
         paymentUseCase.updatePaymentStatus(webhookReq);
-
-        String impUid = webhookInput.getImp_uid();
-        String merchantUid = webhookInput.getMerchant_uid();
-
-        System.out.println("포트원 웹훅");
-        System.out.println(impUid);
-        System.out.println(merchantUid);
-    }
-
-    // 결제 flow 3: 결제 검증
-    // 포트원에 결제할 정보를 성공적으로 전송했을때 호출되어야한다.
-    // case 1 : 금액이 위변조 되었다면 임시 결제 정보를 삭제한다.
-    // case 2 : 결제가 정상 처리 되었다면 임시 결제 정보의 결제 상태를 PAID로 변경한다.
-    @PostMapping
-    public ResponseEntity<IamportResponse<com.siot.IamportRestClient.response.Payment>>
-    validationPayment(@RequestBody PaymentCallbackReq request) {
-        IamportResponse<com.siot.IamportRestClient.response.Payment> iamportResponse =
-                paymentUseCase.paymentByCallback(request);
-        log.info("결제 응답={}", iamportResponse.getResponse().toString());
-
-        return ResponseEntity.status(HttpStatus.OK).body(iamportResponse);
+        log.info(webhookInput.getImp_uid());
     }
 
     // 결제 내역 조회
@@ -94,14 +74,4 @@ class PaymentApiController {
         return "hello";
     }
 
-    // test
-    @GetMapping("/success-payment")
-    public String successPaymentPage() {
-        return "success-payment";
-    }
-
-    @GetMapping("/fail-payment")
-    public String failPaymentPage() {
-        return "fail-payment";
-    }
 }

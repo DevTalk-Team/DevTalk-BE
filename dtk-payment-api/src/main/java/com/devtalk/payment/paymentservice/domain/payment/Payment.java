@@ -34,7 +34,7 @@ public class Payment extends BaseEntity {
     private Integer cost;
 
     // 결제 일시
-    @Column(updatable = false)
+    @Column
     private LocalDateTime paidAt;
 
     // 결제 상태

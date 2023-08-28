@@ -148,55 +148,6 @@ public class PaymentService implements PaymentUseCase {
         }
     }
 
-    // 결제 검증
-    @Override
-    public IamportResponse<com.siot.IamportRestClient.response.Payment> paymentByCallback(PaymentCallbackReq request) {
-        String impKey = paymentProperty.getImpKey();
-        String impSecret = paymentProperty.getImpSecret();
-
-        IamportClient iamportClient = new IamportClient(impKey, impSecret);
-        try {
-            // 결제 단건 조회 (포트원)
-            IamportResponse<com.siot.IamportRestClient.response.Payment> iamportResponse = iamportClient.paymentByImpUid(request.getPaymentUid());
-            // 예약 내역 조회
-            Payment payment = paymentRepo.findByConsultationId(request.getConsultationId())
-                    .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_CONSULTATION));
-            // 결제 완료가 아니면
-            if (!iamportResponse.getResponse().getStatus().equals("paid")) {
-                // 임시 결제 삭제
-                paymentRepo.delete(payment);
-                throw new RuntimeException("결제 미완료");
-            }
-
-            // DB에 저장된 결제 금액
-            Integer cost = payment.getCost();
-            // 실 결제 금액
-            int iamportCost = iamportResponse.getResponse().getAmount().intValue();
-
-            // 결제 금액 검증
-            if (iamportCost != cost) {
-                // 임시 결제 삭제
-                paymentRepo.delete(payment);
-
-                // 결제금액 위변조로 의심되는 결제금액을 취소
-                iamportClient.cancelPaymentByImpUid(
-                        new CancelData(iamportResponse.getResponse().getImpUid(), true, new BigDecimal(iamportCost)));
-
-                throw new RuntimeException("결제금액 위변조 의심");
-            }
-
-            // 결제 상태 변경
-            payment.changePaymentBySuccess(iamportResponse.getResponse().getImpUid(), PaymentStatus.PAID, LocalDateTime.now());
-
-            return iamportResponse;
-
-        } catch (IamportResponseException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     @Override
     public PaymentSearchRes searchPaymentInfo(Long consultationId) {
         Payment payment = paymentRepo.findByConsultationId(consultationId)
