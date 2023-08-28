@@ -20,7 +20,7 @@ import static com.devtalk.consultation.consultationservice.consultation.applicat
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class ReserveService implements ReserveUseCase {
+public class ReserveConsultationService implements ReserveConsultationUseCase {
     private final ConsultationValidator consultationValidator;
     private final FileUploadService fileUploadService;
     private final ConsultationRepo consultationRepo;

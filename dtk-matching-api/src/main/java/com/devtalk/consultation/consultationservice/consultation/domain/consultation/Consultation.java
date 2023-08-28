@@ -1,14 +1,15 @@
 package com.devtalk.consultation.consultationservice.consultation.domain.consultation;
 
+import com.devtalk.consultation.consultationservice.global.error.ErrorCode;
+import com.devtalk.consultation.consultationservice.global.error.execption.BusinessRuleException;
 import com.devtalk.consultation.consultationservice.global.vo.BaseTime;
 import com.devtalk.consultation.consultationservice.global.vo.Money;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
+import static com.devtalk.consultation.consultationservice.consultation.domain.consultation.ConsultationCancellation.*;
 import static com.devtalk.consultation.consultationservice.consultation.domain.consultation.ProcessStatus.*;
+import static com.devtalk.consultation.consultationservice.global.error.ErrorCode.*;
 
 @Entity
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -51,6 +52,9 @@ public class Consultation extends BaseTime {
     @JoinColumn(name = "review_id")
     private Review review;
 
+    @OneToOne(mappedBy = "consultation", fetch = FetchType.LAZY)
+    private ConsultationCancellation consultationCancellation;
+
     @Column(nullable = false)
     private boolean canceled = false;
 
@@ -81,12 +85,47 @@ public class Consultation extends BaseTime {
                 .consultationDetails(consultationDetails)
                 .cost(cost)
                 .build();
-        newConsultation.changeStatus(ACCEPT_WAIT);
+        newConsultation.setStatus(ACCEPT_WAIT);
         return newConsultation;
     }
 
-    public void changeStatus(ProcessStatus status) {
+    public void setStatus(ProcessStatus status) {
         this.status = status;
+    }
+
+    public void changeConsultationCancellation(ConsultationCancellation consultationCancellation) {
+        if (this.consultationCancellation != null) {
+            this.consultationCancellation.setConsultation(null);
+        }
+        this.consultationCancellation = consultationCancellation;
+        this.consultationCancellation.setConsultation(this);
+    }
+
+    public void cancelByConsulter(String canceledReason) {
+        if (!(this.status.equals(ACCEPT_WAIT) || this.status.equals(ACCEPTED) || this.status.equals(PAID))) {
+            throw new BusinessRuleException(IRREVOCABLE_STATUS);
+        }
+        cancel(CONSULTER_CANCELED, canceledReason);
+    }
+
+    public void cancelByConsultant(String canceledReason) {
+        ProcessStatus newStatus = null;
+        if (this.status.equals(ACCEPT_WAIT)) {
+            newStatus = CONSULTANT_REFUSED;
+        } else if (this.status.equals(PAID)) {
+            newStatus = CONSULTANT_CANCELED;
+        } else {
+            throw new BusinessRuleException(IRREVOCABLE_STATUS);
+        }
+        cancel(newStatus, canceledReason);
+    }
+
+    private void cancel(ProcessStatus status, String canceledReason) {
+        this.status = status;
+        this.canceled = true;
+
+        ConsultationCancellation consultationCancellation = createConsultationCancellation(this.productId, canceledReason);
+        changeConsultationCancellation(consultationCancellation);
     }
 
 }

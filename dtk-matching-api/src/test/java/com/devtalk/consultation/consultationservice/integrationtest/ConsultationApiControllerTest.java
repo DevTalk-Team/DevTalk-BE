@@ -1,7 +1,7 @@
 package com.devtalk.consultation.consultationservice.integrationtest;
 
 import com.devtalk.consultation.consultationservice.consultation.adapter.in.web.ConsultationApiController;
-import com.devtalk.consultation.consultationservice.consultation.application.ReserveService;
+import com.devtalk.consultation.consultationservice.consultation.application.ReserveConsultationService;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.client.ProductServiceClient;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.client.dto.ProductRes;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.ConsultationRepo;
@@ -71,7 +71,7 @@ class ConsultationApiControllerTest {
     void setUp() {
         productServiceClient = Mockito.mock(ProductServiceClient.class);
         ConsultationValidator consultationValidator = new ConsultationValidator(productServiceClient, consultationQueryableRepo, memberQueryableRepo, new FileValidator(fileListMaxSize, fileListMaxCount));
-        consultationApiController = new ConsultationApiController(new ReserveService(consultationValidator, fileUploadService, consultationRepo));
+        consultationApiController = new ConsultationApiController(new ReserveConsultationService(consultationValidator, fileUploadService, consultationRepo));
     }
 
     @Test
