@@ -50,4 +50,13 @@ public class ConsultationQueryRepo implements ConsultationQueryableRepo {
                         .fetchFirst());
     }
 
+    @Override
+    public List<Consultation> findAllByConsulterId(Long consulterId) {
+        return queryFactory
+                .select(consultation)
+                .from(consultation)
+                .where(consultation.consulterId.eq(consulterId))
+                .fetch();
+    }
+
 }

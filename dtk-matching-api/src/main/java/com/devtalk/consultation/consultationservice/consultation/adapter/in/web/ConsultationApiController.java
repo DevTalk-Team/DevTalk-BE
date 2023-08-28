@@ -3,7 +3,9 @@ package com.devtalk.consultation.consultationservice.consultation.adapter.in.web
 import com.devtalk.consultation.consultationservice.consultation.application.port.in.CancelConsultationUseCase;
 import com.devtalk.consultation.consultationservice.consultation.application.port.in.ModifyConsultationUseCase;
 import com.devtalk.consultation.consultationservice.consultation.application.port.in.ReserveConsultationUseCase;
+import com.devtalk.consultation.consultationservice.consultation.application.port.in.SearchConsultationUseCase;
 import com.devtalk.consultation.consultationservice.global.vo.SuccessCode;
+import com.devtalk.consultation.consultationservice.global.vo.SuccessResponse;
 import com.devtalk.consultation.consultationservice.global.vo.SuccessResponseWithoutResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ public class ConsultationApiController {
     private final ReserveConsultationUseCase reserveUseCase;
     private final CancelConsultationUseCase cancelUseCase;
     private final ModifyConsultationUseCase modifyUseCase;
+    private final SearchConsultationUseCase searchUseCase;
 
     @PostMapping("/v1/consulter/{consulterId}/consultations")
     public ResponseEntity<?> reserveConsultation(@RequestBody @Validated ReservationInput reservationInput,
@@ -50,5 +53,10 @@ public class ConsultationApiController {
                                                         @PathVariable Long consultationId) {
         modifyUseCase.modifyConsultation(consultationModificationInput.toReq(consulterId, consultationId));
         return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.CONSULTATION_MODIFICATION_SUCCESS);
+    }
+
+    @GetMapping("/v1/consulter/{consulterId}/consultations")
+    public ResponseEntity<?> searchConsultationByConsulter(@PathVariable Long consulterId) {
+        return SuccessResponse.toResponseEntity(SuccessCode.CONSULTER_CONSULTATION_SEARCH_SUCCESS, searchUseCase.searchConsultationBy(consulterId));
     }
 }

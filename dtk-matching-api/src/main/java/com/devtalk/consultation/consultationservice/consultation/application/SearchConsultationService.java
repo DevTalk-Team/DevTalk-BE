@@ -1,5 +1,6 @@
 package com.devtalk.consultation.consultationservice.consultation.application;
 
+import com.devtalk.consultation.consultationservice.consultation.application.port.in.SearchConsultationUseCase;
 import com.devtalk.consultation.consultationservice.consultation.application.port.in.dto.ConsultationRes;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.ConsultationQueryableRepo;
 import com.devtalk.consultation.consultationservice.consultation.domain.consultation.Consultation;
@@ -14,7 +15,7 @@ import static com.devtalk.consultation.consultationservice.consultation.applicat
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class SearchConsultationService {
+public class SearchConsultationService implements SearchConsultationUseCase {
     private final ConsultationQueryableRepo consultationQueryableRepo;
 
     public List<ConsultationSearchRes> searchConsultationBy(Long consulterId) {

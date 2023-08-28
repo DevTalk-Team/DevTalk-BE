@@ -10,4 +10,6 @@ public interface ConsultationQueryableRepo {
 
     Optional<Consultation> findByIdWithConsulterId(Long consultationId, Long consulterId);
     Optional<Consultation> findByIdWithConsultantId(Long consultationId, Long consulterId);
+
+    List<Consultation> findAllByConsulterId(Long consulterId);
 }
