@@ -46,4 +46,31 @@ public class ConsultationReq {
             return Consultation.createConsultation(consulterId, consulterName, consultantId, consultantName, productId, consultationDetails, cost);
         }
     }
+
+    @AllArgsConstructor
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @Getter
+    public static class CancellationOfConsulterReq {
+        private Long consulterId;
+        private Long consultationId;
+        private String reason;
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @Getter
+    public static class CancellationOfConsultantReq {
+        private Long consultantId;
+        private Long consultationId;
+        private String reason;
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @Getter
+    public static class DenyReq {
+        private Long consulterId;
+        private Long consultationId;
+        private String reason;
+    }
 }
