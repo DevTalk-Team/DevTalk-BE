@@ -4,6 +4,8 @@ import com.devtalk.consultation.consultationservice.consultation.domain.consulta
 import com.devtalk.consultation.consultationservice.consultation.domain.consultation.Consultation;
 import com.devtalk.consultation.consultationservice.consultation.domain.consultation.ConsultationDetails;
 import com.devtalk.consultation.consultationservice.consultation.domain.consultation.ProcessMean;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -68,9 +70,10 @@ public class ConsultationReq {
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @Getter
-    public static class DenyReq {
+    public static class ConsultationModificationReq {
         private Long consulterId;
         private Long consultationId;
-        private String reason;
+        private String content;
+        private List<MultipartFile> attachedFileList = new ArrayList<>();
     }
 }

@@ -24,4 +24,8 @@ public class AttachedFile extends BaseTime {
     private String originName;
 
     private String storedName;
+
+    public void setConsultation(Consultation consultation) {
+        this.consultation = consultation;
+    }
 }

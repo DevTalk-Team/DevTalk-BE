@@ -18,7 +18,7 @@ import static com.devtalk.consultation.consultationservice.global.error.ErrorCod
 
 @Service
 @RequiredArgsConstructor
-public class ConsultationValidator {
+public class ConsultationReservationValidator {
 
     private final ProductServiceClient productServiceClient;
     private final ConsultationQueryableRepo consultationQueryableRepo;
@@ -27,28 +27,30 @@ public class ConsultationValidator {
 
     // TODO: MaxUploadSizeExceededException 예외 처리해주기
     // 파일 확장자가 png, jpg, jpeg, pdf, ppt, xlsx. xls, doc, docx, txt 인지 검증
-    public void validate(ReservationReq reservationReq) {
+    public void validateReservation(ReservationReq reservationReq) {
         validateAttachedFileList(reservationReq.getAttachedFileList());
-        validateExistingMember(reservationReq.getConsulterId(), reservationReq.getConsultantId());
+        validateConsulter(reservationReq.getConsulterId());
+        validateConsultant(reservationReq.getConsultantId());
         validateProduct(reservationReq);
         validateDuplicatedMatching(reservationReq.getProductId());
     }
 
     // TODO: 파일 3개 이하 개수 체크 + 확장자 체크 + 파일 사이즈 체크
     private void validateAttachedFileList(List<MultipartFile> attachedFileList) {
-        fileValidator.checkExceedMaxCount(attachedFileList.size());
-        fileValidator.checkExceedMaxSize(attachedFileList);
-        fileValidator.checkFileExtension(attachedFileList);
+        fileValidator.checkFileCountAndSizeAndExtension(attachedFileList);
     }
 
-    private void validateExistingMember(Long consulterId, Long consultantId) {
+    public void validateConsulter(Long consulterId) {
         if (!memberQueryableRepo.existsByConsulterId(consulterId))
             throw new NotFoundException(NOT_FOUND_CONSULTER);
-        else if (!memberQueryableRepo.existsByConsultantId(consultantId))
+    }
+
+    public void validateConsultant(Long consultantId) {
+        if (!memberQueryableRepo.existsByConsultantId(consultantId))
             throw new NotFoundException(NOT_FOUND_CONSULTANT);
     }
 
-    // TODO: reservationReq 의 내용과 ProductSearchRes 의 내용이 같은지 비교함
+    // reservationReq 의 내용과 ProductSearchRes 의 내용이 같은지 비교함
     private void validateProduct(ReservationReq reservationReq) {
         ProductSearchRes realProduct = productServiceClient.getProduct(reservationReq.getProductId());
 
