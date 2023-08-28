@@ -136,7 +136,12 @@ public class PaymentService implements PaymentUseCase {
 
     @Override
     public void updatePaymentStatus(WebhookReq webhookReq) {
+        String paymentUid = webhookReq.getImp_uid();
+        Long consultationId = Long.parseLong(webhookReq.getMerchant_uid());
+        String status = webhookReq.getStatus();
 
+        Payment payment = paymentRepo.findByConsultationId(consultationId)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_CONSULTATION));
     }
 
     // 결제 검증
