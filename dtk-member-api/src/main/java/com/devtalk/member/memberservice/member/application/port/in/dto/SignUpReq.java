@@ -1,18 +1,17 @@
 package com.devtalk.member.memberservice.member.application.port.in.dto;
 
 import com.devtalk.member.memberservice.member.adapter.in.web.dto.SignUpInput;
-import com.devtalk.member.memberservice.member.domain.member.RoleType;
+import com.devtalk.member.memberservice.member.domain.member.MemberType;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Getter
 @Builder
 public class SignUpReq {
 
-    private RoleType roleType;
+    private MemberType memberType;
 
     private String name;
     private String email;
@@ -20,18 +19,17 @@ public class SignUpReq {
     private String checkPassword;
     private String phoneNumber;
 
-    private List<String> field;
+    private List<String> category;
 
-    public static SignUpReq toReq(SignUpInput input, RoleType roleType) {
+    public static SignUpReq toReq(SignUpInput input, MemberType memberType) {
         return SignUpReq.builder()
-                .roleType(roleType)
+                .memberType(memberType)
                 .email(input.getEmail())
                 .password(input.getPassword())
                 .checkPassword(input.getCheckPassword())
                 .name(input.getName())
                 .phoneNumber(input.getPhoneNumber())
-                .field(input.getField())
+                .category(input.getCategory())
                 .build();
     }
-
 }

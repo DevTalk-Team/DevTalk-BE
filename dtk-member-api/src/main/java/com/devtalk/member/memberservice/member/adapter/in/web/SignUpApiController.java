@@ -4,7 +4,7 @@ import com.devtalk.member.memberservice.global.success.SuccessResponseNoResult;
 import com.devtalk.member.memberservice.member.adapter.in.web.dto.SignUpInput;
 import com.devtalk.member.memberservice.member.application.port.in.SignUpUseCase;
 import com.devtalk.member.memberservice.member.application.port.in.dto.SignUpReq;
-import com.devtalk.member.memberservice.member.domain.member.RoleType;
+import com.devtalk.member.memberservice.member.domain.member.MemberType;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class SignUpApiController {
     @PostMapping("/consulter")
     @ResponseStatus(HttpStatus.CREATED)
     public SuccessResponseNoResult consulterSignUp(@Valid @RequestBody SignUpInput input) {
-        SignUpReq req = toReq(input, RoleType.CONSULTER);
+        SignUpReq req = toReq(input, MemberType.CONSULTER);
         signUpUseCase.signUp(req);
         return new SuccessResponseNoResult(CONSULTER_SIGNUP_SUCCESS);
     }
@@ -32,7 +32,10 @@ public class SignUpApiController {
     @PostMapping("/consultant")
     @ResponseStatus(HttpStatus.CREATED)
     public SuccessResponseNoResult consultantSignUp(@Valid @RequestBody SignUpInput input) {
-        SignUpReq req = toReq(input, RoleType.CONSULTANT);
+        SignUpReq req = toReq(input, MemberType.CONSULTANT);
+
+        System.out.println("전문가 회원가입 " + req.toString());
+
         signUpUseCase.signUp(req);
         return new SuccessResponseNoResult(CONSULTANT_SIGNUP_SUCCESS);
     }

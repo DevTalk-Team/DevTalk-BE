@@ -17,7 +17,7 @@ public class MemberDetails implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(() -> {
-            return "ROLE_" + member.getRoleType().toString();
+            return "ROLE_" + member.getMemberType().toString();
         });
         return authorities;
     }

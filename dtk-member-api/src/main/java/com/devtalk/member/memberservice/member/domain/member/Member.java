@@ -19,7 +19,7 @@ public class Member {
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
-    private RoleType roleType;
+    private MemberType memberType;
 
     @Column(nullable = false)
     private String name;
@@ -33,11 +33,9 @@ public class Member {
     @Column(nullable = false, length = 20, unique = true)
     private String phoneNumber;
 
-//    private String field;
-
     public static Member createMember(SignUpReq req, PasswordEncoder passwordEncoder) {
         Member member = Member.builder()
-                .roleType(req.getRoleType())
+                .memberType(req.getMemberType())
                 .name(req.getName())
                 .email(req.getEmail())
                 .password(passwordEncoder.encode(req.getPassword()))
