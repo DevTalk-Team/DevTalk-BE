@@ -1,6 +1,7 @@
 package com.devtalk.payment.paymentservice.domain.consultation;
 
 import com.devtalk.payment.paymentservice.domain.BaseEntity;
+import com.devtalk.payment.paymentservice.domain.payment.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -49,16 +50,21 @@ public class Consultation extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ProcessStatus processStatus;
 
-    @Builder
-    public Consultation(String consulter, String consulterEmail
-                        , String consultant, String consultationType, Integer cost,
-                        LocalDateTime consultationAt, ProcessStatus processStatus) {
-        this.consulter = consulter;
-        this.consulterEmail = consulterEmail;
-        this.consultant = consultant;
-        this.consultationType = consultationType;
-        this.cost = cost;
-        this.consultationAt = consultationAt;
-        this.processStatus = processStatus;
+//    @Builder
+//    public Consultation(String consulter, String consulterEmail
+//                        , String consultant, String consultationType, Integer cost,
+//                        LocalDateTime consultationAt, ProcessStatus processStatus) {
+//        this.consulter = consulter;
+//        this.consulterEmail = consulterEmail;
+//        this.consultant = consultant;
+//        this.consultationType = consultationType;
+//        this.cost = cost;
+//        this.consultationAt = consultationAt;
+//        this.processStatus = processStatus;
+//    }
+
+    public void changeConsultationByCanceled() {
+        this.processStatus = ProcessStatus.CANCELED;
     }
+
 }
