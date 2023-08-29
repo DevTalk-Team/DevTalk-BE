@@ -15,11 +15,27 @@ public class Review extends BaseTime {
     private Long id;
 
     @Column(nullable = false)
-    private Long memberId;
+    private Long consulterId;
 
-    @Column(length = 200)
-    private String pictureUrl;
+    private Integer score;
+
+    private String photoUrl;
+
+    private String photoOriginName;
+
+    private String photoStoredName;
 
     @Column(length = 255)
     private String content;
+
+    public static Review createReview(Long consulterId, Integer score, String photoUrl, String photoOriginName, String photoStoredName, String content) {
+        return Review.builder()
+                .consulterId(consulterId)
+                .score(score)
+                .photoUrl(photoUrl)
+                .photoOriginName(photoOriginName)
+                .photoStoredName(photoStoredName)
+                .content(content)
+                .build();
+    }
 }

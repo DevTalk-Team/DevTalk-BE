@@ -76,4 +76,15 @@ public class ConsultationReq {
         private String content;
         private List<MultipartFile> attachedFileList = new ArrayList<>();
     }
+
+    @AllArgsConstructor
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @Getter
+    public static class ReviewReq {
+        private Long consulterId;
+        private Long consultationId;
+        private Integer score;
+        private String content;
+        private MultipartFile photo;
+    }
 }
