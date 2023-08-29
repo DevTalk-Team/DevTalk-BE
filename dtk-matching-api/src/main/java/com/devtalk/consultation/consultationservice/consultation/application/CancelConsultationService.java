@@ -1,8 +1,11 @@
 package com.devtalk.consultation.consultationservice.consultation.application;
 
 import com.devtalk.consultation.consultationservice.consultation.application.port.in.CancelConsultationUseCase;
+import com.devtalk.consultation.consultationservice.consultation.application.port.out.client.PaymentServiceClient;
+import com.devtalk.consultation.consultationservice.consultation.application.port.out.client.ProductServiceClient;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.ConsultationQueryableRepo;
 import com.devtalk.consultation.consultationservice.consultation.domain.consultation.Consultation;
+import com.devtalk.consultation.consultationservice.consultation.domain.consultation.ProcessStatus;
 import com.devtalk.consultation.consultationservice.global.error.ErrorCode;
 import com.devtalk.consultation.consultationservice.global.error.execption.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +21,8 @@ import static com.devtalk.consultation.consultationservice.global.error.ErrorCod
 public class CancelConsultationService implements CancelConsultationUseCase {
 
     private final ConsultationQueryableRepo consultationQueryableRepo;
-
+    private final ProductServiceClient productServiceClient;
+    private final PaymentServiceClient paymentServiceClient;
 
     // TODO: 결제가 이미 된 매칭이라면
     // 1. 결제 서비스에 결제 취소요청
@@ -30,22 +34,29 @@ public class CancelConsultationService implements CancelConsultationUseCase {
         Consultation consultation = consultationQueryableRepo.findByIdWithConsulterId(cancellationReq.getConsultationId(), cancellationReq.getConsulterId())
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_CONSULTATION));
 
-        consultation.cancelByConsulter(cancellationReq.getReason());
-        //TODO: 상담취소 아이템 생성
+        ProcessStatus originProcessStatus = consultation.getStatus();
 
+        consultation.cancelByConsulter(cancellationReq.getReason());
+        productServiceClient.cancelProduct(consultation.getProductId());
+
+        if (originProcessStatus.equals(ProcessStatus.PAID)) {
+            paymentServiceClient.refund(consultation.getId());
+        }
     }
 
     @Override
     @Transactional
     public void cancelByConsultant(CancellationOfConsultantReq cancellationReq) {
-        //TODO: 상담사가 상담취소를 하는데 케이스가 2가지가 있음
-        // 1. 그냥 처음부터 요청들어오면 거절하는것
-        // 2. 승인 후에 취소하는 것 (결제전, 결제후)
-
         Consultation consultation = consultationQueryableRepo.findByIdWithConsultantId(cancellationReq.getConsultationId(), cancellationReq.getConsultantId())
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_CONSULTATION));
 
-        consultation.cancelByConsultant(cancellationReq.getReason());
+        ProcessStatus originProcessStatus = consultation.getStatus();
 
+        consultation.cancelByConsultant(cancellationReq.getReason());
+        productServiceClient.cancelProduct(consultation.getProductId());
+
+        if (originProcessStatus.equals(ProcessStatus.PAID)) {
+            paymentServiceClient.refund(consultation.getId());
+        }
     }
 }
