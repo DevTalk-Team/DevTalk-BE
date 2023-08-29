@@ -54,7 +54,7 @@ public class ConsultantApiController {
 
     @GetMapping("/v1/consultants/{consultantId}/reviews")
     public ResponseEntity<SuccessResponse> searchReviewsByConsultant(@PathVariable Long consultantId) {
-        return SuccessResponse.toResponseEntity(SuccessCode.CONSULTER_CANCELED_CONSULTATION_SEARCH_SUCCESS,
+        return SuccessResponse.toResponseEntity(SuccessCode.CONSULTANT_REVIEW_SEARCH_SUCCESS,
                 searchUseCase.searchConsultationListByConsultant(consultantId));
     }
 }
