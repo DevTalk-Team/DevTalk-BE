@@ -4,7 +4,6 @@ import com.devtalk.payment.paymentservice.domain.BaseEntity;
 import com.devtalk.payment.paymentservice.domain.consultation.Consultation;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
@@ -42,9 +41,13 @@ public class Payment extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;
 
-    public void changePaymentBySuccess(String paymentUid, PaymentStatus status, LocalDateTime paidAt) {
-        this.status = status;
+    public void changePaymentBySuccess(String paymentUid) {
+        this.status = PaymentStatus.PAID;
         this.paymentUid = paymentUid;
-        this.paidAt = paidAt;
+        this.paidAt = LocalDateTime.now();
+    }
+
+    public void changePaymentByCanceled() {
+        this.status = PaymentStatus.CANCELED;
     }
 }

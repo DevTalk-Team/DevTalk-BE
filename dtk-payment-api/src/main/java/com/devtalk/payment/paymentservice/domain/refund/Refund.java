@@ -21,7 +21,6 @@ public class Refund extends BaseEntity {
     // 결제ID
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_id")
-    @Column(nullable = false)
     private Payment paymentId;
 
     // 예약ID
@@ -29,13 +28,9 @@ public class Refund extends BaseEntity {
     @JoinColumn(name = "consultation_id")
     private Consultation consultationId;
 
-    // 환불 사유
-    @Column(nullable = false, length = 100)
-    private String text;
-
-    // 환불 일시
-    @Column(nullable = false, updatable = false, insertable = false)
-    private Date refundAt;
+//    // 환불 사유
+//    @Column(nullable = false, length = 100)
+//    private String refundReason;
 
     // 환불 금액
     @Column(nullable = false)

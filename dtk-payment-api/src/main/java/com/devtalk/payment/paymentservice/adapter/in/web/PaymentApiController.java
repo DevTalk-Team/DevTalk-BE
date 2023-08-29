@@ -2,8 +2,10 @@ package com.devtalk.payment.paymentservice.adapter.in.web;
 
 import com.devtalk.payment.global.code.SuccessCode;
 import com.devtalk.payment.global.vo.SuccessResponse;
+import com.devtalk.payment.global.vo.SuccessResponseWithoutResult;
 import com.devtalk.payment.paymentservice.adapter.in.web.dto.PaymentInput.WebhookInput;
 import com.devtalk.payment.paymentservice.application.port.in.PaymentUseCase;
+import com.devtalk.payment.paymentservice.application.port.in.RefundUseCase;
 import com.siot.IamportRestClient.response.IamportResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +35,7 @@ import static com.devtalk.payment.paymentservice.application.port.in.dto.Payment
 @RequestMapping("/payment")
 class PaymentApiController {
     private final PaymentUseCase paymentUseCase;
+    private final RefundUseCase refundUseCase;
     private final ModelMapper modelMapper;
 
     // 결제 링크 요청
@@ -69,9 +72,9 @@ class PaymentApiController {
         return SuccessResponse.toResponseEntity(SuccessCode.GET_PAYMENT_INFO_SUCCESS, paymentSearchRes);
     }
 
-    @DeleteMapping("/{paymentId}")
-    public String cancelPayment(){
-        return "hello";
+    @DeleteMapping("/{consultationId}/cancel")
+    public ResponseEntity<?> cancelPayment(@PathVariable("consultationId") Long consultationId){
+        refundUseCase.cancelPayment(consultationId);
+        return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.REFUND_REQUEST_SUCCESS);
     }
-
 }

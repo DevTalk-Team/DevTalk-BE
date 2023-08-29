@@ -9,23 +9,15 @@ import com.devtalk.payment.paymentservice.application.port.in.PaymentUseCase;
 import com.devtalk.payment.paymentservice.application.port.out.repository.PaymentRepo;
 import com.devtalk.payment.paymentservice.domain.consultation.Consultation;
 import com.devtalk.payment.paymentservice.domain.payment.Payment;
-import com.devtalk.payment.paymentservice.domain.payment.PaymentStatus;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.siot.IamportRestClient.IamportClient;
-import com.siot.IamportRestClient.exception.IamportResponseException;
-import com.siot.IamportRestClient.request.CancelData;
-import com.siot.IamportRestClient.response.IamportResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.io.*;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,8 +34,6 @@ public class PaymentService implements PaymentUseCase {
     private final EmailUseCase emailUseCase;
 
     private final PaymentProperty paymentProperty;
-
-    private String impUid = "imp67671220";
 
     // 결제 토큰 생성 (포트원 API사용을 위해 필요함)
     @Override
@@ -76,8 +66,8 @@ public class PaymentService implements PaymentUseCase {
 
     @Override
     public String getPaymentLink(Long consultationId) {
+        String impUid = paymentProperty.getImpUid();
         String webhookUrl = "https://101d-211-213-255-27.ngrok-free.app/payment/webhook";
-        String token = getToken();
         Consultation consultation = consultationUseCase.searchConsultationInfo(consultationId);
         String paymentInfo = String.format(
                 "{" +
@@ -95,8 +85,8 @@ public class PaymentService implements PaymentUseCase {
                         "\"pay_methods\":[" +
                         "{\"pg\":\"html5_inicis.INIpayTest\",\"pay_method\":\"card\",\"label\":\"신용/체크카드\"}," +
                         "{\"pg\":\"html5_inicis.INIpayTest\",\"pay_method\":\"naverpay\",\"label\":\"네이버페이\"}," +
-                        "{\"pg\":\"html5_inicis.INIpayTest\",\"pay_method\":\"kakaopay\",\"label\":\"카카오페이\"}" +
-//                        "{\"pg\":\"iamporttest_3\",\"pay_method\":\"tosspayments\",\"label\":\"토스페이\"}" +
+                        "{\"pg\":\"html5_inicis.INIpayTest\",\"pay_method\":\"kakaopay\",\"label\":\"카카오페이\"}," +
+                        "{\"pg\":\"iamporttest_3\",\"pay_method\":\"tosspay.tosstest\",\"label\":\"토스페이\"}" +
                         "]" +
                         "}",
                             consultation.getConsultationType(),
@@ -116,7 +106,7 @@ public class PaymentService implements PaymentUseCase {
         WebClient wc = WebClient.create("https://api.iamport.co/api/supplements/v1/link/payment");
 
         String response = wc.post()
-                .header("Authorization", "Bearer " + token)
+                .header("Authorization", "Bearer " + getToken())
                 .bodyValue(requestBody)
                 .retrieve()
                 .bodyToMono(String.class)
@@ -144,7 +134,7 @@ public class PaymentService implements PaymentUseCase {
             Payment payment = paymentRepo.findByConsultationId(consultationId)
                     .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_CONSULTATION));
 
-            payment.changePaymentBySuccess(paymentUid, PaymentStatus.PAID, LocalDateTime.now());
+            payment.changePaymentBySuccess(paymentUid);
         }
     }
 
