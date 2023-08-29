@@ -1,7 +1,6 @@
 package com.devtalk.consultation.consultationservice.consultation.adapter.in.web;
 
 import com.devtalk.consultation.consultationservice.consultation.application.port.in.*;
-import com.devtalk.consultation.consultationservice.consultation.application.port.in.dto.ConsultationRes;
 import com.devtalk.consultation.consultationservice.global.vo.SuccessCode;
 import com.devtalk.consultation.consultationservice.global.vo.SuccessResponse;
 import com.devtalk.consultation.consultationservice.global.vo.SuccessResponseWithoutResult;
@@ -11,12 +10,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import static com.devtalk.consultation.consultationservice.consultation.adapter.in.web.dto.ConsultationInput.*;
-import static com.devtalk.consultation.consultationservice.consultation.application.port.in.dto.ConsultationRes.*;
 
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-public class ConsultationApiController {
+public class ConsulterApiController {
 
     private final ReserveConsultationUseCase reserveUseCase;
     private final CancelConsultationUseCase cancelUseCase;
@@ -39,14 +37,6 @@ public class ConsultationApiController {
         return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.CONSULTATION_CONSULTER_CANCEL_SUCCESS);
     }
 
-    @DeleteMapping("/v1/consultants/{consultantId}/consultations/{consultationId}")
-    public ResponseEntity<?> cancelConsultationByConsultant(@RequestBody @Validated CancellationOfConsultantInput cancellationInput,
-                                                           @PathVariable Long consultantId,
-                                                           @PathVariable Long consultationId) {
-        cancelUseCase.cancelByConsultant(cancellationInput.toReq(consultantId, consultationId));
-        return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.CONSULTATION_CONSULTANT_CANCEL_SUCCESS);
-    }
-
     @PatchMapping("/v1/consulters/{consulterId}/consultations/{consultationId}")
     public ResponseEntity<?> modifyConsultationContents(@RequestBody @Validated ConsultationModificationInput consultationModificationInput,
                                                         @PathVariable Long consulterId,
@@ -58,7 +48,7 @@ public class ConsultationApiController {
     @GetMapping("/v1/consulters/{consulterId}/consultations")
     public ResponseEntity<SuccessResponse> searchConsultationByConsulter(@PathVariable Long consulterId) {
         return SuccessResponse.toResponseEntity(SuccessCode.CONSULTER_CONSULTATION_SEARCH_SUCCESS,
-                searchUseCase.searchConsultationBy(consulterId));
+                searchUseCase.searchConsultationListByConsulter(consulterId));
     }
 
     @GetMapping("/v1/consulters/{consulterId}/consultations/{consultationId}")
@@ -75,12 +65,7 @@ public class ConsultationApiController {
                 searchUseCase.searchCanceledConsultationDetailsByConsulter(consulterId, consultationId));
     }
 
-    @GetMapping("/v1/consultants/{consultantId}/canceled-consultations/{consultationId}")
-    public ResponseEntity<SuccessResponse> searchCanceledConsultationByConsultant(@PathVariable Long consultantId,
-                                                                                 @PathVariable Long consultationId) {
-        return SuccessResponse.toResponseEntity(SuccessCode.CONSULTER_CANCELED_CONSULTATION_SEARCH_SUCCESS,
-                searchUseCase.searchCanceledConsultationDetailsByConsultant(consultantId, consultationId));
-    }
+
 
     @PostMapping("/v1/consulter/{consulterId}/consultations/{consultationId}/reviews")
     public ResponseEntity<?> writeReview(@RequestBody @Validated ReviewInput reviewInput,
