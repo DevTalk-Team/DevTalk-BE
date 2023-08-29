@@ -4,6 +4,7 @@ import com.devtalk.consultation.consultationservice.consultation.adapter.in.web.
 import com.devtalk.consultation.consultationservice.consultation.application.port.in.AcceptConsultationUseCase;
 import com.devtalk.consultation.consultationservice.consultation.application.port.in.CancelConsultationUseCase;
 import com.devtalk.consultation.consultationservice.consultation.application.port.in.SearchConsultationUseCase;
+import com.devtalk.consultation.consultationservice.consultation.application.port.in.dto.ConsultationRes;
 import com.devtalk.consultation.consultationservice.global.vo.SuccessCode;
 import com.devtalk.consultation.consultationservice.global.vo.SuccessResponse;
 import com.devtalk.consultation.consultationservice.global.vo.SuccessResponseWithoutResult;
@@ -11,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import static com.devtalk.consultation.consultationservice.consultation.application.port.in.dto.ConsultationRes.*;
 
 @RestController
 @RequestMapping("/api")
@@ -45,6 +48,12 @@ public class ConsultantApiController {
 
     @GetMapping("/v1/consultants/{consultantId}/consultations")
     public ResponseEntity<SuccessResponse> searchConsultationByConsultant(@PathVariable Long consultantId) {
+        return SuccessResponse.toResponseEntity(SuccessCode.CONSULTER_CANCELED_CONSULTATION_SEARCH_SUCCESS,
+                searchUseCase.searchConsultationListByConsultant(consultantId));
+    }
+
+    @GetMapping("/v1/consultants/{consultantId}/reviews")
+    public ResponseEntity<SuccessResponse> searchReviewsByConsultant(@PathVariable Long consultantId) {
         return SuccessResponse.toResponseEntity(SuccessCode.CONSULTER_CANCELED_CONSULTATION_SEARCH_SUCCESS,
                 searchUseCase.searchConsultationListByConsultant(consultantId));
     }
