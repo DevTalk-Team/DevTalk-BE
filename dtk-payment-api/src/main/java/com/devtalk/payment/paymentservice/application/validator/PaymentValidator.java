@@ -21,7 +21,5 @@ public class PaymentValidator {
     private final ConsultationRepo consultationRepo;
     private final PaymentRepo paymentRepo;
 
-    // TODO: 결제 검증 구현하기
-
 
 }

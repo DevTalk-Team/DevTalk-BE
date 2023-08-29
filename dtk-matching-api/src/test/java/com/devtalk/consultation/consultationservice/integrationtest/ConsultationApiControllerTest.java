@@ -7,7 +7,7 @@ import com.devtalk.consultation.consultationservice.consultation.application.por
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.ConsultationRepo;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.ConsultationQueryableRepo;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.MemberQueryableRepo;
-import com.devtalk.consultation.consultationservice.consultation.application.validator.ConsultationValidator;
+import com.devtalk.consultation.consultationservice.consultation.application.validator.ConsultationReservationValidator;
 import com.devtalk.consultation.consultationservice.consultation.application.validator.FileValidator;
 import com.devtalk.consultation.consultationservice.consultation.domain.consultation.Consultation;
 import com.devtalk.consultation.consultationservice.consultation.domain.consultation.ProcessStatus;
@@ -70,7 +70,7 @@ class ConsultationApiControllerTest {
     @BeforeAll
     void setUp() {
         productServiceClient = Mockito.mock(ProductServiceClient.class);
-        ConsultationValidator consultationValidator = new ConsultationValidator(productServiceClient, consultationQueryableRepo, memberQueryableRepo, new FileValidator(fileListMaxSize, fileListMaxCount));
+        ConsultationReservationValidator consultationValidator = new ConsultationReservationValidator(productServiceClient, consultationQueryableRepo, memberQueryableRepo, new FileValidator(fileListMaxSize, fileListMaxCount));
         consultationApiController = new ConsultationApiController(new ReserveConsultationService(consultationValidator, fileUploadService, consultationRepo));
     }
 

@@ -20,4 +20,12 @@ public class PaymentInput {
         private LocalDateTime consultationAt;
     }
 
+    @Getter
+    @NoArgsConstructor
+    public static class WebhookInput{
+        private String imp_uid;
+        private String merchant_uid;
+        private String status;
+    }
+
 }

@@ -12,7 +12,7 @@ public class PaymentRes {
     @Getter
     @Builder
     public static class PaymentSearchRes{
-        private Long paymentId;
+        private String paymentId;
         private Consultation consultationId;
         private String paymentUid;
         private Integer cost;
@@ -23,7 +23,7 @@ public class PaymentRes {
     @AllArgsConstructor
     @Getter
     public static class PaymentServiceRes {
-        private Long paymentId;
+        private String paymentId;
         private String paymentUid;
     }
 }

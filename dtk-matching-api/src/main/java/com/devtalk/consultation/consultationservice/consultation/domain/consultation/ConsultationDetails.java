@@ -33,4 +33,12 @@ public class ConsultationDetails {
     @Builder.Default
     @OneToMany(mappedBy = "consultation", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<AttachedFile> attachedFileList = new ArrayList<>();
+
+    public void setAttachedFileList(List<AttachedFile> attachedFileList) {
+        this.attachedFileList = attachedFileList;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 }
