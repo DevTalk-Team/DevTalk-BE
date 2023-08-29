@@ -2,6 +2,7 @@ package com.devtalk.consultation.consultationservice.consultation.application.po
 
 import com.devtalk.consultation.consultationservice.consultation.domain.consultation.Consultation;
 import com.devtalk.consultation.consultationservice.consultation.domain.consultation.ConsultationCancellation;
+import com.devtalk.consultation.consultationservice.consultation.domain.consultation.Review;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,4 +18,6 @@ public interface ConsultationQueryableRepo {
 
     Optional<ConsultationCancellation> findCancellationByConsultationIdAndConsulterId(Long consultationId, Long consulterId);
     Optional<ConsultationCancellation> findCancellationByConsultationIdAndConsultantId(Long consultationId, Long consultantId);
+
+    List<Review> findAllReviewByConsultantId(Long consultantId);
 }
