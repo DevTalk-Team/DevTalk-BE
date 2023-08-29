@@ -130,10 +130,13 @@ public class Consultation extends BaseTime {
     }
 
     public void cancelByConsultant(String canceledReason) {
+        //TODO: 상담사가 상담취소를 하는데 케이스가 2가지가 있음
+        // 1. 그냥 처음부터 요청들어오면 거절하는것
+        // 2. 승인 후에 취소하는 것 (결제전, 결제후)
         ProcessStatus newStatus = null;
         if (this.status.equals(ACCEPT_WAIT)) {
             newStatus = CONSULTANT_REFUSED;
-        } else if (this.status.equals(PAID)) {
+        } else if (this.status.equals(PAID) || this.status.equals(ACCEPTED)) {
             newStatus = CONSULTANT_CANCELED;
         } else {
             throw new BusinessRuleException(IRREVOCABLE_STATUS);
