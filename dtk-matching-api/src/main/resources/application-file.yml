@@ -1,7 +1,7 @@
 file:
   inbound: /api/files
-  outbound: /Users/khs/devtalk/files
+  outbound: /Users/khs/Documents/devtalk/files
   consultations: /consultations
-  review: /reviews
+  reviews: /reviews
   list-max-size: 10485760 # 10MB
   list-max-count: 3
