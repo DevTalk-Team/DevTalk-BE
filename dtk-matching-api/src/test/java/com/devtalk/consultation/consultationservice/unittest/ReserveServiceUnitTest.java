@@ -59,7 +59,7 @@ class ReserveServiceUnitTest {
         ReservationReq reservationReq = getReservationReq(consulter.getId(), consultant.getId(), productId, attachedFileList);
 
         willDoNothing().given(consultationValidator).validateReservation(reservationReq);
-        given(fileUploadUtils.uploadFileList(reservationReq.getAttachedFileList())).willReturn(convertToBaseFile(attachedFileList));
+        given(fileUploadUtils.uploadConsultationFileList(reservationReq.getAttachedFileList())).willReturn(convertToBaseFile(attachedFileList));
 
         given(consultationRepo.save(any())).willReturn(any());
 
@@ -85,7 +85,7 @@ class ReserveServiceUnitTest {
 
         willDoNothing().given(consultationValidator).validateReservation(reservationReq);
 
-        given(fileUploadUtils.uploadFileList(reservationReq.getAttachedFileList())).willThrow(FileException.class);
+        given(fileUploadUtils.uploadConsultationFileList(reservationReq.getAttachedFileList())).willThrow(FileException.class);
 
         // when, then
         assertThrows(FileException.class, () -> reserveService.reserve(reservationReq));

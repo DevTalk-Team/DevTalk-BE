@@ -30,11 +30,22 @@ public class FileUploadService {
     @Value("${file.consultations}")
     private String consultationFolderPath;
 
-    public List<BaseFile> uploadFileList(List<MultipartFile> multipartFileList) throws FileException {
+    @Value("${file.reviews}")
+    private String reviewFolderPath;
+
+    public List<BaseFile> uploadConsultationFileList(List<MultipartFile> multipartFileList) throws FileException {
+        return uploadFileList(multipartFileList, consultationFolderPath);
+    }
+
+    public BaseFile uploadReviewPhoto(MultipartFile multipartFile) throws FileException {
+        return uploadFile(multipartFile, reviewFolderPath);
+    }
+
+    private List<BaseFile> uploadFileList(List<MultipartFile> multipartFileList, String path) throws FileException {
         List<BaseFile> fileList = new ArrayList<>();
 
         multipartFileList.stream().forEach(multipartFile -> {
-            fileList.add(uploadFile(multipartFile, consultationFolderPath));
+            fileList.add(uploadFile(multipartFile, path));
         });
 
         return fileList;
