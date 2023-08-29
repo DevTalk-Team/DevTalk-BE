@@ -46,7 +46,7 @@ public class ModifyConsultationService implements ModifyConsultationUseCase {
     }
 
     private List<AttachedFile> uploadAttachedFileList(List<MultipartFile> attachedFileList) {
-        List<BaseFile> baseFileList = fileUploadService.uploadFileList(attachedFileList);
+        List<BaseFile> baseFileList = fileUploadService.uploadConsultationFileList(attachedFileList);
         List<AttachedFile> uploadedAttachedFileList = new ArrayList<>();
 
         baseFileList.stream().forEach(baseFile -> {

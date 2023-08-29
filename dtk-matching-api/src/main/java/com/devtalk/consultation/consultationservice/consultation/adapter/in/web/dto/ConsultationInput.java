@@ -1,9 +1,7 @@
 package com.devtalk.consultation.consultationservice.consultation.adapter.in.web.dto;
 
 import com.devtalk.consultation.consultationservice.consultation.domain.consultation.ProcessMean;
-import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -115,4 +113,24 @@ public class ConsultationInput {
             return new ConsultationModificationReq(consulterId, consultationId, content, attachedFileList);
         }
     }
+
+    @AllArgsConstructor
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @Getter
+    public static class ReviewInput {
+
+        @Max(5) @Min(0)
+        private Integer score;
+
+        @NotBlank @Size(max = 500)
+        private String content;
+
+        private MultipartFile photo;
+
+        public ReviewReq toReq(Long consulterId, Long consultationId) {
+            return new ReviewReq(consulterId, consultationId, score, content, photo);
+        }
+    }
+
+
 }

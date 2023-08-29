@@ -26,7 +26,9 @@ public enum ErrorCode {
     DUPLICATED_RESERVATION(CONFLICT, "02007", "이미 예약된 상담입니다."),
     IRREVOCABLE_STATUS(CONFLICT, "02008", "취소할 수 없는 매칭상태입니다."),
     NOT_FOUND_CONSULTATION(NOT_FOUND, "02031", "존재하지 않는 요청입니다."),
-    UNAUTHORIZED_CONSULTATION(UNAUTHORIZED, "02051", "권한이 없는 요청입니다.");
+    UNAUTHORIZED_CONSULTATION(UNAUTHORIZED, "02051", "권한이 없는 요청입니다."),
+    REVIEW_IMPOSSIBLE_STATUS(CONFLICT, "02052", "리뷰를 작성할 수 없는 상태입니다.");
+
 
 
 

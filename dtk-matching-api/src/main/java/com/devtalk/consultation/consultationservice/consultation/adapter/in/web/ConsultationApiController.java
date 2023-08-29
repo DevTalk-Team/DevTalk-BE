@@ -1,9 +1,6 @@
 package com.devtalk.consultation.consultationservice.consultation.adapter.in.web;
 
-import com.devtalk.consultation.consultationservice.consultation.application.port.in.CancelConsultationUseCase;
-import com.devtalk.consultation.consultationservice.consultation.application.port.in.ModifyConsultationUseCase;
-import com.devtalk.consultation.consultationservice.consultation.application.port.in.ReserveConsultationUseCase;
-import com.devtalk.consultation.consultationservice.consultation.application.port.in.SearchConsultationUseCase;
+import com.devtalk.consultation.consultationservice.consultation.application.port.in.*;
 import com.devtalk.consultation.consultationservice.consultation.application.port.in.dto.ConsultationRes;
 import com.devtalk.consultation.consultationservice.global.vo.SuccessCode;
 import com.devtalk.consultation.consultationservice.global.vo.SuccessResponse;
@@ -25,6 +22,7 @@ public class ConsultationApiController {
     private final CancelConsultationUseCase cancelUseCase;
     private final ModifyConsultationUseCase modifyUseCase;
     private final SearchConsultationUseCase searchUseCase;
+    private final ReviewConsultationUseCase reviewUseCase;
 
     @PostMapping("/v1/consulters/{consulterId}/consultations")
     public ResponseEntity<?> reserveConsultation(@RequestBody @Validated ReservationInput reservationInput,
@@ -82,5 +80,13 @@ public class ConsultationApiController {
                                                                                  @PathVariable Long consultationId) {
         return SuccessResponse.toResponseEntity(SuccessCode.CONSULTER_CANCELED_CONSULTATION_SEARCH_SUCCESS,
                 searchUseCase.searchCanceledConsultationDetailsByConsultant(consultantId, consultationId));
+    }
+
+    @PostMapping("/v1/consulter/{consulterId}/consultations/{consultationId}/reviews")
+    public ResponseEntity<?> writeReview(@RequestBody @Validated ReviewInput reviewInput,
+                                         @PathVariable Long consulterId,
+                                         @PathVariable Long consultationId) {
+        reviewUseCase.reviewConsultation(reviewInput.toReq(consulterId, consultationId));
+        return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.CONSULTATION_REVIEW_WRITE_SUCCESS);
     }
 }
