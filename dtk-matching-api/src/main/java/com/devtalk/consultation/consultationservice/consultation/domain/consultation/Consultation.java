@@ -7,6 +7,7 @@ import com.devtalk.consultation.consultationservice.global.vo.Money;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.devtalk.consultation.consultationservice.consultation.domain.consultation.ConsultationCancellation.*;
@@ -134,6 +135,18 @@ public class Consultation extends BaseTime {
             throw new BusinessRuleException(IRREVOCABLE_STATUS);
         }
         cancel(newStatus, canceledReason);
+    }
+
+    public void writeReview(Integer score, String content,
+                            String photoUrl, String photoOriginName, String photoStoredName, LocalDateTime reviewAt) {
+        ACCEPT_WAIT, ACCEPTED, PAID, CONSULTANT_REFUSED, CONSULTANT_CANCELED, CONSULTER_CANCELED, REVIEWED
+        if (!this.status.equals(PAID)
+                && this.consultationDetails.getReservationAT().isAfter(reviewAt)
+                && this.consultationDetails.getReservationAT().plusDays(7).isBefore(reviewAt)
+                && this.review != null) {
+            throw new BusinessRuleException(REVIEW_IMPOSSIBLE_STATUS);
+        }
+        this.review = Review.createReview(this.consultantId, score, photoUrl, photoOriginName, photoStoredName, content);
     }
 
     private void cancel(ProcessStatus status, String canceledReason) {
