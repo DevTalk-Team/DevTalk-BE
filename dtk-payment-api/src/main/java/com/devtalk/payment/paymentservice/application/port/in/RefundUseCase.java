@@ -4,4 +4,6 @@ import com.devtalk.payment.paymentservice.domain.consultation.Consultation;
 
 public interface RefundUseCase {
     String getEmailHtmlConsultationRefundInfo(Consultation consultation);
+
+    void cancelPayment(Long consultationId);
 }
