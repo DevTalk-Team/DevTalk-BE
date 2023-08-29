@@ -56,4 +56,10 @@ public class SearchConsultationService implements SearchConsultationUseCase {
         return CancellationReasonRes.of(consultationCancellation);
     }
 
+    @Override
+    public List<ReviewSearchRes> searchReviewByConsultant(Long consultantId) {
+        return consultationQueryableRepo.findAllReviewByConsultantId(consultantId).stream()
+                .map(review -> ReviewSearchRes.of(review)).toList();
+    }
+
 }
