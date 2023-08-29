@@ -1,6 +1,6 @@
 package com.devtalk.consultation.consultationservice.integrationtest;
 
-import com.devtalk.consultation.consultationservice.consultation.adapter.in.web.ConsultationApiController;
+import com.devtalk.consultation.consultationservice.consultation.adapter.in.web.ConsulterApiController;
 import com.devtalk.consultation.consultationservice.consultation.application.ReserveConsultationService;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.client.ProductServiceClient;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.client.dto.ProductRes;
@@ -53,7 +53,7 @@ class ConsultationApiControllerTest {
     final Integer fileListMaxSize = 10485760;
     final Integer fileListMaxCount = 3;
 
-    private ConsultationApiController consultationApiController;
+    private ConsulterApiController consultationApiController;
 
     // ReserveService 멤버
     @Autowired private FileUploadService fileUploadService;
@@ -71,7 +71,7 @@ class ConsultationApiControllerTest {
     void setUp() {
         productServiceClient = Mockito.mock(ProductServiceClient.class);
         ConsultationReservationValidator consultationValidator = new ConsultationReservationValidator(productServiceClient, consultationQueryableRepo, memberQueryableRepo, new FileValidator(fileListMaxSize, fileListMaxCount));
-        consultationApiController = new ConsultationApiController(new ReserveConsultationService(consultationValidator, fileUploadService, consultationRepo));
+        consultationApiController = new ConsulterApiController(new ReserveConsultationService(consultationValidator, fileUploadService, consultationRepo));
     }
 
     @Test

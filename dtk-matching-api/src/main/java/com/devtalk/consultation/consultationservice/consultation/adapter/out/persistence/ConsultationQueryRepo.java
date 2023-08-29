@@ -63,6 +63,15 @@ public class ConsultationQueryRepo implements ConsultationQueryableRepo {
     }
 
     @Override
+    public List<Consultation> findAllByConsultantId(Long consultantId) {
+        return queryFactory
+                .select(consultation)
+                .from(consultation)
+                .where(consultation.consultantId.eq(consultantId))
+                .fetch();
+    }
+
+    @Override
     public Optional<ConsultationCancellation> findCancellationByConsultationIdAndConsulterId(Long consultationId, Long consulterId) {
         return Optional.ofNullable(
                 queryFactory
