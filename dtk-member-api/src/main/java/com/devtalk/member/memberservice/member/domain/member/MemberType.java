@@ -1,5 +1,6 @@
 package com.devtalk.member.memberservice.member.domain.member;
 
-public enum RoleType {
+// 멘티, 전문가
+public enum MemberType {
     CONSULTER, CONSULTANT
 }

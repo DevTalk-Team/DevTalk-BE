@@ -1,4 +1,4 @@
-package com.devtalk.member.memberservice.member.domain.field;
+package com.devtalk.member.memberservice.member.domain.region;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -6,14 +6,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
 @Entity
-public class Field {
-
+public class Region {
     @Id
     @GeneratedValue
-    @Column(name = "field_id")
+    @Column(name = "region_id")
     Long id;
 
-    @Column(name = "field_name")
-    String fieldName;
-
+    String region;
 }

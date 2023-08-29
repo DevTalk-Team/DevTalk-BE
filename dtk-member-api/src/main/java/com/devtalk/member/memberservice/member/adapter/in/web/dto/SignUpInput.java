@@ -8,7 +8,6 @@ import java.util.List;
 
 @Data
 public class SignUpInput {
-
     @NotBlank(message = "이름은 필수입니다.")
     private final String name;
 
@@ -27,6 +26,5 @@ public class SignUpInput {
     @NotBlank(message = "휴대폰 번호는 필수입니다.")
     private final String phoneNumber;
 
-    private List<String> field;
-
+    private List<String> category;
 }
