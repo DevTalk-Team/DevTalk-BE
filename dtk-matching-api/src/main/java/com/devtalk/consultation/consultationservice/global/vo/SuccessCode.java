@@ -14,7 +14,8 @@ public enum SuccessCode {
     CONSULTER_CONSULTATION_DETAIL_SEARCH_SUCCESS(HttpStatus.OK, "0205", "내담자 상담 상세 조회 성공"),
     CONSULTER_CANCELED_CONSULTATION_SEARCH_SUCCESS(HttpStatus.OK, "0206", "내담자 취소 사유 조회 성공"),
     CONSULTATION_REVIEW_WRITE_SUCCESS(HttpStatus.CREATED, "0207", "상담 리뷰 작성 성공"),
-    CONSULTANT_CONSULTATION_ACCEPT_SUCCESS(HttpStatus.OK, "0208", "상담사 상담 수락 성공");
+    CONSULTANT_CONSULTATION_ACCEPT_SUCCESS(HttpStatus.OK, "0208", "상담사 상담 수락 성공"),
+    CONSULTANT_REVIEW_SEARCH_SUCCESS(HttpStatus.OK, "0212", "상담사 리뷰 리스트 조회 성공");
 
 
     private final HttpStatus httpStatus;

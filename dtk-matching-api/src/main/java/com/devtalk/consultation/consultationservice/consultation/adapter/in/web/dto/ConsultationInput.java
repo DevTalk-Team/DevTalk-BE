@@ -107,6 +107,7 @@ public class ConsultationInput {
         @Size(max = 500)
         private String content;
 
+        @Builder.Default
         private List<MultipartFile> attachedFileList = new ArrayList<>();
 
         public ConsultationModificationReq toReq(Long consulterId, Long consultationId) {
