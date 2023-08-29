@@ -7,6 +7,8 @@ import com.devtalk.consultation.consultationservice.global.vo.Money;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 import static com.devtalk.consultation.consultationservice.consultation.domain.consultation.ConsultationCancellation.*;
 import static com.devtalk.consultation.consultationservice.consultation.domain.consultation.ProcessStatus.*;
 import static com.devtalk.consultation.consultationservice.global.error.ErrorCode.*;
@@ -99,6 +101,20 @@ public class Consultation extends BaseTime {
         }
         this.consultationCancellation = consultationCancellation;
         this.consultationCancellation.setConsultation(this);
+    }
+
+    public void changeAttachedFileList(List<AttachedFile> newAttachedFileList) {
+        List<AttachedFile> originAttachedFileList = this.consultationDetails.getAttachedFileList();
+        if (originAttachedFileList != null) {
+            originAttachedFileList.stream().forEach(attachedFile -> attachedFile.setConsultation(null));
+        }
+        this.consultationDetails.setAttachedFileList(newAttachedFileList);
+        newAttachedFileList.stream().forEach(attachedFile -> attachedFile.setConsultation(this));
+    }
+
+    public void modifyDetails(String newContent, List<AttachedFile> newAttachedFileList) {
+        changeAttachedFileList(newAttachedFileList);
+        this.consultationDetails.setContent(newContent);
     }
 
     public void cancelByConsulter(String canceledReason) {

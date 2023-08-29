@@ -3,7 +3,7 @@ package com.devtalk.consultation.consultationservice.unittest.validator;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.client.ProductServiceClient;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.ConsultationQueryableRepo;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.MemberQueryableRepo;
-import com.devtalk.consultation.consultationservice.consultation.application.validator.ConsultationValidator;
+import com.devtalk.consultation.consultationservice.consultation.application.validator.ConsultationReservationValidator;
 import com.devtalk.consultation.consultationservice.consultation.application.validator.FileValidator;
 import com.devtalk.consultation.consultationservice.consultation.domain.consultation.ProcessMean;
 import com.devtalk.consultation.consultationservice.consultation.domain.member.Consultant;
@@ -51,7 +51,8 @@ public class ConsultationValidatorUnitTest {
     final Integer fileListMaxSize = 10485760;
     final Integer fileListMaxCount = 3;
 
-    @InjectMocks ConsultationValidator consultationValidator;
+    @InjectMocks
+    ConsultationReservationValidator consultationValidator;
     @Mock ProductServiceClient productServiceClient;
 
     @Mock MemberQueryableRepo memberQueryableRepo;
@@ -88,7 +89,7 @@ public class ConsultationValidatorUnitTest {
         given(consultationQueryableRepo.existsByProductIdInReservedItem(reservationReq.getProductId())).willReturn(false);
 
         // when, then
-        assertDoesNotThrow(() -> consultationValidator.validate(reservationReq));
+        assertDoesNotThrow(() -> consultationValidator.validateReservation(reservationReq));
     }
 
     @Test
@@ -107,7 +108,7 @@ public class ConsultationValidatorUnitTest {
         ReservationReq reservationReq = getReservationReq(consulter.getId(), consultant.getId(), productId, attachedFileList);
 
         // when, then
-        assertThrows(FileException.class, () -> consultationValidator.validate(reservationReq));
+        assertThrows(FileException.class, () -> consultationValidator.validateReservation(reservationReq));
     }
 
     @Test
@@ -126,7 +127,7 @@ public class ConsultationValidatorUnitTest {
         ReservationReq reservationReq = getReservationReq(consulter.getId(), consultant.getId(), productId, attachedFileList);
 
         // when, then
-        assertThrows(FileException.class, () -> consultationValidator.validate(reservationReq));
+        assertThrows(FileException.class, () -> consultationValidator.validateReservation(reservationReq));
     }
 
     @Test
@@ -145,7 +146,7 @@ public class ConsultationValidatorUnitTest {
         ReservationReq reservationReq = getReservationReq(consulter.getId(), consultant.getId(), productId, attachedFileList);
 
         // when, then
-        assertThrows(FileException.class, () -> consultationValidator.validate(reservationReq));
+        assertThrows(FileException.class, () -> consultationValidator.validateReservation(reservationReq));
     }
 
     @Test
@@ -166,7 +167,7 @@ public class ConsultationValidatorUnitTest {
         given(memberQueryableRepo.existsByConsulterId(reservationReq.getConsulterId())).willReturn(false);
 
         // when, then
-        assertThrows(NotFoundException.class, () -> consultationValidator.validate(reservationReq));
+        assertThrows(NotFoundException.class, () -> consultationValidator.validateReservation(reservationReq));
     }
 
     @Test
@@ -188,7 +189,7 @@ public class ConsultationValidatorUnitTest {
         given(memberQueryableRepo.existsByConsultantId(reservationReq.getConsultantId())).willReturn(false);
 
         // when, then
-        assertThrows(NotFoundException.class, () -> consultationValidator.validate(reservationReq));
+        assertThrows(NotFoundException.class, () -> consultationValidator.validateReservation(reservationReq));
     }
 
     @Test
@@ -216,7 +217,7 @@ public class ConsultationValidatorUnitTest {
                         .build());
 
         // when, then
-        assertThrows(InvalidInputException.class, () -> consultationValidator.validate(reservationReq));
+        assertThrows(InvalidInputException.class, () -> consultationValidator.validateReservation(reservationReq));
     }
 
     @Test
@@ -245,7 +246,7 @@ public class ConsultationValidatorUnitTest {
                         .build());
 
         // when, then
-        assertThrows(InvalidInputException.class, () -> consultationValidator.validate(reservationReq));
+        assertThrows(InvalidInputException.class, () -> consultationValidator.validateReservation(reservationReq));
     }
 
     @Test
@@ -276,7 +277,7 @@ public class ConsultationValidatorUnitTest {
         given(consultationQueryableRepo.existsByProductIdInReservedItem(reservationReq.getProductId())).willReturn(true);
 
         // when, then
-        assertThrows(DuplicationException.class, () -> consultationValidator.validate(reservationReq));
+        assertThrows(DuplicationException.class, () -> consultationValidator.validateReservation(reservationReq));
     }
 
     private ReservationReq getReservationReq(Long consulterId, Long consultantId, Long productId, List<MultipartFile> attachedFileList) {

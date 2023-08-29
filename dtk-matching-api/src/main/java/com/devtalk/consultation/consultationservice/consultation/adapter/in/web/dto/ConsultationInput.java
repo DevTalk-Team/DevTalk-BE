@@ -99,4 +99,20 @@ public class ConsultationInput {
         }
     }
 
+    @Builder
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @Getter
+    public static class ConsultationModificationInput {
+
+        @NotBlank
+        @Size(max = 500)
+        private String content;
+
+        private List<MultipartFile> attachedFileList = new ArrayList<>();
+
+        public ConsultationModificationReq toReq(Long consulterId, Long consultationId) {
+            return new ConsultationModificationReq(consulterId, consultationId, content, attachedFileList);
+        }
+    }
 }

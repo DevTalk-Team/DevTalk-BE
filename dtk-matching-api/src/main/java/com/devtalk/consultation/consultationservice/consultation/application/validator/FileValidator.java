@@ -31,6 +31,12 @@ public class FileValidator {
         this.fileListMaxCount = fileListMaxCount;
     }
 
+    public void checkFileCountAndSizeAndExtension(List<MultipartFile> fileList) {
+        checkExceedMaxCount(fileList.size());
+        checkExceedMaxSize(fileList);
+        checkFileExtension(fileList);
+    }
+
     public void checkExceedMaxCount(Integer fileCount) {
         if(fileCount > fileListMaxCount) {
             throw new FileException(EXCESS_FILE_LIST_COUNT);

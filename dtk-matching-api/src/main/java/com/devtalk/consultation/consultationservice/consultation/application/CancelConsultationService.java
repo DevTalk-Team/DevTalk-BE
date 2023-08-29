@@ -3,11 +3,14 @@ package com.devtalk.consultation.consultationservice.consultation.application;
 import com.devtalk.consultation.consultationservice.consultation.application.port.in.CancelConsultationUseCase;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.ConsultationQueryableRepo;
 import com.devtalk.consultation.consultationservice.consultation.domain.consultation.Consultation;
+import com.devtalk.consultation.consultationservice.global.error.ErrorCode;
+import com.devtalk.consultation.consultationservice.global.error.execption.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.devtalk.consultation.consultationservice.consultation.application.port.in.dto.ConsultationReq.*;
+import static com.devtalk.consultation.consultationservice.global.error.ErrorCode.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -20,7 +23,7 @@ public class CancelConsultationService implements CancelConsultationUseCase {
     @Transactional
     public void cancelByConsulter(CancellationOfConsulterReq cancellationReq) {
         Consultation consultation = consultationQueryableRepo.findByIdWithConsulterId(cancellationReq.getConsultationId(), cancellationReq.getConsulterId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상담입니다."));
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND_CONSULTATION));
 
         consultation.cancelByConsulter(cancellationReq.getReason());
         //TODO: 상담취소 아이템 생성
@@ -34,8 +37,8 @@ public class CancelConsultationService implements CancelConsultationUseCase {
         // 1. 그냥 처음부터 요청들어오면 거절하는것
         // 2. 승인 후에 취소하는 것 (결제전, 결제후)
 
-        Consultation consultation = consultationQueryableRepo.findByIdWithConsulterId(cancellationReq.getConsultationId(), cancellationReq.getConsultantId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상담입니다."));
+        Consultation consultation = consultationQueryableRepo.findByIdWithConsultantId(cancellationReq.getConsultationId(), cancellationReq.getConsultantId())
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND_CONSULTATION));
 
         consultation.cancelByConsultant(cancellationReq.getReason());
 
