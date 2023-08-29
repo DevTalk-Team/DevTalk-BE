@@ -1,9 +1,7 @@
 package com.devtalk.consultation.consultationservice.consultation.adapter.out.persistence;
 
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.ConsultationQueryableRepo;
-import com.devtalk.consultation.consultationservice.consultation.domain.consultation.Consultation;
-import com.devtalk.consultation.consultationservice.consultation.domain.consultation.ConsultationCancellation;
-import com.devtalk.consultation.consultationservice.consultation.domain.consultation.QConsultationCancellation;
+import com.devtalk.consultation.consultationservice.consultation.domain.consultation.*;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -14,6 +12,7 @@ import java.util.Optional;
 import static com.devtalk.consultation.consultationservice.consultation.domain.consultation.ProcessStatus.*;
 import static com.devtalk.consultation.consultationservice.consultation.domain.consultation.QConsultation.*;
 import static com.devtalk.consultation.consultationservice.consultation.domain.consultation.QConsultationCancellation.*;
+import static com.devtalk.consultation.consultationservice.consultation.domain.consultation.QReview.*;
 
 @Repository
 @RequiredArgsConstructor
@@ -63,6 +62,15 @@ public class ConsultationQueryRepo implements ConsultationQueryableRepo {
     }
 
     @Override
+    public List<Consultation> findAllByConsultantId(Long consultantId) {
+        return queryFactory
+                .select(consultation)
+                .from(consultation)
+                .where(consultation.consultantId.eq(consultantId))
+                .fetch();
+    }
+
+    @Override
     public Optional<ConsultationCancellation> findCancellationByConsultationIdAndConsulterId(Long consultationId, Long consulterId) {
         return Optional.ofNullable(
                 queryFactory
@@ -88,4 +96,12 @@ public class ConsultationQueryRepo implements ConsultationQueryableRepo {
                         .fetchFirst());
     }
 
+    @Override
+    public List<Review> findAllReviewByConsultantId(Long consultantId) {
+        return queryFactory
+                .select(review)
+                .from(review)
+                .where(review.consultantId.eq(consultantId))
+                .fetch();
+    }
 }

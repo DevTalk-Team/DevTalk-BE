@@ -44,6 +44,9 @@ dependencies {
 
 	implementation "com.fasterxml.uuid:java-uuid-generator:4.0.1" //UUID
 
+	//swagger
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+
 	// ⭐ Spring boot 3.x이상에서 QueryDsl 패키지를 정의하는 방법
 	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
 	annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"

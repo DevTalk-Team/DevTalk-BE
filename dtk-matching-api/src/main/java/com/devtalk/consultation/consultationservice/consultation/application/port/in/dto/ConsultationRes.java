@@ -41,7 +41,6 @@ public class ConsultationRes {
         }
     }
 
-
     @AllArgsConstructor
     @Getter
     public static class CancellationReasonRes {
@@ -51,4 +50,32 @@ public class ConsultationRes {
             return new CancellationReasonRes(consultationCancellation.getCanceledReason());
         }
     }
+
+    @Builder(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @Getter
+    public static class ReviewSearchRes {
+        private Long id;
+        private String consulterName;
+        private String consultantName;
+        private Integer score;
+        private String photoUrl;
+        private String photoOriginName;
+        private String photoStoredName;
+        private String content;
+
+        public static ReviewSearchRes of(Review review) {
+            return ReviewSearchRes.builder()
+                    .id(review.getId())
+                    .consulterName(review.getConsulterName())
+                    .consultantName(review.getConsultantName())
+                    .score(review.getScore())
+                    .photoUrl(review.getPhotoUrl())
+                    .photoOriginName(review.getPhotoOriginName())
+                    .photoStoredName(review.getPhotoStoredName())
+                    .content(review.getContent())
+                    .build();
+        }
+    }
+
 }
