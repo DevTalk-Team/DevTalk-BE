@@ -113,6 +113,10 @@ public class Consultation extends BaseTime {
         newAttachedFileList.stream().forEach(attachedFile -> attachedFile.setConsultation(this));
     }
 
+    public void accept() {
+        this.status = ACCEPTED;
+    }
+
     public void modifyDetails(String newContent, List<AttachedFile> newAttachedFileList) {
         changeAttachedFileList(newAttachedFileList);
         this.consultationDetails.setContent(newContent);
