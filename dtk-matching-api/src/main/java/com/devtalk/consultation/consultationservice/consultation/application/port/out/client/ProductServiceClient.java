@@ -3,7 +3,9 @@ package com.devtalk.consultation.consultationservice.consultation.application.po
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.client.dto.ProductRes;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import static com.devtalk.consultation.consultationservice.consultation.application.port.out.client.dto.ProductRes.*;
 
@@ -12,5 +14,8 @@ public interface ProductServiceClient {
 
     @GetMapping("/products/{productId}")
     ProductSearchRes getProduct(@PathVariable Long productId);
+
+    @PostMapping("/products/{productId}/accept")
+    void acceptProduct(@PathVariable Long productId);
 
 }

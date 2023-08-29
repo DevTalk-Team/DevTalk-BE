@@ -19,6 +19,11 @@ public class CancelConsultationService implements CancelConsultationUseCase {
 
     private final ConsultationQueryableRepo consultationQueryableRepo;
 
+
+    // TODO: 결제가 이미 된 매칭이라면
+    // 1. 결제 서비스에 결제 취소요청
+    // 2. 상품 서비스에 상품 취소요청
+
     @Override
     @Transactional
     public void cancelByConsulter(CancellationOfConsulterReq cancellationReq) {
