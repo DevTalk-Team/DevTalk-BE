@@ -32,7 +32,7 @@ public class PaymentReq {
     }
 
     @NoArgsConstructor
-    @Getter
+    @Data
     public static class WebhookReq{
         private String imp_uid;
         private String merchant_uid;
