@@ -7,8 +7,11 @@ import com.devtalk.payment.paymentservice.application.port.in.PaymentUseCase;
 import com.devtalk.payment.paymentservice.application.port.in.RefundUseCase;
 import com.devtalk.payment.paymentservice.application.port.out.repository.ConsultationRepo;
 import com.devtalk.payment.paymentservice.application.port.out.repository.PaymentRepo;
+import com.devtalk.payment.paymentservice.application.port.out.repository.RefundRepo;
+import com.devtalk.payment.paymentservice.application.validator.PaymentValidator;
 import com.devtalk.payment.paymentservice.domain.consultation.Consultation;
 import com.devtalk.payment.paymentservice.domain.payment.Payment;
+import com.devtalk.payment.paymentservice.domain.refund.Refund;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,6 +31,8 @@ class RefundService implements RefundUseCase {
     private final PaymentUseCase paymentUseCase;
     private final PaymentRepo paymentRepo;
     private final ConsultationRepo consultationRepo;
+    private final RefundRepo refundRepo;
+    private final PaymentValidator paymentValidator;
 
     @Override
     public String getEmailHtmlConsultationRefundInfo(Consultation consultation) {
@@ -42,6 +47,8 @@ class RefundService implements RefundUseCase {
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_CONSULTATION));
         Payment payment = paymentRepo.findByConsultationId(consultationId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_CONSULTATION));
+
+        paymentValidator.validateIsItPaid(payment);
 
         RefundPortOneReq refundPortOneReq = RefundPortOneReq.builder()
                 .imp_uid(payment.getPaymentUid())
@@ -70,5 +77,16 @@ class RefundService implements RefundUseCase {
         }
         payment.changePaymentByCanceled();
         consultation.changeConsultationByCanceled();
+        saveRefundInfo(payment, consultation);
+    }
+
+    @Override
+    public void saveRefundInfo(Payment payment, Consultation consultation) {
+        Refund refund = Refund.builder()
+                .refundCost(payment.getCost())
+                .consultationId(consultation)
+                .paymentId(payment)
+                .build();
+        refundRepo.save(refund);
     }
 }
