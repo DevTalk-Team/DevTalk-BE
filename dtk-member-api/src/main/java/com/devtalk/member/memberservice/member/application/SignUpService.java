@@ -34,11 +34,12 @@ public class SignUpService implements SignUpUseCase {
     private final MemberCategoryRepo memberCategoryRepo;
 
     @Override
-    public void signUp(SignUpReq req) {
+    public Member signUp(SignUpReq req) {
         signUpValidator.validate(req);
         Member member = createMember(req, passwordEncoder);
-        memberRepo.save(member);
+        Member savedMember = memberRepo.save(member);
         toMemberCategory(member, req.getCategory());
+        return savedMember;
     }
 
     private void toMemberCategory(Member member, List<String> category) {
