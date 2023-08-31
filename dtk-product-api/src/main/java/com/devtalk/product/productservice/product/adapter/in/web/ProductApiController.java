@@ -4,6 +4,7 @@ package com.devtalk.product.productservice.product.adapter.in.web;
 import com.devtalk.product.productservice.global.vo.SuccessResponse;
 import com.devtalk.product.productservice.product.adapter.in.web.dto.ProductInput;
 import com.devtalk.product.productservice.product.adapter.in.web.dto.ProductOutput;
+import com.devtalk.product.productservice.product.adapter.out.web.producer.KafkaProducer;
 import com.devtalk.product.productservice.product.application.port.in.ProductUseCase;
 import com.devtalk.product.productservice.product.application.port.in.dto.ProductReq.ReserveProdReq;
 
@@ -13,6 +14,7 @@ import com.devtalk.product.productservice.product.domain.member.Consultant;
 import com.devtalk.product.productservice.product.domain.member.Member;
 import com.devtalk.product.productservice.product.domain.member.RoleType;
 import com.devtalk.product.productservice.product.domain.product.Product;
+import com.devtalk.product.productservice.product.domain.product.ProductProceedType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -42,23 +44,25 @@ import java.util.List;
 class ProductApiController {
     private final ProductUseCase productUseCase;
     private final MemberRepo memberRepo;
+    private final KafkaProducer kafkaProducer;
 
 
-    @PostMapping("")
-    public ResponseEntity<?> create() {
-        Consultant consultant = Consultant.builder()
-                .name("구한서")
-                .loginId("5시간 비대면 상담")
-                .role(RoleType.CONSULTANT)
-                .F2F(5000)
-                .NF2F(4000)
-                .area("gangnam")
-                .build();
-        memberRepo.save(consultant);
 
-
-        return ResponseEntity.ok().build();
-    }
+//    @PostMapping("")
+//    public ResponseEntity<?> create() {
+//        Consultant consultant = Consultant.builder()
+//                .name("구한서")
+//                .loginId("5시간 비대면 상담")
+//                .role(RoleType.CONSULTANT)
+//                .F2F(5000)
+//                .NF2F(4000)
+//                .area("gangnam")
+//                .build();
+//        memberRepo.save(consultant);
+//
+//
+//        return ResponseEntity.ok().build();
+//    }
 
     @Operation(summary = "상품 등록 API", description = "상담사가 상담 가능한 시간을 설정.")
     @ApiResponses(value = {
@@ -160,6 +164,17 @@ class ProductApiController {
 //        return ResponseEntity.ok().build();
 //    }
 //
-//
-//
+@PostMapping("")
+    public ResponseEntity<?> reserveConsultation() {
+         Product product = Product.builder()
+                .status("예약 대기중")
+                .type(ProductProceedType.NF2F)
+                .build();
+
+				//*** 주입 받은 KafkaProducer를 사용 ***//
+        kafkaProducer.sendPaymentStatus("test", product);
+
+        return ResponseEntity.ok().build();
+    }
+
 }

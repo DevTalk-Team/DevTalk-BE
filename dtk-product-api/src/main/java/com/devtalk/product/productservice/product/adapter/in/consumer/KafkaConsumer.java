@@ -1,7 +1,6 @@
 package com.devtalk.product.productservice.product.adapter.in.consumer;
 
 import com.devtalk.product.productservice.global.config.CustomLocalDateTimeDeserializer;
-import com.devtalk.product.productservice.global.config.CustomLocalDateTimeSerializer;
 
 import com.devtalk.product.productservice.product.application.port.out.repository.ProductRepo;
 import com.devtalk.product.productservice.product.application.port.out.repository.ReservedProductRepo;
@@ -22,7 +21,6 @@ import java.time.LocalDateTime;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@Getter
 public class KafkaConsumer {
     private final ProductRepo productRepo;
     private final ReservedProductRepo reservedProductRepo;

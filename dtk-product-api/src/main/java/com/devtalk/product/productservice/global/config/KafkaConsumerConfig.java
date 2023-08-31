@@ -1,6 +1,6 @@
 package com.devtalk.product.productservice.global.config;
 
-import com.fasterxml.jackson.databind.deser.std.StringDeserializer;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
