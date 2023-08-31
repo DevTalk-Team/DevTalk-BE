@@ -1,16 +1,12 @@
 package com.devtalk.payment.paymentservice.adapter.in.consumer;
 
 import com.devtalk.payment.global.config.CustomLocalDateTimeDeserializer;
-import com.devtalk.payment.global.config.CustomLocalDateTimeSerializer;
-import com.devtalk.payment.paymentservice.application.port.in.ConsultationUseCase;
-import com.devtalk.payment.paymentservice.application.port.in.PaymentUseCase;
 import com.devtalk.payment.paymentservice.application.port.out.repository.ConsultationRepo;
 import com.devtalk.payment.paymentservice.application.port.out.repository.PaymentRepo;
 import com.devtalk.payment.paymentservice.domain.consultation.Consultation;
 import com.devtalk.payment.paymentservice.domain.payment.Payment;
 import com.devtalk.payment.paymentservice.domain.payment.PaymentStatus;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -21,9 +17,6 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 @Service
 @Slf4j
@@ -32,7 +25,7 @@ public class KafkaConsumer {
     private final ConsultationRepo consultationRepo;
     private final PaymentRepo paymentRepo;
 
-    @KafkaListener(topics = "test")
+    @KafkaListener(topics = "approved-consultation-topic")
     public void receiveConsultationInfo(String kafkaMessage) {
         log.info("Kafka Message: " + kafkaMessage);
 //        Map<Object, Object> map = new HashMap<>();
