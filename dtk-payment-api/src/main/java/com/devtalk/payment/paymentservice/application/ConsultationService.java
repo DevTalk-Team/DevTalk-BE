@@ -17,22 +17,11 @@ import org.thymeleaf.context.Context;
 public
 class ConsultationService implements ConsultationUseCase {
     private final ConsultationRepo consultationRepo;
-    private final TemplateEngine templateEngine;
 
     @Override
     public Consultation searchConsultationInfo(Long consultationId) {
         return consultationRepo.findById(consultationId)
                 .orElseThrow(()-> new NotFoundException(ErrorCode.NOT_FOUND_CONSULTATION));
-    }
-
-    @Override
-    public String getEmailHtmlConsultationPaidInfo(Consultation consultation) {
-        Context context = new Context();
-        context.setVariable("counselee", consultation.getConsulter());
-        context.setVariable("counselor", consultation.getConsultant());
-        context.setVariable("message", "결제에 성공했습니다.");
-
-        return templateEngine.process("mail/payment-email", context);
     }
 
 }

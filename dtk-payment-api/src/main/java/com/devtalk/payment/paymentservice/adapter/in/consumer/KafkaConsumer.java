@@ -29,12 +29,10 @@ import java.util.UUID;
 @Slf4j
 @RequiredArgsConstructor
 public class KafkaConsumer {
-    private final ConsultationUseCase consultationUseCase;
-    private final PaymentUseCase paymentUseCase;
     private final ConsultationRepo consultationRepo;
     private final PaymentRepo paymentRepo;
 
-    @KafkaListener(topics = "consultation-topic")
+    @KafkaListener(topics = "test")
     public void receiveConsultationInfo(String kafkaMessage) {
         log.info("Kafka Message: " + kafkaMessage);
 //        Map<Object, Object> map = new HashMap<>();
@@ -51,14 +49,11 @@ public class KafkaConsumer {
     }
 
     private void dataSynchronization(Consultation consultation) {
-        // 카프카로 받은 예약 정보를 저장
         consultationRepo.save(consultation);
-//        consultationRepo.save((Consultation) map);
-        // Payment에 임시 결제 정보 생성
-//        Consultation consultation = consultationUseCase.searchConsultationInfo(((Consultation) map).getId());
         paymentRepo.save(Payment.builder()
                 .consultation(consultation)
                 .paymentUid(null)
+                .merchantId(consultation.getMerchantId())
                 .cost(consultation.getCost())
                 .paidAt(null)
                 .status(PaymentStatus.READY)
