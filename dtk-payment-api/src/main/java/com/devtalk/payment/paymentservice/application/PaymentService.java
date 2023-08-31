@@ -3,6 +3,7 @@ package com.devtalk.payment.paymentservice.application;
 import com.devtalk.payment.global.code.ErrorCode;
 import com.devtalk.payment.global.config.property.PaymentProperty;
 import com.devtalk.payment.global.error.exception.NotFoundException;
+import com.devtalk.payment.paymentservice.adapter.out.producer.KafkaProducer;
 import com.devtalk.payment.paymentservice.application.port.in.ConsultationUseCase;
 import com.devtalk.payment.paymentservice.application.port.in.EmailUseCase;
 import com.devtalk.payment.paymentservice.application.port.in.PaymentUseCase;
@@ -32,7 +33,7 @@ public class PaymentService implements PaymentUseCase {
     private final PaymentRepo paymentRepo;
     private final ConsultationUseCase consultationUseCase;
     private final EmailUseCase emailUseCase;
-
+    private final KafkaProducer kafkaProducer;
     private final PaymentProperty paymentProperty;
 
     // 결제 토큰 생성 (포트원 API사용을 위해 필요함)
@@ -65,9 +66,10 @@ public class PaymentService implements PaymentUseCase {
     }
 
     @Override
+    @Transactional
     public String getPaymentLink(Long consultationId) {
         String impUid = paymentProperty.getImpUid();
-        String webhookUrl = "https://101d-211-213-255-27.ngrok-free.app/payment/webhook";
+        String webhookUrl = "https://9379-211-213-255-27.ngrok-free.app/payment/webhook";
         Consultation consultation = consultationUseCase.searchConsultationInfo(consultationId);
         String paymentInfo = String.format(
                 "{" +
@@ -92,12 +94,11 @@ public class PaymentService implements PaymentUseCase {
                             consultation.getConsultationType(),
                             impUid,
                             consultation.getCost(),
-                            consultation.getId(),
+                            consultation.getMerchantId(),
                             consultation.getConsultationType(),
                             consultation.getConsulter(),
                             consultation.getConsulterEmail(),
                             webhookUrl);
-        // Add other payment methods
 
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("payment_info", paymentInfo);
@@ -120,21 +121,23 @@ public class PaymentService implements PaymentUseCase {
             return paymentLink;
         } catch (JsonProcessingException e) {
             e.printStackTrace();
-            return null;
+            throw new RuntimeException(e);
         }
     }
 
     @Override
     public void updatePaymentStatus(WebhookReq webhookReq) {
         String paymentUid = webhookReq.getImp_uid();
-        Long consultationId = Long.parseLong(webhookReq.getMerchant_uid());
+        String merchantId = webhookReq.getMerchant_uid();
         String status = webhookReq.getStatus();
 
         if (status.equals("paid")) {
-            Payment payment = paymentRepo.findByConsultationId(consultationId)
+            Payment payment = paymentRepo.findByMerchantId(merchantId)
                     .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_CONSULTATION));
-
+            Consultation consultation = payment.getConsultation();
             payment.changePaymentBySuccess(paymentUid);
+            consultation.changeConsultationByWaitingConsultation();
+            kafkaProducer.sendPaymentStatus("payment-status", payment);
         }
     }
 

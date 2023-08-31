@@ -23,4 +23,13 @@ class PaymentQueryRepo implements PaymentQueryableRepo {
                         .fetchOne()
         );
     }
+
+    @Override
+    public Optional<Payment> findByMerchantId(String merchantId) {
+        return Optional.ofNullable(
+                queryFactory.selectFrom(payment)
+                        .where(payment.merchantId.eq(merchantId))
+                        .fetchOne()
+        );
+    }
 }

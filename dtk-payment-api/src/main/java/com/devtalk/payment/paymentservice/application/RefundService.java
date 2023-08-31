@@ -49,10 +49,13 @@ class RefundService implements RefundUseCase {
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_CONSULTATION));
 
         paymentValidator.validateIsItPaid(payment);
+        payment.changePaymentByCanceled();
+        consultation.changeConsultationByCanceled();
+        saveRefundInfo(payment, consultation);
 
         RefundPortOneReq refundPortOneReq = RefundPortOneReq.builder()
                 .imp_uid(payment.getPaymentUid())
-                .merchant_uid(payment.getConsultation().getId().toString())
+                .merchant_uid(payment.getMerchantId())
                 .amount(payment.getCost())
                 .extra(RefundPortOneReq.Extra.builder().requester("customer").build())
                 .build();
@@ -75,9 +78,6 @@ class RefundService implements RefundUseCase {
         if (node.get("code").asInt() != 0) {
             throw new IncorrectException(ErrorCode.INVALID_REFUND_REQUEST);
         }
-        payment.changePaymentByCanceled();
-        consultation.changeConsultationByCanceled();
-        saveRefundInfo(payment, consultation);
     }
 
     @Override
@@ -86,6 +86,7 @@ class RefundService implements RefundUseCase {
                 .refundCost(payment.getCost())
                 .consultationId(consultation)
                 .paymentId(payment)
+                .merchantId(payment.getMerchantId())
                 .build();
         refundRepo.save(refund);
     }

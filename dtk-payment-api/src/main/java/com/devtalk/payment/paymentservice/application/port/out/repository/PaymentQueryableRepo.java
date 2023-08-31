@@ -9,4 +9,6 @@ import java.util.Optional;
 
 public interface PaymentQueryableRepo{
     Optional<Payment> findByConsultationId(Long consultationId);
+
+    Optional<Payment> findByMerchantId(String merchantId);
 }
