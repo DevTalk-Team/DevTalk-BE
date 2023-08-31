@@ -20,8 +20,15 @@ import static com.devtalk.consultation.consultationservice.global.error.ErrorCod
 public class SearchConsultationService implements SearchConsultationUseCase {
     private final ConsultationQueryableRepo consultationQueryableRepo;
 
-    public List<ConsultationSearchRes> searchConsultationBy(Long consulterId) {
+    public List<ConsultationSearchRes> searchConsultationListByConsulter(Long consulterId) {
         List<Consultation> consultationList = consultationQueryableRepo.findAllByConsulterId(consulterId);
+
+        return consultationList.stream().map(consultation -> ConsultationSearchRes.of(consultation)).toList();
+    }
+
+    @Override
+    public List<ConsultationSearchRes> searchConsultationListByConsultant(Long consultantId) {
+        List<Consultation> consultationList = consultationQueryableRepo.findAllByConsultantId(consultantId);
 
         return consultationList.stream().map(consultation -> ConsultationSearchRes.of(consultation)).toList();
     }
@@ -47,6 +54,12 @@ public class SearchConsultationService implements SearchConsultationUseCase {
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_CONSULTATION));
 
         return CancellationReasonRes.of(consultationCancellation);
+    }
+
+    @Override
+    public List<ReviewSearchRes> searchReviewByConsultant(Long consultantId) {
+        return consultationQueryableRepo.findAllReviewByConsultantId(consultantId).stream()
+                .map(review -> ReviewSearchRes.of(review)).toList();
     }
 
 }

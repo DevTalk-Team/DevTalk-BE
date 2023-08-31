@@ -5,6 +5,10 @@ import com.devtalk.consultation.consultationservice.consultation.application.por
 import com.devtalk.consultation.consultationservice.global.vo.SuccessCode;
 import com.devtalk.consultation.consultationservice.global.vo.SuccessResponse;
 import com.devtalk.consultation.consultationservice.global.vo.SuccessResponseWithoutResult;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -16,7 +20,7 @@ import static com.devtalk.consultation.consultationservice.consultation.applicat
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-public class ConsultationApiController {
+public class ConsulterApiController {
 
     private final ReserveConsultationUseCase reserveUseCase;
     private final CancelConsultationUseCase cancelUseCase;
@@ -24,6 +28,9 @@ public class ConsultationApiController {
     private final SearchConsultationUseCase searchUseCase;
     private final ReviewConsultationUseCase reviewUseCase;
 
+    @Operation(summary = "Get thing", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
+    })
     @PostMapping("/v1/consulters/{consulterId}/consultations")
     public ResponseEntity<?> reserveConsultation(@RequestBody @Validated ReservationInput reservationInput,
                                                  @PathVariable Long consulterId) {
@@ -31,6 +38,9 @@ public class ConsultationApiController {
         return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.CONSULTATION_RESERVATION_SUCCESS);
     }
 
+    @Operation(summary = "Get thing", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
+    })
     @DeleteMapping("/v1/consulters/{consulterId}/consultations/{consultationId}")
     public ResponseEntity<?> cancelConsultationByConsulter(@RequestBody @Validated CancellationOfConsulterInput cancellationInput,
                                                  @PathVariable Long consulterId,
@@ -39,14 +49,9 @@ public class ConsultationApiController {
         return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.CONSULTATION_CONSULTER_CANCEL_SUCCESS);
     }
 
-    @DeleteMapping("/v1/consultants/{consultantId}/consultations/{consultationId}")
-    public ResponseEntity<?> cancelConsultationByConsultant(@RequestBody @Validated CancellationOfConsultantInput cancellationInput,
-                                                           @PathVariable Long consultantId,
-                                                           @PathVariable Long consultationId) {
-        cancelUseCase.cancelByConsultant(cancellationInput.toReq(consultantId, consultationId));
-        return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.CONSULTATION_CONSULTANT_CANCEL_SUCCESS);
-    }
-
+    @Operation(summary = "Get thing", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
+    })
     @PatchMapping("/v1/consulters/{consulterId}/consultations/{consultationId}")
     public ResponseEntity<?> modifyConsultationContents(@RequestBody @Validated ConsultationModificationInput consultationModificationInput,
                                                         @PathVariable Long consulterId,
@@ -55,12 +60,18 @@ public class ConsultationApiController {
         return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.CONSULTATION_MODIFICATION_SUCCESS);
     }
 
+    @Operation(summary = "Get thing", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(type = "array", implementation = ConsultationSearchRes.class)))
+    })
     @GetMapping("/v1/consulters/{consulterId}/consultations")
     public ResponseEntity<SuccessResponse> searchConsultationByConsulter(@PathVariable Long consulterId) {
         return SuccessResponse.toResponseEntity(SuccessCode.CONSULTER_CONSULTATION_SEARCH_SUCCESS,
-                searchUseCase.searchConsultationBy(consulterId));
+                searchUseCase.searchConsultationListByConsulter(consulterId));
     }
 
+    @Operation(summary = "Get thing", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ConsultationSearchRes.class)))
+    })
     @GetMapping("/v1/consulters/{consulterId}/consultations/{consultationId}")
     public ResponseEntity<SuccessResponse> searchConsultationDetailsByConsulter(@PathVariable Long consulterId,
                                                                          @PathVariable Long consultationId) {
@@ -68,6 +79,9 @@ public class ConsultationApiController {
                 searchUseCase.searchConsultationDetailsBy(consulterId, consultationId));
     }
 
+    @Operation(summary = "Get thing", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CancellationReasonRes.class)))
+    })
     @GetMapping("/v1/consulters/{consulterId}/canceled-consultations/{consultationId}")
     public ResponseEntity<SuccessResponse> searchCanceledConsultationByConsulter(@PathVariable Long consulterId,
                                                                                  @PathVariable Long consultationId) {
@@ -75,13 +89,9 @@ public class ConsultationApiController {
                 searchUseCase.searchCanceledConsultationDetailsByConsulter(consulterId, consultationId));
     }
 
-    @GetMapping("/v1/consultants/{consultantId}/canceled-consultations/{consultationId}")
-    public ResponseEntity<SuccessResponse> searchCanceledConsultationByConsultant(@PathVariable Long consultantId,
-                                                                                 @PathVariable Long consultationId) {
-        return SuccessResponse.toResponseEntity(SuccessCode.CONSULTER_CANCELED_CONSULTATION_SEARCH_SUCCESS,
-                searchUseCase.searchCanceledConsultationDetailsByConsultant(consultantId, consultationId));
-    }
-
+    @Operation(summary = "Get thing", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
+    })
     @PostMapping("/v1/consulter/{consulterId}/consultations/{consultationId}/reviews")
     public ResponseEntity<?> writeReview(@RequestBody @Validated ReviewInput reviewInput,
                                          @PathVariable Long consulterId,
