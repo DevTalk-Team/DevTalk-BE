@@ -11,7 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @AllArgsConstructor
 @Getter
 public class Member {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
@@ -44,4 +43,8 @@ public class Member {
         return member;
     }
 
+    public Member updatePassword(String password) {
+        this.password = password;
+        return this;
+    }
 }

@@ -28,6 +28,10 @@ public class Payment extends BaseEntity {
     @Column
     private String paymentUid;
 
+    // 포트원 가맹점 상품 고유번호
+    @Column
+    private String merchantId;
+
     // 결제 금액
     @Column(nullable = false)
     private Integer cost;

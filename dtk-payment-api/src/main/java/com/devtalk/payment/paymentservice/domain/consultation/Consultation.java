@@ -1,6 +1,7 @@
 package com.devtalk.payment.paymentservice.domain.consultation;
 
 import com.devtalk.payment.paymentservice.domain.BaseEntity;
+import com.devtalk.payment.paymentservice.domain.payment.Payment;
 import com.devtalk.payment.paymentservice.domain.payment.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,10 +16,15 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 public class Consultation extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, unique = true)
     private Long id;
+
+    // 포트원 가맹점 상품 번호
+    @Column(nullable = false)
+    private String merchantId;
 
     // 의뢰자 이름
     @Column(nullable = false)
@@ -50,21 +56,9 @@ public class Consultation extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ProcessStatus processStatus;
 
-//    @Builder
-//    public Consultation(String consulter, String consulterEmail
-//                        , String consultant, String consultationType, Integer cost,
-//                        LocalDateTime consultationAt, ProcessStatus processStatus) {
-//        this.consulter = consulter;
-//        this.consulterEmail = consulterEmail;
-//        this.consultant = consultant;
-//        this.consultationType = consultationType;
-//        this.cost = cost;
-//        this.consultationAt = consultationAt;
-//        this.processStatus = processStatus;
-//    }
-
     public void changeConsultationByCanceled() {
         this.processStatus = ProcessStatus.CANCELED;
     }
-
+    public void changeConsultationByWaitingConsultation(){
+        this.processStatus = ProcessStatus.WAITING_CONSULTATION;}
 }

@@ -10,14 +10,8 @@ import org.springframework.stereotype.Component;
 @Component
 @Getter
 public class PaymentProperty {
-
-    @Value("${portone.imp_key}")
     private String impKey;
-
-    @Value("${portone.imp_secret}")
     private String impSecret;
-
-    @Value("${portone.imp_uid}")
     private String impUid;
 
     public PaymentProperty(
