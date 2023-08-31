@@ -4,10 +4,12 @@ import com.devtalk.member.memberservice.member.adapter.in.web.dto.SignUpInput;
 import com.devtalk.member.memberservice.member.domain.member.MemberType;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
 @Getter
+@Setter
 @Builder
 public class SignUpReq {
 
@@ -20,7 +22,7 @@ public class SignUpReq {
     private String phoneNumber;
 
     private List<String> category;
-
+    
     public static SignUpReq toReq(SignUpInput input, MemberType memberType) {
         return SignUpReq.builder()
                 .memberType(memberType)

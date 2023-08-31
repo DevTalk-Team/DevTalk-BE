@@ -7,6 +7,7 @@ import com.devtalk.member.memberservice.member.adapter.in.web.dto.LogInInput;
 import com.devtalk.member.memberservice.member.application.port.in.AuthUseCase;
 import com.devtalk.member.memberservice.member.application.port.in.dto.AuthReq.LogInReq;
 import com.devtalk.member.memberservice.member.application.port.in.dto.AuthRes;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,9 @@ import static com.devtalk.member.memberservice.global.success.SuccessCode.LOGIN_
 import static com.devtalk.member.memberservice.global.success.SuccessCode.LOGOUT_SUCCESS;
 import static com.devtalk.member.memberservice.member.application.port.in.dto.AuthReq.LogInReq.toReq;
 
+@Tag(name = "인증", description = "로그인, 로그아웃")
 @RestController
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class AuthApiController {
 
