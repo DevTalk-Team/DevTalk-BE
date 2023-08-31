@@ -20,10 +20,13 @@ public class MemberQueryRepo implements MemberQueryableRepo {
     public String findEmailByNameAndPhoneNumber(String name, String phoneNumber) {
         queryFactory = new JPAQueryFactory(em);
 
-        return queryFactory
+        String s = queryFactory
                 .select(member.email)
                 .from(member)
                 .where(member.name.eq(name), member.phoneNumber.eq(phoneNumber))
                 .fetchOne();
+
+        System.out.println("s = " + s);
+        return s;
     }
 }
