@@ -1,10 +1,18 @@
 package com.devtalk.member.memberservice.member.adapter.in.web;
 
+import com.devtalk.member.memberservice.global.error.ErrorResponse;
 import com.devtalk.member.memberservice.global.success.SuccessResponseNoResult;
 import com.devtalk.member.memberservice.member.adapter.in.web.dto.SignUpInput;
 import com.devtalk.member.memberservice.member.application.port.in.SignUpUseCase;
+import com.devtalk.member.memberservice.member.application.port.in.VerifyEmailUseCase;
 import com.devtalk.member.memberservice.member.application.port.in.dto.SignUpReq;
 import com.devtalk.member.memberservice.member.domain.member.MemberType;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
@@ -14,13 +22,42 @@ import org.springframework.web.bind.annotation.*;
 import static com.devtalk.member.memberservice.global.success.SuccessCode.*;
 import static com.devtalk.member.memberservice.member.application.port.in.dto.SignUpReq.toReq;
 
+
+@Tag(name = "회원가입", description = "이메일 중복 확인, 인증 코드, 회원가입")
 @RestController
+@RequestMapping("/api/signup")
 @RequiredArgsConstructor
 public class SignUpApiController {
 
     private final SignUpUseCase signUpUseCase;
+    private final VerifyEmailUseCase verifyEmailUseCase;
+
+    /* 이메일 인증 코드 보내기 */
+    @Operation(summary = "회원가입 - 이메일 인증 코드 요청", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseNoResult.class)))
+    })
+    @GetMapping("/auth-code")
+    public SuccessResponseNoResult sendAuthCode(@Email @RequestParam String email) {
+        verifyEmailUseCase.sendAuthCode(email);
+        return new SuccessResponseNoResult(SENDING_AUTH_CODE_SUCCESS);
+    }
+
+    /* 인증 코드 확인 */
+    @Operation(summary = "회원가입 - 이메일 인증 코드 확인", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseNoResult.class))),
+            @ApiResponse(description = "인증 코드 불일치", responseCode = "409", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    @PostMapping("/auth-code")
+    public SuccessResponseNoResult verifyAuthCode(@Email @RequestParam String email,
+                                                  @RequestParam String authCode) {
+        verifyEmailUseCase.verifyAuthCode(email, authCode);
+        return new SuccessResponseNoResult(AUTH_CODE_SUCCESS);
+    }
 
     /* 멘티 회원가입 */
+    @Operation(summary = "멘티 회원가입", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "201", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseNoResult.class)))
+    })
     @PostMapping("/consulter")
     @ResponseStatus(HttpStatus.CREATED)
     public SuccessResponseNoResult consulterSignUp(@Valid @RequestBody SignUpInput input) {
@@ -29,19 +66,23 @@ public class SignUpApiController {
         return new SuccessResponseNoResult(CONSULTER_SIGNUP_SUCCESS);
     }
     /* 전문가 회원가입 */
+    @Operation(summary = "전문가 회원가입", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "201", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseNoResult.class)))
+    })
     @PostMapping("/consultant")
     @ResponseStatus(HttpStatus.CREATED)
     public SuccessResponseNoResult consultantSignUp(@Valid @RequestBody SignUpInput input) {
         SignUpReq req = toReq(input, MemberType.CONSULTANT);
-
-        System.out.println("전문가 회원가입 " + req.toString());
-
         signUpUseCase.signUp(req);
         return new SuccessResponseNoResult(CONSULTANT_SIGNUP_SUCCESS);
     }
 
     /* 이메일 중복 확인 */
-    @GetMapping("/members/check-email")
+    @Operation(summary = "회원가입 - 이메일 중복 확인", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseNoResult.class))),
+            @ApiResponse(description = "가입 이메일 중복", responseCode = "409", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    @GetMapping("/check-email")
     public SuccessResponseNoResult isDuplicatedEmail(@Email @RequestParam String email) {
         signUpUseCase.checkDuplicatedEmail(email);
         return new SuccessResponseNoResult(CHECK_EMAIL_DUPLICATION_SUCCESS);

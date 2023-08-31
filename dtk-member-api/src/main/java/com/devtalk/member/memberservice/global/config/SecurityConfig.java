@@ -37,41 +37,24 @@ public class SecurityConfig {
         // ACL(Access Control List, 접근 제어 목록)의 예외 URL 설정
         return (web -> web
                 .ignoring()
-                .requestMatchers("/members/**", "/consulter", "/consultant", "/login", "/logout"));
+                .requestMatchers("/members/**", "/consulter", "/consultant", "/login", "/logout",
+                        /* swagger v3 */
+                        "/v3/api-docs/**",
+                        "/swagger-ui/**"));
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         // 인터셉터로 요청을 안전하게 보호하는 방법 설정
-//        http
-//                .csrf().disable()
-//                .httpBasic().disable()
-//                .formLogin().disable()
-//                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                // 예외 처리
-//                .and()
-//                .exceptionHandling()
-//                .authenticationEntryPoint(jwtAuthenticationEntryPoint) // customEntryPoint 401 error handling
-//                .accessDeniedHandler(jwtAccessDeniedHandler) // customAccessDeniedHandler 403 error handling
-//
-//                .and()
-//                .authorizeHttpRequests() // 인증이 필요한 것들
-//                .antMatchers("/mypage/**").authenticated()
-//                .anyRequest().permitAll() // 그 외 나머지는 인증 X
-//
-//                .and()
-//                .headers()
-//                .frameOptions().sameOrigin();
-//
-//        return http.build();
         return httpSecurity
                 .httpBasic((httpBasic) -> httpBasic.disable())
                 .csrf((csrf) -> csrf.disable())
                 .sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .formLogin((formLogin) -> formLogin.disable())
+
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
-                .authorizeHttpRequests((req) -> req.requestMatchers("/mypage/**").authenticated()
+
+                .authorizeHttpRequests((req) -> req.requestMatchers("/api/mypage/**", "/api/logout", "/api/members/**").authenticated()
                 .anyRequest().permitAll())
                 .exceptionHandling((e) -> e.authenticationEntryPoint(jwtAuthenticationEntryPoint)
                         .accessDeniedHandler(jwtAccessDeniedHandler))
