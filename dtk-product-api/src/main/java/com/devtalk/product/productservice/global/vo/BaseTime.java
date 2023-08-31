@@ -4,6 +4,7 @@ package com.devtalk.product.productservice.global.vo;
         import jakarta.persistence.MappedSuperclass;
         import jakarta.persistence.PrePersist;
         import jakarta.persistence.PreUpdate;
+        import lombok.Builder;
         import lombok.Getter;
         import lombok.NoArgsConstructor;
         import lombok.Setter;
