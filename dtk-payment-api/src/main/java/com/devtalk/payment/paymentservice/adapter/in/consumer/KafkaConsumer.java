@@ -29,8 +29,6 @@ import java.util.UUID;
 @Slf4j
 @RequiredArgsConstructor
 public class KafkaConsumer {
-    private final ConsultationUseCase consultationUseCase;
-    private final PaymentUseCase paymentUseCase;
     private final ConsultationRepo consultationRepo;
     private final PaymentRepo paymentRepo;
 

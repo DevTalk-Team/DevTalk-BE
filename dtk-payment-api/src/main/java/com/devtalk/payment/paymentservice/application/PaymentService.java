@@ -138,6 +138,7 @@ public class PaymentService implements PaymentUseCase {
             payment.changePaymentBySuccess(paymentUid);
             consultation.changeConsultationByWaitingConsultation();
             kafkaProducer.sendPaymentStatus("payment-status", payment);
+            emailUseCase.sendPaymentSuccessEmail(consultation);
         }
     }
 
