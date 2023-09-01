@@ -3,9 +3,11 @@ package com.devtalk.member.memberservice.member.adapter.in.web;
 import com.devtalk.member.memberservice.global.error.ErrorResponse;
 import com.devtalk.member.memberservice.global.success.SuccessResponseNoResult;
 import com.devtalk.member.memberservice.member.adapter.in.web.dto.SignUpInput;
+import com.devtalk.member.memberservice.member.adapter.out.producer.KafkaProducer;
 import com.devtalk.member.memberservice.member.application.port.in.SignUpUseCase;
 import com.devtalk.member.memberservice.member.application.port.in.VerifyEmailUseCase;
 import com.devtalk.member.memberservice.member.application.port.in.dto.SignUpReq;
+import com.devtalk.member.memberservice.member.domain.member.Member;
 import com.devtalk.member.memberservice.member.domain.member.MemberType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -31,6 +33,7 @@ public class SignUpApiController {
 
     private final SignUpUseCase signUpUseCase;
     private final VerifyEmailUseCase verifyEmailUseCase;
+    private final KafkaProducer kafkaProducer;
 
     /* 이메일 인증 코드 보내기 */
     @Operation(summary = "회원가입 - 이메일 인증 코드 요청", responses = {
@@ -62,7 +65,8 @@ public class SignUpApiController {
     @ResponseStatus(HttpStatus.CREATED)
     public SuccessResponseNoResult consulterSignUp(@Valid @RequestBody SignUpInput input) {
         SignUpReq req = toReq(input, MemberType.CONSULTER);
-        signUpUseCase.signUp(req);
+        Member member = signUpUseCase.signUp(req);
+        kafkaProducer.send("test", member);
         return new SuccessResponseNoResult(CONSULTER_SIGNUP_SUCCESS);
     }
     /* 전문가 회원가입 */
@@ -73,7 +77,8 @@ public class SignUpApiController {
     @ResponseStatus(HttpStatus.CREATED)
     public SuccessResponseNoResult consultantSignUp(@Valid @RequestBody SignUpInput input) {
         SignUpReq req = toReq(input, MemberType.CONSULTANT);
-        signUpUseCase.signUp(req);
+        Member member = signUpUseCase.signUp(req);
+        kafkaProducer.send("test", member);
         return new SuccessResponseNoResult(CONSULTANT_SIGNUP_SUCCESS);
     }
 
