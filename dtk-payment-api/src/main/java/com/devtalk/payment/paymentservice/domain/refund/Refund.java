@@ -19,6 +19,7 @@ public class Refund extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     // 결제ID
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_id")
@@ -36,4 +37,8 @@ public class Refund extends BaseEntity {
     // 환불 금액
     @Column(nullable = false)
     private Integer refundCost;
+
+    // 포트원 가맹점 상품 고유번호
+    @Column(nullable = false)
+    private String merchantId;
 }
