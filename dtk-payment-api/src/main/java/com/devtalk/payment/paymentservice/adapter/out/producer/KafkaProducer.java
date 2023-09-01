@@ -1,7 +1,6 @@
 package com.devtalk.payment.paymentservice.adapter.out.producer;
 
 import com.devtalk.payment.global.config.CustomLocalDateTimeSerializer;
-import com.devtalk.payment.paymentservice.domain.consultation.Consultation;
 import com.devtalk.payment.paymentservice.domain.payment.Payment;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
