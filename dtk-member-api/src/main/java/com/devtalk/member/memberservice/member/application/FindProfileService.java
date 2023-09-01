@@ -52,7 +52,7 @@ public class FindProfileService implements FindProfileUseCase {
             mimeMessage.setFrom(new InternetAddress("devtalk@gamil.com", "Devtalk"));
             mimeMessage.setRecipients(MimeMessage.RecipientType.TO, email);
             mimeMessage.setSubject("Devtalk 임시 비밀번호 발급");
-            mimeMessage.setText(tempPassword + "\n임시 비밀번호로 로그인 후, 새로운 비밀번호를 설정해주세요.");
+            mimeMessage.setText(tempPassword + "\n임시 비밀번호로 로그인해주세요.");
         } catch (MessagingException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
@@ -78,9 +78,8 @@ public class FindProfileService implements FindProfileUseCase {
 
     @Override
     public void changePassword(String password, String newPassword) {
-        // TODO password가 임시 password가 맞는지 확인 후
-        validator.changePasswordValidate(password);
-        // newPassword로 변경
-//        member.updatePassword(newPassword)
+        Member member = validator.changePasswordValidate(password, newPassword);
+        // redis
+        member.updatePassword(newPassword);
     }
 }

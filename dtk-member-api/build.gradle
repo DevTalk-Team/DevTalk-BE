@@ -60,8 +60,11 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.json/json
 	implementation 'org.json:json:20230227'
 
-	//swagger
+	// swagger
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+
+	// kafka
+	implementation 'org.springframework.kafka:spring-kafka'
 }
 
 dependencyManagement {
