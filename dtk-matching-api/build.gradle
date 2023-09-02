@@ -6,7 +6,7 @@ plugins {
 
 
 group = 'com.devtalk.consultation'
-version = '0.0.1-SNAPSHOT'
+version = '1.0'
 sourceCompatibility = '17'
 
 configurations {
@@ -30,7 +30,7 @@ dependencies {
 	implementation "org.springframework.cloud:spring-cloud-starter-openfeign"
 	implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '3.1.0'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-//	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
