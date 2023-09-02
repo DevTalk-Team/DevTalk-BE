@@ -67,3 +67,9 @@ spring:
             LDDUWsSwWAyQwfGcyBbRLVIE7B58sjkz8hN38UYo7nQxGnysfZSsWNhjXPYyDRpV
             -----END RSA PRIVATE KEY-----
           passphrase: 12345
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh

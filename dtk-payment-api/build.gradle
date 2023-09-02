@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.devtalk.payment'
-version = '0.0.1-SNAPSHOT'
+version = '1.0'
 sourceCompatibility = '17'
 
 configurations {
@@ -25,17 +25,19 @@ ext {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 //    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
-    implementation 'org.springframework.cloud:spring-cloud-starter-config'
-    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
+    // config
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
+    implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
 
 //    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     compileOnly 'org.projectlombok:lombok'
