@@ -1,5 +1,5 @@
 server:
-  port: 0
+  port: 2177
 
 spring:
   config:
@@ -9,9 +9,9 @@ spring:
     name: consultation-service
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://localhost:3305/devtalk-consultation?characterEncoding=UTF-8&serverTimezone=UTC
+    url: jdbc:mariadb://localhost:3306/devtalk-consultation?characterEncoding=UTF-8&serverTimezone=UTC
     username: root
-    password: love1994
+    password: 1234
     hikari:
       maximum-pool-size: 8
       connection-timeout: 10000
@@ -32,9 +32,9 @@ spring:
 #      port: 6379
 
 
-eureka:
-  client:
-    register-with-eureka: true
-    fetch-registry: true # Eureka ????? ?????? ??? ????? ??? ???? ???? ??
-    service-url:
-      defaultZone: http://127.0.0.1:8761/eureka
+#eureka:
+#  client:
+#    register-with-eureka: true
+#    fetch-registry: true # Eureka ????? ?????? ??? ????? ??? ???? ???? ??
+#    service-url:
+#      defaultZone: http://127.0.0.1:8761/eureka
