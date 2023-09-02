@@ -1,4 +1,4 @@
-package com.devtalk.payment.paymentservice;
+package com.devtalk.payment;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -7,9 +7,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
-//@EnableDiscoveryClient
+@EnableDiscoveryClient
 @EnableJpaAuditing
-@ComponentScan(basePackages = {"com.devtalk.payment"})
 public class PaymentServiceApplication {
 
     public static void main(String[] args) {
