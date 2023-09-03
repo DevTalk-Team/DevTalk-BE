@@ -19,6 +19,4 @@ public interface PaymentUseCase {
 
     PaymentSearchRes searchPaymentInfo(Long consultationId);
 
-    // 결제 검증
-    IamportResponse<com.siot.IamportRestClient.response.Payment> paymentByCallback(PaymentCallbackReq paymentCallbackReq);
 }

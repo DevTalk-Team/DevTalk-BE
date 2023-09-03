@@ -9,23 +9,15 @@ import com.devtalk.payment.paymentservice.application.port.in.PaymentUseCase;
 import com.devtalk.payment.paymentservice.application.port.out.repository.PaymentRepo;
 import com.devtalk.payment.paymentservice.domain.consultation.Consultation;
 import com.devtalk.payment.paymentservice.domain.payment.Payment;
-import com.devtalk.payment.paymentservice.domain.payment.PaymentStatus;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.siot.IamportRestClient.IamportClient;
-import com.siot.IamportRestClient.exception.IamportResponseException;
-import com.siot.IamportRestClient.request.CancelData;
-import com.siot.IamportRestClient.response.IamportResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.io.*;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,8 +34,6 @@ public class PaymentService implements PaymentUseCase {
     private final EmailUseCase emailUseCase;
 
     private final PaymentProperty paymentProperty;
-
-    private String impUid = "imp67671220";
 
     // 결제 토큰 생성 (포트원 API사용을 위해 필요함)
     @Override
@@ -76,8 +66,8 @@ public class PaymentService implements PaymentUseCase {
 
     @Override
     public String getPaymentLink(Long consultationId) {
+        String impUid = paymentProperty.getImpUid();
         String webhookUrl = "https://101d-211-213-255-27.ngrok-free.app/payment/webhook";
-        String token = getToken();
         Consultation consultation = consultationUseCase.searchConsultationInfo(consultationId);
         String paymentInfo = String.format(
                 "{" +
@@ -95,8 +85,8 @@ public class PaymentService implements PaymentUseCase {
                         "\"pay_methods\":[" +
                         "{\"pg\":\"html5_inicis.INIpayTest\",\"pay_method\":\"card\",\"label\":\"신용/체크카드\"}," +
                         "{\"pg\":\"html5_inicis.INIpayTest\",\"pay_method\":\"naverpay\",\"label\":\"네이버페이\"}," +
-                        "{\"pg\":\"html5_inicis.INIpayTest\",\"pay_method\":\"kakaopay\",\"label\":\"카카오페이\"}" +
-//                        "{\"pg\":\"iamporttest_3\",\"pay_method\":\"tosspayments\",\"label\":\"토스페이\"}" +
+                        "{\"pg\":\"html5_inicis.INIpayTest\",\"pay_method\":\"kakaopay\",\"label\":\"카카오페이\"}," +
+                        "{\"pg\":\"iamporttest_3\",\"pay_method\":\"tosspay.tosstest\",\"label\":\"토스페이\"}" +
                         "]" +
                         "}",
                             consultation.getConsultationType(),
@@ -116,7 +106,7 @@ public class PaymentService implements PaymentUseCase {
         WebClient wc = WebClient.create("https://api.iamport.co/api/supplements/v1/link/payment");
 
         String response = wc.post()
-                .header("Authorization", "Bearer " + token)
+                .header("Authorization", "Bearer " + getToken())
                 .bodyValue(requestBody)
                 .retrieve()
                 .bodyToMono(String.class)
@@ -140,56 +130,11 @@ public class PaymentService implements PaymentUseCase {
         Long consultationId = Long.parseLong(webhookReq.getMerchant_uid());
         String status = webhookReq.getStatus();
 
-        Payment payment = paymentRepo.findByConsultationId(consultationId)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_CONSULTATION));
-    }
-
-    // 결제 검증
-    @Override
-    public IamportResponse<com.siot.IamportRestClient.response.Payment> paymentByCallback(PaymentCallbackReq request) {
-        String impKey = paymentProperty.getImpKey();
-        String impSecret = paymentProperty.getImpSecret();
-
-        IamportClient iamportClient = new IamportClient(impKey, impSecret);
-        try {
-            // 결제 단건 조회 (포트원)
-            IamportResponse<com.siot.IamportRestClient.response.Payment> iamportResponse = iamportClient.paymentByImpUid(request.getPaymentUid());
-            // 예약 내역 조회
-            Payment payment = paymentRepo.findByConsultationId(request.getConsultationId())
+        if (status.equals("paid")) {
+            Payment payment = paymentRepo.findByConsultationId(consultationId)
                     .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_CONSULTATION));
-            // 결제 완료가 아니면
-            if (!iamportResponse.getResponse().getStatus().equals("paid")) {
-                // 임시 결제 삭제
-                paymentRepo.delete(payment);
-                throw new RuntimeException("결제 미완료");
-            }
 
-            // DB에 저장된 결제 금액
-            Integer cost = payment.getCost();
-            // 실 결제 금액
-            int iamportCost = iamportResponse.getResponse().getAmount().intValue();
-
-            // 결제 금액 검증
-            if (iamportCost != cost) {
-                // 임시 결제 삭제
-                paymentRepo.delete(payment);
-
-                // 결제금액 위변조로 의심되는 결제금액을 취소
-                iamportClient.cancelPaymentByImpUid(
-                        new CancelData(iamportResponse.getResponse().getImpUid(), true, new BigDecimal(iamportCost)));
-
-                throw new RuntimeException("결제금액 위변조 의심");
-            }
-
-            // 결제 상태 변경
-            payment.changePaymentBySuccess(PaymentStatus.PAID, iamportResponse.getResponse().getImpUid(), LocalDateTime.now());
-
-            return iamportResponse;
-
-        } catch (IamportResponseException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            payment.changePaymentBySuccess(paymentUid);
         }
     }
 

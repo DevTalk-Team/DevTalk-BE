@@ -19,11 +19,4 @@ public class PaymentRes {
         private LocalDateTime paidAt;
         private PaymentStatus status;
     }
-
-    @AllArgsConstructor
-    @Getter
-    public static class PaymentServiceRes {
-        private String paymentId;
-        private String paymentUid;
-    }
 }
