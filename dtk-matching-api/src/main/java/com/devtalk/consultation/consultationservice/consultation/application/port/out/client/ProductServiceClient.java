@@ -1,6 +1,5 @@
 package com.devtalk.consultation.consultationservice.consultation.application.port.out.client;
 
-import com.devtalk.consultation.consultationservice.consultation.application.port.out.client.dto.ProductRes;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
