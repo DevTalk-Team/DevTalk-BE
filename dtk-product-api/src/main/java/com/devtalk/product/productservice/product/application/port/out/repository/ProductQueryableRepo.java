@@ -5,6 +5,5 @@ import com.devtalk.product.productservice.product.domain.product.Product;
 import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
-@Repository
 public interface ProductQueryableRepo {
 }

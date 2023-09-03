@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Builder
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Product extends BaseTime {
     //상품ID
     @Id
