@@ -12,4 +12,5 @@ public interface MemberRepo extends JpaRepository<Member, Long>, MemberQueryable
     boolean existsByNameAndPhoneNumber(String name, String phoneNumber);
     Optional<Member> findByEmail(String email);
     Optional<Member> findByNameAndEmail(String name, String email);
+    String findEmailByNameAndPhoneNumber(String name, String phoneNumber);
 }
