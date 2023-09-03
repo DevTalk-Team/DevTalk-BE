@@ -10,6 +10,7 @@ import lombok.experimental.SuperBuilder;
 @DiscriminatorColumn
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@SuperBuilder // 👈 여기 추가
 public abstract class Member extends BaseTime {
 
     @Id
