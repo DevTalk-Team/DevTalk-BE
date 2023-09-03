@@ -8,7 +8,6 @@ import static com.devtalk.consultation.consultationservice.consultation.applicat
 
 @FeignClient(name = "product-service") // Discovery Server에 등록된 서비스 이름
 public interface ProductServiceClient {
-
     @GetMapping("/products/{productId}")
     ProductSearchRes getProduct(@PathVariable Long productId);
 
