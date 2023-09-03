@@ -12,6 +12,7 @@ import lombok.experimental.SuperBuilder;
 @DiscriminatorValue("CONSULTER")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@SuperBuilder // 👈 여기 추가
 public class Consulter extends Member {
 
 }

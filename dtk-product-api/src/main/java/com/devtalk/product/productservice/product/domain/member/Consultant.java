@@ -13,11 +13,12 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@SuperBuilder // 👈 여기 추가
 public class Consultant extends Member {
 
-    private int NF2F;
+    private int NF2F_Price;
 
-    private int F2F;
+    private int F2F_Price;
 
     private String region;
 
@@ -35,10 +36,10 @@ public class Consultant extends Member {
 //    }
     public int getPrice(ReservedProceedType reservedProceedType) {
         if (reservedProceedType == ReservedProceedType.NF2F) {
-            return this.NF2F;
+            return this.NF2F_Price;
         }
         if (reservedProceedType == ReservedProceedType.F2F){
-            return this.F2F;
+            return this.F2F_Price;
         }
         else
             return 0;
