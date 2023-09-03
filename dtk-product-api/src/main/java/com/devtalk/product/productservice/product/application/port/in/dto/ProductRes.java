@@ -50,7 +50,7 @@ public class ProductRes {
                 .reservationAt(productReservedDetails.getProduct().getReservationAt())
                 .price(productReservedDetails.getPrice())
                 .reservedProceedType(productReservedDetails.getReservedProceedType())
-                .area(productReservedDetails.getArea())
+                .area(productReservedDetails.getRegion())
                 .build();
     }
 }

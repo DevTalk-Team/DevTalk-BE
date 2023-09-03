@@ -10,7 +10,6 @@ import lombok.experimental.SuperBuilder;
 
 @Entity
 @DiscriminatorValue("CONSULTANT")
-@SuperBuilder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -20,20 +19,20 @@ public class Consultant extends Member {
 
     private int F2F;
 
-    private String area;
+    private String region;
 
-    public static Consultant createConsulter(Long memberId, String loginId, String name, RoleType roleType,
-                                             int NF2F, int F2F, String area) {
-        return Consultant.builder()
-                .id(memberId)
-                .loginId(loginId)
-                .name(name)
-                .role(roleType)
-                .NF2F(NF2F)
-                .F2F(F2F)
-                .area(area)
-                .build();
-    }
+//    public static Consultant createConsulter(Long memberId, String loginId, String name, MemberType memberType,
+//                                             int NF2F, int F2F, String region) {
+//        return Consultant.builder()
+//                .id(memberId)
+//                .loginId(loginId)
+//                .name(name)
+//                .memberType(memberType)
+//                .NF2F(NF2F)
+//                .F2F(F2F)
+//                .region(region)
+//                .build();
+//    }
     public int getPrice(ReservedProceedType reservedProceedType) {
         if (reservedProceedType == ReservedProceedType.NF2F) {
             return this.NF2F;

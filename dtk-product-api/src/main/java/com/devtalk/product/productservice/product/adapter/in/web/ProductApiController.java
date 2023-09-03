@@ -5,14 +5,14 @@ import com.devtalk.product.productservice.global.vo.SuccessResponse;
 import com.devtalk.product.productservice.product.adapter.in.web.dto.ProductInput;
 import com.devtalk.product.productservice.product.adapter.in.web.dto.ProductOutput;
 import com.devtalk.product.productservice.product.adapter.out.web.producer.KafkaProducer;
-import com.devtalk.product.productservice.product.application.port.in.ProductUseCase;
+import com.devtalk.product.productservice.product.application.port.in.*;
 import com.devtalk.product.productservice.product.application.port.in.dto.ProductReq.ReserveProdReq;
 
 import com.devtalk.product.productservice.product.application.port.in.dto.ProductRes;
 import com.devtalk.product.productservice.product.application.port.out.repository.MemberRepo;
 import com.devtalk.product.productservice.product.domain.member.Consultant;
 import com.devtalk.product.productservice.product.domain.member.Member;
-import com.devtalk.product.productservice.product.domain.member.RoleType;
+import com.devtalk.product.productservice.product.domain.member.MemberType;
 import com.devtalk.product.productservice.product.domain.product.Product;
 import com.devtalk.product.productservice.product.domain.product.ProductProceedType;
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,8 +42,12 @@ import java.util.List;
 @RequiredArgsConstructor
 
 class ProductApiController {
-    private final ProductUseCase productUseCase;
     private final MemberRepo memberRepo;
+    private final DeleteUseCase deleteUseCase;
+    private final RegistUseCase registUseCase;
+    private final SearchUseCase searchUseCase;
+    private final UpdateUseCase updateUseCase;
+
     private final KafkaProducer kafkaProducer;
 
 
@@ -75,7 +79,7 @@ class ProductApiController {
     @PostMapping("/consultant/{consultantid}/register")
     public ResponseEntity<?> registProduct(@RequestBody @Validated ProductInput.RegistrationInput registrationInput,
                                            @PathVariable Long consultantId) {
-        productUseCase.registProduct(registrationInput.toReq(consultantId));
+        registUseCase.registProduct(registrationInput.toReq(consultantId));
         return ResponseEntity.ok().build();
     }
 
@@ -90,7 +94,7 @@ class ProductApiController {
     @GetMapping("/search/consultant/{consultantid}")
     //@ApiOperation(value = "상품 등록", notes = "상담자가 상담 가능한 시간을 설정한다")
     public ResponseEntity<ProductOutput> searchProductList(@PathVariable Long consultantId) {
-        List<ProductRes.ConsultantProductListRes> consultantProductListRes = productUseCase.searchList(consultantId);
+        List<ProductRes.ConsultantProductListRes> consultantProductListRes = searchUseCase.searchList(consultantId);
         ProductOutput productOutput
                 = new ProductOutput("0500", "조회 성공", consultantProductListRes);
         return ResponseEntity.status(HttpStatus.OK).body(productOutput);
@@ -109,7 +113,7 @@ class ProductApiController {
     @PutMapping("/api/products/update/{productId}")
     public ResponseEntity<?> updateProduct(@RequestBody @Validated ProductInput.UpdateInput updateInput,
                                            @PathVariable Long productId) {
-        productUseCase.updateProductType(updateInput.toReq(productId));
+        updateUseCase.updateProductType(updateInput.toReq(productId));
         return ResponseEntity.ok().build();
     }
 
@@ -124,7 +128,7 @@ class ProductApiController {
     })
     @DeleteMapping("delete/{consultationId}")
     public ResponseEntity<?> deleteProduct(@PathVariable Long consultationId) {
-        productUseCase.deleteReservation(consultationId);
+        deleteUseCase.deleteReservation(consultationId);
         return ResponseEntity.ok().build();
     }
 
@@ -141,7 +145,7 @@ class ProductApiController {
     })
     @GetMapping("search/memberId/{memberId}")
     public ResponseEntity<ProductOutput> myConsultationList(@PathVariable Long memberId) {
-        List<ProductRes.ReservedProductRes> myConsultatioinListRes = productUseCase.searchConsulationListByMemberId(memberId);
+        List<ProductRes.ReservedProductRes> myConsultatioinListRes = searchUseCase.searchConsulationListByMemberId(memberId);
         ProductOutput productOutput
                 = new ProductOutput("0500", "조회 성공", myConsultatioinListRes);
         return ResponseEntity.status(HttpStatus.OK).body(productOutput);
