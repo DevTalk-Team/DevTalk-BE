@@ -38,17 +38,6 @@ public class AuthService implements AuthUseCase {
 
     @Override
     public AuthRes.LogInRes login(AuthReq.LogInReq req) {
-        // email 검증
-        log.info("[login] email : {}", req.getEmail());
-        Member findMember = memberRepo.findByEmail(req.getEmail())
-                .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND));
-        // password 검증
-        log.info("[login] 패스워드 비교 수행");
-        if(!passwordEncoder.matches(req.getPassword(), findMember.getPassword())) {
-            throw new PasswordMismatchingException(WRONG_PASSWORD);
-        }
-        log.info("[login] 패스워드 일치");
-
         // Member 인증 객체 생성
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(req.getEmail(), req.getPassword());
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);

@@ -43,8 +43,8 @@ public class ConsulterApiController {
     })
     @DeleteMapping("/v1/consulters/{consulterId}/consultations/{consultationId}")
     public ResponseEntity<?> cancelConsultationByConsulter(@RequestBody @Validated CancellationOfConsulterInput cancellationInput,
-                                                 @PathVariable Long consulterId,
-                                                @PathVariable Long consultationId) {
+                                                           @PathVariable Long consulterId,
+                                                           @PathVariable Long consultationId) {
         cancelUseCase.cancelByConsulter(cancellationInput.toReq(consulterId, consultationId));
         return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.CONSULTATION_CONSULTER_CANCEL_SUCCESS);
     }
@@ -74,7 +74,7 @@ public class ConsulterApiController {
     })
     @GetMapping("/v1/consulters/{consulterId}/consultations/{consultationId}")
     public ResponseEntity<SuccessResponse> searchConsultationDetailsByConsulter(@PathVariable Long consulterId,
-                                                                         @PathVariable Long consultationId) {
+                                                                                @PathVariable Long consultationId) {
         return SuccessResponse.toResponseEntity(SuccessCode.CONSULTER_CONSULTATION_DETAIL_SEARCH_SUCCESS,
                 searchUseCase.searchConsultationDetailsBy(consulterId, consultationId));
     }
