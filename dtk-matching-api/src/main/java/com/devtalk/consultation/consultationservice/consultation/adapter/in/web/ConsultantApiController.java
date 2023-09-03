@@ -31,10 +31,10 @@ public class ConsultantApiController {
     private final CancelConsultationUseCase cancelUseCase;
     private final SearchConsultationUseCase searchUseCase;
 
-    @Operation(summary = "Get thing", responses = {
+    // 상담 거절, 결제 전 취소, 결제 후 취소는 모두 이 api로
+    @Operation(summary = "상담사 - 상담 취소 및 거절", responses = {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class))),
-            @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
-            @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content(schema = @Schema(hidden = true))) })
+    })
     @DeleteMapping("/v1/consultants/{consultantId}/consultations/{consultationId}")
     public ResponseEntity<?> cancelConsultationByConsultant(@RequestBody @Validated CancellationOfConsultantInput cancellationInput,
                                                             @PathVariable Long consultantId,
@@ -43,7 +43,7 @@ public class ConsultantApiController {
         return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.CONSULTATION_CONSULTANT_CANCEL_SUCCESS);
     }
 
-    @Operation(summary = "Get thing", responses = {
+    @Operation(summary = "상담사 - 상담 승인", responses = {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
     })
     @PostMapping("/v1/consultants/{consultantId}/consultations/{consultationId}")
@@ -53,7 +53,7 @@ public class ConsultantApiController {
         return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.CONSULTANT_CONSULTATION_ACCEPT_SUCCESS);
     }
 
-    @Operation(summary = "Get thing", responses = {
+    @Operation(summary = "상담사 - 취소된 상담 내역 조회", responses = {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CancellationReasonRes.class)))
     })
     @GetMapping("/v1/consultants/{consultantId}/canceled-consultations/{consultationId}")
@@ -63,7 +63,7 @@ public class ConsultantApiController {
                 searchUseCase.searchCanceledConsultationDetailsByConsultant(consultantId, consultationId));
     }
 
-    @Operation(summary = "Get thing", responses = {
+    @Operation(summary = "상담사 - 상담 전체 내역 조회(모든 상태)", responses = {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(type = "array", implementation = ConsultationSearchRes.class)))
     })
     @GetMapping("/v1/consultants/{consultantId}/consultations")
@@ -72,7 +72,7 @@ public class ConsultantApiController {
                 searchUseCase.searchConsultationListByConsultant(consultantId));
     }
 
-    @Operation(summary = "Get thing", responses = {
+    @Operation(summary = "상담사 - 리뷰 전체 조회", responses = {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(type = "array", implementation = ReviewSearchRes.class)))
     })
     @GetMapping("/v1/consultants/{consultantId}/reviews")
