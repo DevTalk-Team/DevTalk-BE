@@ -6,7 +6,6 @@ import com.devtalk.consultation.consultationservice.consultation.application.por
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.ConsultationQueryableRepo;
 import com.devtalk.consultation.consultationservice.consultation.domain.consultation.Consultation;
 import com.devtalk.consultation.consultationservice.consultation.domain.consultation.ProcessStatus;
-import com.devtalk.consultation.consultationservice.global.error.ErrorCode;
 import com.devtalk.consultation.consultationservice.global.error.execption.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
