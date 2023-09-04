@@ -5,6 +5,7 @@ import com.devtalk.product.productservice.product.application.port.in.dto.Produc
 import com.devtalk.product.productservice.product.domain.member.Consultant;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Builder
+@SuperBuilder
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Product extends BaseTime {
     //상품ID

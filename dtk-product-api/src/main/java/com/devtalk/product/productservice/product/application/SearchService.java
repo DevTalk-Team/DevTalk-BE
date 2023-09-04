@@ -4,10 +4,8 @@ import com.devtalk.product.productservice.global.error.exception.NotFoundExcepti
 import com.devtalk.product.productservice.product.adapter.out.web.persistence.MemberQueryRepo;
 import com.devtalk.product.productservice.product.application.port.in.SearchUseCase;
 import com.devtalk.product.productservice.product.application.port.in.dto.ProductRes;
-import com.devtalk.product.productservice.product.application.port.out.repository.MemberRepo;
 import com.devtalk.product.productservice.product.application.port.out.repository.ProductRepo;
 import com.devtalk.product.productservice.product.application.port.out.repository.ReservedProductRepo;
-import com.devtalk.product.productservice.product.domain.member.Consultant;
 import com.devtalk.product.productservice.product.domain.member.Consulter;
 import com.devtalk.product.productservice.product.domain.member.Member;
 import com.devtalk.product.productservice.product.domain.member.MemberType;
@@ -50,7 +48,7 @@ public class SearchService implements SearchUseCase {
     @Transactional
     public List<ProductRes.ReservedProductRes> searchConsulationListByMemberId(Long memberId){
         List<ProductReservedDetails> productReservedDetails;
-        Optional<Member> memberOpt = memberQueryRepo.findById(memberId);
+        Optional<Consulter> memberOpt = memberQueryRepo.findById(memberId);
         if (!memberOpt.isPresent()) {
             throw new NotFoundException(NOT_FOUND_MEMBER);
         }
