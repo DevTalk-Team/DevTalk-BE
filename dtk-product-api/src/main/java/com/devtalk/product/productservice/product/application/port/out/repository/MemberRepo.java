@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 
-public interface MemberRepo extends JpaRepository<Member, Long>, MemberQueryableRepo {
+public interface MemberRepo extends JpaRepository<Member, Long> {
 }

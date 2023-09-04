@@ -1,20 +1,57 @@
 package com.devtalk.product.productservice.product.adapter.out.web.persistence;
 
+import com.devtalk.product.productservice.product.application.port.out.repository.MemberQueryableRepo;
 import com.devtalk.product.productservice.product.domain.member.Consultant;
 import com.devtalk.product.productservice.product.domain.member.Consulter;
-import com.devtalk.product.productservice.product.domain.member.Member;
-import com.devtalk.product.productservice.product.domain.product.Product;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
+import static com.devtalk.product.productservice.product.domain.member.QConsultant.consultant;
+import static com.devtalk.product.productservice.product.domain.member.QConsulter.consulter;
+
 @Repository
-public interface MemberQueryRepo extends JpaRepository<Member, Long> {
-    Optional<Consultant> findConsultantById(Long id);
-    Optional<Consulter> findConsulterById(Long id);
-    Optional<Product> findByConsultantIdAndReservationAt(Long consultantId, LocalDateTime reservationAt);
+@RequiredArgsConstructor
+public class MemberQueryRepo implements MemberQueryableRepo {
+
+    private final JPAQueryFactory queryFactory;
+
+    @Override
+    public Optional<Consultant> findByConsultantId(Long consultantId) {
+        return Optional.ofNullable(
+                queryFactory.selectFrom(consultant)
+                        .where(consultant.id.eq(consultantId))
+                        .fetchOne()
+        );
+    }
+
+    @Override
+    public Optional<Consulter> findByConsulterId(Long consulterId) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Consulter> findById(Long memberId) {
+        return Optional.empty();
+    }
+
+    @Override
+    public boolean existsByConsultantId(Long consultantId) {
+        return queryFactory
+                .select(consultant.id)
+                .from(consultant)
+                .where(consultant.id.eq(consultantId))
+                .fetchFirst() != null;
+    }
+
+    @Override
+    public boolean existsByConsulterId(Long consulterId) {
+        return queryFactory
+                .select(consulter.id)
+                .from(consulter)
+                .where(consulter.id.eq(consulterId))
+                .fetchFirst() != null;
+    }
 }

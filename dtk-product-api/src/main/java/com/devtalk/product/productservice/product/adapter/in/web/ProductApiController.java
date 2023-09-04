@@ -170,13 +170,17 @@ class ProductApiController {
 //
 @PostMapping("")
     public ResponseEntity<?> reserveConsultation() {
-         Product product = Product.builder()
-                .status("예약 대기중")
-                .type(ProductProceedType.NF2F)
-                .build();
+         Consultant consultant = Consultant.builder()
+                .phoneNumber("01020477221")
+                 .memberType(MemberType.CONSULTANT)
+                 .name("김수현")
+                 .NF2F_Price(50000)
+                 .F2F_Price(100000)
+                 .region("강남")
+                 .build();
 
 				//*** 주입 받은 KafkaProducer를 사용 ***//
-        kafkaProducer.sendPaymentStatus("test", product);
+        kafkaProducer.sendPaymentStatus("member-signup", consultant);
 
         return ResponseEntity.ok().build();
     }

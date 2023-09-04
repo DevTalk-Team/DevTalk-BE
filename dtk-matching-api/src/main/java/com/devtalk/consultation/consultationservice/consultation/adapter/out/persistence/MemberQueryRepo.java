@@ -1,10 +1,7 @@
 package com.devtalk.consultation.consultationservice.consultation.adapter.out.persistence;
 
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.MemberQueryableRepo;
-import com.devtalk.consultation.consultationservice.consultation.domain.member.Consultant;
-import com.devtalk.consultation.consultationservice.consultation.domain.member.Consulter;
-import com.devtalk.consultation.consultationservice.consultation.domain.member.QConsultant;
-import com.devtalk.consultation.consultationservice.consultation.domain.member.QConsulter;
+import com.devtalk.consultation.consultationservice.consultation.domain.member.*;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -31,6 +28,10 @@ public class MemberQueryRepo implements MemberQueryableRepo {
 
     @Override
     public Optional<Consulter> findByConsulterId(Long consulterId) {
+        return Optional.empty();
+    }
+    @Override
+    public Optional<Member> findByMemberId(Long memberId) {
         return Optional.empty();
     }
 

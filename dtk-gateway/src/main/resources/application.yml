@@ -1,5 +1,5 @@
 server:
-  port: 8000
+  port: 8800
 
 eureka:
   client:
@@ -14,13 +14,25 @@ spring:
   cloud:
     gateway:
       default-filters:
-        - name: TestFilter
-          args:
-            baseMessage: Spring Cloud Gateway Global Filter
-            preLogger: true
-            postLogger: true
+        - AuthorizationHeaderFilter  # AuthorizationHeaderFilter 추가
       routes:
+        - id: board-service
+          uri: lb://BOARD-SERVICE
+          predicates:
+            - Path=/board-service/**
         - id: matching-service
           uri: lb://MATCHING-SERVICE
           predicates:
             - Path=/matching-service/**
+        - id: member-service
+          uri: lb://MEMBER-SERVICE
+          predicates:
+            - Path=/member-service/**
+        - id: payment-service
+          uri: lb://PAYMENT-SERVICE
+          predicates:
+            - Path=/payment-service/**
+        - id: product-service
+          uri: lb://PRODUCT-SERVICE
+          predicates:
+            - Path=/product-service/**

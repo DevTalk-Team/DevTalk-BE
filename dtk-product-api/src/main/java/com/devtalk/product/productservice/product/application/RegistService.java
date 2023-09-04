@@ -33,7 +33,7 @@ public class RegistService implements RegistUseCase {
 
     @Transactional
     public Consultant searchConsultant(Long consultantId) {
-        return memberQueryRepo.findConsultantById(consultantId)
+        return memberQueryRepo.findByConsultantId(consultantId)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_CONSULTANT));
     }
 }
