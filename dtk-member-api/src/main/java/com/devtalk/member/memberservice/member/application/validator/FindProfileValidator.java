@@ -2,6 +2,7 @@ package com.devtalk.member.memberservice.member.application.validator;
 
 import com.devtalk.member.memberservice.global.error.ErrorCode;
 import com.devtalk.member.memberservice.global.error.exception.MemberNotFoundException;
+import com.devtalk.member.memberservice.global.util.RedisUtil;
 import com.devtalk.member.memberservice.member.application.port.out.repository.MemberRepo;
 import com.devtalk.member.memberservice.member.domain.member.Member;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class FindProfileValidator {
     private final MemberRepo memberRepo;
+    private final RedisUtil redisUtil;
 
     public void findEmailValidate(String name, String phoneNumber) {
         log.info("validate 시작");
@@ -29,10 +31,8 @@ public class FindProfileValidator {
     }
 
     public Member changePasswordValidate(String password, String newPassword) {
-        // 임시 비밀번호 발급 후 바로 페이지 넘어가면
-        // 임시 비밀번호, email (key, value)로 redis에 넣어놓고
-        // - 비밀번호가 redis에 없으면 throw exception
-        // redis에서 password로 값 찾고 newPassword로 변경?!
-        return null;
+        String email = redisUtil.getData(password);
+        return memberRepo.findByEmail(email)
+                .orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
     }
 }
