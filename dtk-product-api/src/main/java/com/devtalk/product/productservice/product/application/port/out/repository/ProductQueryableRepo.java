@@ -3,8 +3,9 @@ package com.devtalk.product.productservice.product.application.port.out.reposito
 
 import com.devtalk.product.productservice.product.domain.product.Product;
 import org.springframework.stereotype.Repository;
+
+import java.time.LocalDateTime;
 import java.util.Optional;
 
-@Repository
 public interface ProductQueryableRepo {
 }

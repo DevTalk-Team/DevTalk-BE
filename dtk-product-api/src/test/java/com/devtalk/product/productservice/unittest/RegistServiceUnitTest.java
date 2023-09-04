@@ -1,7 +1,5 @@
 package com.devtalk.product.productservice.unittest;
 
-import com.devtalk.product.productservice.product.application.ProductService;
-
 import com.devtalk.product.productservice.product.application.port.in.dto.ProductReq.RegistProdReq;
 
 import com.devtalk.product.productservice.product.application.port.out.repository.ConsultantQueryableRepo;
@@ -26,14 +24,12 @@ import static org.mockito.BDDMockito.*;
 class RegistServiceUnitTest {
 
     @InjectMocks
-    ProductService productService;
 
     @Mock
     Validator validator;
     @Mock
     ProductRepo productRepo;
     @Mock
-    ConsultantQueryableRepo consultantQueryableRepo;
 
     @Test
     @DisplayName("s. 예약성공")
