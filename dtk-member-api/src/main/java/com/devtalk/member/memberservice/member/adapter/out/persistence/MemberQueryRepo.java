@@ -19,16 +19,14 @@ public class MemberQueryRepo implements MemberQueryableRepo {
 
     private JPAQueryFactory queryFactory;
 
-//    @Override
-//    public String findEmailByNameAndPhoneNumber(String name, String phoneNumber) {
-//        queryFactory = new JPAQueryFactory(em);
-//        List<Member> fetch = queryFactory
-//                .select(member)
-//                .from(member)
-//                .where(member.name.eq(name), member.phoneNumber.eq(phoneNumber))
-//                .fetch();
-//        String result = fetch.toString();
-//        System.out.println("result = " + result);
-//        return result;
-//    }
+    @Override
+    public String findEmailByNameAndPhoneNumber(String name, String phoneNumber) {
+        queryFactory = new JPAQueryFactory(em);
+        String email = queryFactory
+                .select(member.email)
+                .from(member)
+                .where(member.name.eq(name), member.phoneNumber.eq(phoneNumber))
+                .fetchOne();
+        return email;
+    }
 }

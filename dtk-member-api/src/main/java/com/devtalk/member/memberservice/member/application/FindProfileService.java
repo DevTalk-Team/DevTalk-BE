@@ -1,7 +1,10 @@
 package com.devtalk.member.memberservice.member.application;
 
+import com.devtalk.member.memberservice.global.error.ErrorCode;
+import com.devtalk.member.memberservice.global.error.exception.MemberNotFoundException;
 import com.devtalk.member.memberservice.global.util.RedisUtil;
 import com.devtalk.member.memberservice.member.application.port.in.FindProfileUseCase;
+import com.devtalk.member.memberservice.member.application.port.out.repository.MemberQueryableRepo;
 import com.devtalk.member.memberservice.member.application.port.out.repository.MemberRepo;
 import com.devtalk.member.memberservice.member.application.validator.FindProfileValidator;
 import com.devtalk.member.memberservice.member.domain.member.Member;
@@ -23,24 +26,26 @@ import java.io.UnsupportedEncodingException;
 @RequiredArgsConstructor
 public class FindProfileService implements FindProfileUseCase {
 
+    private final MemberQueryableRepo memberQueryableRepo;
     private final MemberRepo memberRepo;
     private final FindProfileValidator validator;
     private final JavaMailSender javaMailSender;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private String tempPassword; // 암호화까지 완료한 상태
+    private final RedisUtil redisUtil;
+    private String tempPassword;
 
     @Override
     public String findEmail(String name, String phoneNumber) {
         validator.findEmailValidate(name, phoneNumber);
-        log.info("이메일 찾기 {}", memberRepo.findEmailByNameAndPhoneNumber(name, phoneNumber));
-        return memberRepo.findEmailByNameAndPhoneNumber(name, phoneNumber);
+        return memberQueryableRepo.findEmailByNameAndPhoneNumber(name, phoneNumber);
     }
 
     @Override
     public void sendTempPassword(String name, String email) {
         Member member = validator.sendTempPasswordValidate(name, email);
         javaMailSender.send(createMessage(email));
-        member.updatePassword(tempPassword);
+//        member.updatePassword(bCryptPasswordEncoder.encode(tempPassword));
+        redisUtil.setDataExpire(tempPassword, email, 300000);
     }
 
     MimeMessage createMessage(String email) {
@@ -72,14 +77,12 @@ public class FindProfileService implements FindProfileUseCase {
              idx = (int) (charSet.length * Math.random());
              tempPassword += charSet[idx];
          }
-         tempPassword = bCryptPasswordEncoder.encode(tempPassword);
          return tempPassword;
     }
 
     @Override
     public void changePassword(String password, String newPassword) {
         Member member = validator.changePasswordValidate(password, newPassword);
-        // redis
-        member.updatePassword(newPassword);
+        member.updatePassword(bCryptPasswordEncoder.encode(newPassword));
     }
 }

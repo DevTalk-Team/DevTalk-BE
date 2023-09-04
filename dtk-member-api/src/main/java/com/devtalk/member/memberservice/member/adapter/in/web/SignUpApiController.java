@@ -66,7 +66,7 @@ public class SignUpApiController {
     public SuccessResponseNoResult consulterSignUp(@Valid @RequestBody SignUpInput input) {
         SignUpReq req = toReq(input, MemberType.CONSULTER);
         Member member = signUpUseCase.signUp(req);
-        kafkaProducer.send("test", member);
+        kafkaProducer.send("member-signup", member);
         return new SuccessResponseNoResult(CONSULTER_SIGNUP_SUCCESS);
     }
     /* 전문가 회원가입 */
@@ -78,7 +78,7 @@ public class SignUpApiController {
     public SuccessResponseNoResult consultantSignUp(@Valid @RequestBody SignUpInput input) {
         SignUpReq req = toReq(input, MemberType.CONSULTANT);
         Member member = signUpUseCase.signUp(req);
-        kafkaProducer.send("test", member);
+        kafkaProducer.send("member-signup", member);
         return new SuccessResponseNoResult(CONSULTANT_SIGNUP_SUCCESS);
     }
 
