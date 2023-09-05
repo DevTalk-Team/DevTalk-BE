@@ -9,6 +9,7 @@ import com.devtalk.member.memberservice.member.application.port.out.repository.M
 import com.devtalk.member.memberservice.member.application.validator.SignUpValidator;
 import com.devtalk.member.memberservice.member.domain.category.Category;
 import com.devtalk.member.memberservice.member.domain.category.MemberCategory;
+import com.devtalk.member.memberservice.member.domain.consultation.ConsultantConsultationType;
 import com.devtalk.member.memberservice.member.domain.consultation.ConsultantInfo;
 import com.devtalk.member.memberservice.member.domain.member.Member;
 import com.devtalk.member.memberservice.member.domain.member.MemberType;
@@ -50,9 +51,7 @@ public class SignUpService implements SignUpUseCase {
     }
 
     private void setConsultantInfo(Member member) {
-        log.info("consultant info 생성 시작");
         ConsultantInfo consultantInfo = ConsultantInfo.setMember(member);
-        log.info("consultant info 생성 완료 {}", consultantInfo);
         consultantInfoRepo.save(consultantInfo);
     }
 

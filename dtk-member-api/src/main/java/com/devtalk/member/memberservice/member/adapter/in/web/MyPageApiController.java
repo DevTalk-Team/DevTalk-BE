@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-public class MyPageController {
+public class MyPageApiController {
 
     @PostMapping("/mypage")
     public SuccessResponseNoResult checkPassword(HttpServletRequest request, @RequestParam String password) {
