@@ -24,6 +24,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -38,7 +39,7 @@ import java.util.List;
 @EnableDiscoveryClient
 @RestController
 @Slf4j
-@RequestMapping("/api/v1/products")
+@RequestMapping("/products")
 @RequiredArgsConstructor
 
 class ProductApiController {
@@ -49,24 +50,26 @@ class ProductApiController {
     private final UpdateUseCase updateUseCase;
 
     private final KafkaProducer kafkaProducer;
+    private final Environment env;
 
 
 
-//    @PostMapping("")
-//    public ResponseEntity<?> create() {
-//        Consultant consultant = Consultant.builder()
-//                .name("구한서")
-//                .loginId("5시간 비대면 상담")
-//                .role(RoleType.CONSULTANT)
-//                .F2F(5000)
-//                .NF2F(4000)
-//                .area("gangnam")
-//                .build();
-//        memberRepo.save(consultant);
-//
-//
-//        return ResponseEntity.ok().build();
-//    }
+    @GetMapping("/welcome")
+    public String welcome(){
+        return ("hello");
+    }
+
+
+    @GetMapping("/health_check")
+    public String status() {
+        return String.format("It's Working in User Service"
+                + ", port(local.server.port)=" + env.getProperty("local.server.port")
+                + ", port(server.port)=" + env.getProperty("server.port")
+                + ", token secret=" + env.getProperty("token.secret")
+                + ", token expiration time=" + env.getProperty("token.expiration_time"));
+    }
+
+
 
     @Operation(summary = "상품 등록 API", description = "상담사가 상담 가능한 시간을 설정.")
     @ApiResponses(value = {
