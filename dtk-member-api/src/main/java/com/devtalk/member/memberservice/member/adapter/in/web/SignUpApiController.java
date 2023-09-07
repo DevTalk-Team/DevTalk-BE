@@ -2,15 +2,14 @@ package com.devtalk.member.memberservice.member.adapter.in.web;
 
 import com.devtalk.member.memberservice.global.error.ErrorResponse;
 import com.devtalk.member.memberservice.global.success.SuccessResponseNoResult;
-import com.devtalk.member.memberservice.member.adapter.in.web.dto.SignUpInput;
+import com.devtalk.member.memberservice.member.adapter.in.web.dto.MemberInput;
 import com.devtalk.member.memberservice.member.adapter.out.producer.KafkaProducer;
 import com.devtalk.member.memberservice.member.application.port.in.SignUpUseCase;
 import com.devtalk.member.memberservice.member.application.port.in.VerifyEmailUseCase;
-import com.devtalk.member.memberservice.member.application.port.in.dto.SignUpReq;
+import com.devtalk.member.memberservice.member.application.port.in.dto.MemberReq;
 import com.devtalk.member.memberservice.member.domain.member.Member;
 import com.devtalk.member.memberservice.member.domain.member.MemberType;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -19,15 +18,15 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static com.devtalk.member.memberservice.global.success.SuccessCode.*;
-import static com.devtalk.member.memberservice.member.application.port.in.dto.SignUpReq.toReq;
 
 
 @Tag(name = "회원가입", description = "이메일 중복 확인, 인증 코드, 회원가입")
 @RestController
-@RequestMapping("/api/signup")
+@RequestMapping("/member/signup")
 @RequiredArgsConstructor
 public class SignUpApiController {
 
@@ -51,10 +50,10 @@ public class SignUpApiController {
             @ApiResponse(description = "인증 코드 불일치", responseCode = "409", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping("/auth-code")
-    public SuccessResponseNoResult verifyAuthCode(@Email @RequestParam String email,
-                                                  @RequestParam String authCode) {
+    public ResponseEntity<?> verifyAuthCode(@Email @RequestParam String email,
+                                            @RequestParam String authCode) {
         verifyEmailUseCase.verifyAuthCode(email, authCode);
-        return new SuccessResponseNoResult(AUTH_CODE_SUCCESS);
+        return SuccessResponseNoResult.toResponseEntity(AUTH_CODE_SUCCESS);
     }
 
     /* 멘티 회원가입 */
@@ -63,11 +62,11 @@ public class SignUpApiController {
     })
     @PostMapping("/consulter")
     @ResponseStatus(HttpStatus.CREATED)
-    public SuccessResponseNoResult consulterSignUp(@Valid @RequestBody SignUpInput input) {
-        SignUpReq req = toReq(input, MemberType.CONSULTER);
+    public ResponseEntity<?> consulterSignUp(@Valid @RequestBody MemberInput.SignUpInput input) {
+        MemberReq.SignUpReq req = input.toReq(MemberType.CONSULTER);
         Member member = signUpUseCase.signUp(req);
         kafkaProducer.send("member-signup", member);
-        return new SuccessResponseNoResult(CONSULTER_SIGNUP_SUCCESS);
+        return SuccessResponseNoResult.toResponseEntity(CONSULTER_SIGNUP_SUCCESS);
     }
     /* 전문가 회원가입 */
     @Operation(summary = "전문가 회원가입", responses = {
@@ -75,11 +74,11 @@ public class SignUpApiController {
     })
     @PostMapping("/consultant")
     @ResponseStatus(HttpStatus.CREATED)
-    public SuccessResponseNoResult consultantSignUp(@Valid @RequestBody SignUpInput input) {
-        SignUpReq req = toReq(input, MemberType.CONSULTANT);
+    public ResponseEntity<?> consultantSignUp(@Valid @RequestBody MemberInput.SignUpInput input) {
+        MemberReq.SignUpReq req = input.toReq(MemberType.CONSULTANT);
         Member member = signUpUseCase.signUp(req);
         kafkaProducer.send("member-signup", member);
-        return new SuccessResponseNoResult(CONSULTANT_SIGNUP_SUCCESS);
+        return SuccessResponseNoResult.toResponseEntity(CONSULTANT_SIGNUP_SUCCESS);
     }
 
     /* 이메일 중복 확인 */
@@ -88,8 +87,8 @@ public class SignUpApiController {
             @ApiResponse(description = "가입 이메일 중복", responseCode = "409", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping("/check-email")
-    public SuccessResponseNoResult isDuplicatedEmail(@Email @RequestParam String email) {
+    public ResponseEntity<?> isDuplicatedEmail(@Email @RequestParam String email) {
         signUpUseCase.checkDuplicatedEmail(email);
-        return new SuccessResponseNoResult(CHECK_EMAIL_DUPLICATION_SUCCESS);
+        return SuccessResponseNoResult.toResponseEntity(CHECK_EMAIL_DUPLICATION_SUCCESS);
     }
 }

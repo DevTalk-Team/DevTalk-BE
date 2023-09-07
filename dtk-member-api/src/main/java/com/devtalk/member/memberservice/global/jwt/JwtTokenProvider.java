@@ -3,7 +3,6 @@ package com.devtalk.member.memberservice.global.jwt;
 import com.devtalk.member.memberservice.global.error.ErrorCode;
 import com.devtalk.member.memberservice.global.error.exception.TokenException;
 import com.devtalk.member.memberservice.global.util.RedisUtil;
-import com.devtalk.member.memberservice.member.application.port.in.dto.TokenDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;

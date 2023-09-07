@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "마이페이지", description = "비밀번호 확인, 마이페이지 정보 확인&수정, 내 상담 확인")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/member")
 @RequiredArgsConstructor
 public class MyPageApiController {
 

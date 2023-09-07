@@ -54,7 +54,8 @@ public class SecurityConfig {
 
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
 
-                .authorizeHttpRequests((req) -> req.requestMatchers("/api/mypage/**", "/api/logout").authenticated()
+                .authorizeHttpRequests((req) -> req.requestMatchers("/member/mypage/**", "/member/logout",
+                                "/member/consultant/**").authenticated()
                 .anyRequest().permitAll())
                 .exceptionHandling((e) -> e.authenticationEntryPoint(jwtAuthenticationEntryPoint)
                         .accessDeniedHandler(jwtAccessDeniedHandler))

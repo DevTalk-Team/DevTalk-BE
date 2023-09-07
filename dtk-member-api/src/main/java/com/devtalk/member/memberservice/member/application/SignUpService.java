@@ -1,7 +1,7 @@
 package com.devtalk.member.memberservice.member.application;
 
 import com.devtalk.member.memberservice.member.application.port.in.SignUpUseCase;
-import com.devtalk.member.memberservice.member.application.port.in.dto.SignUpReq;
+import com.devtalk.member.memberservice.member.application.port.in.dto.MemberReq;
 import com.devtalk.member.memberservice.member.application.port.out.repository.CategoryRepo;
 import com.devtalk.member.memberservice.member.application.port.out.repository.ConsultantInfoRepo;
 import com.devtalk.member.memberservice.member.application.port.out.repository.MemberCategoryRepo;
@@ -9,7 +9,6 @@ import com.devtalk.member.memberservice.member.application.port.out.repository.M
 import com.devtalk.member.memberservice.member.application.validator.SignUpValidator;
 import com.devtalk.member.memberservice.member.domain.category.Category;
 import com.devtalk.member.memberservice.member.domain.category.MemberCategory;
-import com.devtalk.member.memberservice.member.domain.consultation.ConsultantConsultationType;
 import com.devtalk.member.memberservice.member.domain.consultation.ConsultantInfo;
 import com.devtalk.member.memberservice.member.domain.member.Member;
 import com.devtalk.member.memberservice.member.domain.member.MemberType;
@@ -37,7 +36,7 @@ public class SignUpService implements SignUpUseCase {
     private final ConsultantInfoRepo consultantInfoRepo;
 
     @Override
-    public Member signUp(SignUpReq req) {
+    public Member signUp(MemberReq.SignUpReq req) {
         signUpValidator.validate(req);
         Member member = createMember(req, passwordEncoder);
         Member savedMember = memberRepo.save(member);
