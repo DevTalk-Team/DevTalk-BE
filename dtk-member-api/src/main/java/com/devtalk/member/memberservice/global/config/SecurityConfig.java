@@ -37,7 +37,7 @@ public class SecurityConfig {
         // ACL(Access Control List, 접근 제어 목록)의 예외 URL 설정
         return (web -> web
                 .ignoring()
-                .requestMatchers("/members/**", "/consulter", "/consultant", "/login", "/logout",
+                .requestMatchers("/api/members/**", "/api/signup", "/api/login",
                         /* swagger v3 */
                         "/v3/api-docs/**",
                         "/swagger-ui/**"));
@@ -54,7 +54,8 @@ public class SecurityConfig {
 
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
 
-                .authorizeHttpRequests((req) -> req.requestMatchers("/api/mypage/**", "/api/logout").authenticated()
+                .authorizeHttpRequests((req) -> req.requestMatchers("/member/mypage/**", "/member/logout",
+                                "/member/consultant/**").authenticated()
                 .anyRequest().permitAll())
                 .exceptionHandling((e) -> e.authenticationEntryPoint(jwtAuthenticationEntryPoint)
                         .accessDeniedHandler(jwtAccessDeniedHandler))

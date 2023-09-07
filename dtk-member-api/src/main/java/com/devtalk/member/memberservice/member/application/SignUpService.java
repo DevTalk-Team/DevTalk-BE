@@ -1,7 +1,7 @@
 package com.devtalk.member.memberservice.member.application;
 
 import com.devtalk.member.memberservice.member.application.port.in.SignUpUseCase;
-import com.devtalk.member.memberservice.member.application.port.in.dto.SignUpReq;
+import com.devtalk.member.memberservice.member.application.port.in.dto.MemberReq;
 import com.devtalk.member.memberservice.member.application.port.out.repository.CategoryRepo;
 import com.devtalk.member.memberservice.member.application.port.out.repository.ConsultantInfoRepo;
 import com.devtalk.member.memberservice.member.application.port.out.repository.MemberCategoryRepo;
@@ -36,7 +36,7 @@ public class SignUpService implements SignUpUseCase {
     private final ConsultantInfoRepo consultantInfoRepo;
 
     @Override
-    public Member signUp(SignUpReq req) {
+    public Member signUp(MemberReq.SignUpReq req) {
         signUpValidator.validate(req);
         Member member = createMember(req, passwordEncoder);
         Member savedMember = memberRepo.save(member);
@@ -50,9 +50,7 @@ public class SignUpService implements SignUpUseCase {
     }
 
     private void setConsultantInfo(Member member) {
-        log.info("consultant info 생성 시작");
         ConsultantInfo consultantInfo = ConsultantInfo.setMember(member);
-        log.info("consultant info 생성 완료 {}", consultantInfo);
         consultantInfoRepo.save(consultantInfo);
     }
 
