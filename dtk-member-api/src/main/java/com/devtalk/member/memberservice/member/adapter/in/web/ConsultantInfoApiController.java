@@ -3,11 +3,11 @@ package com.devtalk.member.memberservice.member.adapter.in.web;
 import com.devtalk.member.memberservice.global.jwt.JwtTokenProvider;
 import com.devtalk.member.memberservice.global.success.SuccessResponse;
 import com.devtalk.member.memberservice.global.success.SuccessResponseNoResult;
-import com.devtalk.member.memberservice.member.adapter.in.web.dto.ConsultantInfoInput;
+import com.devtalk.member.memberservice.member.adapter.in.web.dto.ConsultantInput;
 import com.devtalk.member.memberservice.member.adapter.in.web.dto.ConsultationCategoryInput;
 import com.devtalk.member.memberservice.member.application.port.in.ConsultantInfoUseCase;
-import com.devtalk.member.memberservice.member.application.port.in.dto.ConsultantInfoRes;
 import com.devtalk.member.memberservice.member.application.port.in.dto.ConsultantRegionDto;
+import com.devtalk.member.memberservice.member.application.port.in.dto.ConsultantRes;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,15 +27,15 @@ public class ConsultantInfoApiController {
     @GetMapping("/info")
     public ResponseEntity<?> getInfo(HttpServletRequest request) {
         String token = jwtTokenProvider.resolveToken(request);
-        ConsultantInfoRes infoRes = consultantInfoUseCase.getInfo(token);
+        ConsultantRes.InfoRes infoRes = consultantInfoUseCase.getInfo(token);
         return SuccessResponse.toResponseEntity(CONSULTANT_INFO_SUCCESS, infoRes);
     }
 
     @PutMapping("/info")
-    public ResponseEntity<?> updateInfo(@RequestBody ConsultantInfoInput input, HttpServletRequest request) {
+    public ResponseEntity<?> updateInfo(@RequestBody ConsultantInput.InfoInput input, HttpServletRequest request) {
         String token = jwtTokenProvider.resolveToken(request);
-        ConsultantInfoRes infoRes = consultantInfoUseCase.updateInfo(token, input);
-        return SuccessResponse.toResponseEntity(CONSULTANT_INFO_SUCCESS, infoRes);
+        ConsultantRes.InfoRes infoRes = consultantInfoUseCase.updateInfo(token, input);
+        return SuccessResponse.toResponseEntity(CONSULTANT_INFO_UPDATE_SUCCESS, infoRes);
     }
 
 //    @GetMapping("/info/type") // 상담 가능 유형 (예: 커리어 상담, 멘토섭외 ...)

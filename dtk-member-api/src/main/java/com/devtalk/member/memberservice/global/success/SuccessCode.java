@@ -26,6 +26,7 @@ public enum SuccessCode {
     CONSULTANT_INFO_SUCCESS(OK, "0120", "전문가 소개 페이지 불러오기 성공"),
     CONSULTANT_INFO_TYPE_SUCCESS(OK, "0121", "전문가 소개 - 상담 유형 불러오기 성공"),
     CONSULTANT_INFO_CATEGORY_SUCCESS(OK, "0122", "전문가 소개 - 상담 가능 분야 불러오기 성공"),
+    CONSULTANT_INFO_UPDATE_SUCCESS(OK, "0123", "전문가 소개 수정 성공"),
     CONSULTANT_INFO_TYPE_UPDATE_SUCCESS(OK, "0124", "전문가 소개 - 상담 유형 수정 성공"),
     CONSULTANT_INFO_CATEGORY_UPDATE_SUCCESS(OK, "0125", "전문가 소개 - 상담 가능 분야 수정 성공"),
     ;
