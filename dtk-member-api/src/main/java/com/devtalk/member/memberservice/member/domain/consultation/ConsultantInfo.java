@@ -1,6 +1,9 @@
 package com.devtalk.member.memberservice.member.domain.consultation;
 
+import com.devtalk.member.memberservice.member.application.port.in.dto.ConsultantReq;
+import com.devtalk.member.memberservice.member.application.port.in.dto.ConsultantRes;
 import com.devtalk.member.memberservice.member.domain.member.Member;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,9 +19,12 @@ public class ConsultantInfo {
     @Id @GeneratedValue
     @Column(name = "CONSULTANT_INFO_ID")
     private Long id;
+
+//    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CONSULTANT_ID")
     private Member member;
+
     private int year;
     private String company;
     @Column(name = "SELF_INTRODUCTION")
@@ -35,5 +41,19 @@ public class ConsultantInfo {
         ConsultantInfo consultantInfo = new ConsultantInfo();
         consultantInfo.member = member;
         return consultantInfo;
+    }
+
+    public ConsultantInfo update(ConsultantReq.InfoReq req) {
+        this.year = req.getYear();
+        this.company = req.getCompany();
+        this.selfIntroduction = req.getSelfIntroduction();
+        this.career = req.getCareer();
+        this.field = req.getField();
+        this.skill = req.getSkill();
+        this.call15m = req.getCall15m();
+        this.call30m = req.getCall30m();
+        this.video30m = req.getVideo30m();
+        this.f2f1h = req.getF2f1h();
+        return this;
     }
 }

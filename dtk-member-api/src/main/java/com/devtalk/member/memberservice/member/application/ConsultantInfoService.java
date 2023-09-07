@@ -3,10 +3,10 @@ package com.devtalk.member.memberservice.member.application;
 import com.devtalk.member.memberservice.global.error.ErrorCode;
 import com.devtalk.member.memberservice.global.error.exception.MemberNotFoundException;
 import com.devtalk.member.memberservice.global.jwt.JwtTokenProvider;
-import com.devtalk.member.memberservice.member.adapter.in.web.dto.ConsultantInfoInput;
+import com.devtalk.member.memberservice.member.adapter.in.web.dto.ConsultantInput;
 import com.devtalk.member.memberservice.member.adapter.in.web.dto.ConsultationCategoryInput;
 import com.devtalk.member.memberservice.member.application.port.in.ConsultantInfoUseCase;
-import com.devtalk.member.memberservice.member.application.port.in.dto.ConsultantInfoRes;
+import com.devtalk.member.memberservice.member.application.port.in.dto.ConsultantRes;
 import com.devtalk.member.memberservice.member.application.port.in.dto.ConsultantTypeRes;
 import com.devtalk.member.memberservice.member.application.port.out.repository.*;
 import com.devtalk.member.memberservice.member.domain.category.Category;
@@ -15,12 +15,14 @@ import com.devtalk.member.memberservice.member.domain.consultation.ConsultantInf
 import com.devtalk.member.memberservice.member.domain.member.Member;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 @Transactional
 @RequiredArgsConstructor
 public class ConsultantInfoService implements ConsultantInfoUseCase {
@@ -39,17 +41,21 @@ public class ConsultantInfoService implements ConsultantInfoUseCase {
     }
 
     @Override
-    public ConsultantInfoRes getInfo(String token) {
+    public ConsultantRes.InfoRes getInfo(String token) {
         Member member = getMember(token);
         ConsultantInfo info = consultantInfoRepo.findByMember(member);
-        return ConsultantInfoRes.toRes(info);
+        return ConsultantRes.InfoRes.of(info);
     }
 
     @Override
-    public ConsultantInfoRes updateInfo(String token, ConsultantInfoInput input) {
+    public ConsultantRes.InfoRes updateInfo(String token, ConsultantInput.InfoInput input) {
         Member member = getMember(token);
         ConsultantInfo info = consultantInfoRepo.findByMember(member);
-        return null;
+        System.out.println("input.toReq().getYear() = " + input.toReq().getYear());
+        ConsultantInfo newInfo = info.update(input.toReq());
+        log.info("info 객체 : {}", info.getYear());
+        log.info("newInfo 객체 : {}", newInfo.getYear());
+        return ConsultantRes.InfoRes.of(consultantInfoRepo.save(newInfo));
     }
 
     @Override
