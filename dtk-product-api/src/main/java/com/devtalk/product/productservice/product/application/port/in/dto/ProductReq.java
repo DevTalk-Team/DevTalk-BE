@@ -13,7 +13,6 @@ public class ProductReq {
     @Getter
     public static class RegistProdReq {
         private Long consultantId;
-        //private String status;
         private LocalDateTime reservationAt;
         private ProductProceedType type;
     }

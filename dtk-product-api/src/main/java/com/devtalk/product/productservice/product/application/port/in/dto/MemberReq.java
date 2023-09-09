@@ -11,10 +11,16 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 public class MemberReq {
-    private MemberType memberType;
+    private Long id;
     private String name;
+    private MemberType memberType;
     private String phoneNumber;
-    private int NF2F_Price;
-    private int F2F_Price;
-    private String region;
+
+    public class ConsultantPrivacyReq{
+        private int NF2F_Price;
+
+        private int F2F_Price;
+
+        private String region;
+    }
 }
