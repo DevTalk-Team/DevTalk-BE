@@ -36,4 +36,15 @@ public class ConsultantRes {
                     .build();
         }
     }
+
+    @Builder
+    @Data
+    public static class TypeRes {
+
+    }
+
+    @Builder
+    @Data
+    public static class RegionRes {
+    }
 }

@@ -29,6 +29,8 @@ public enum SuccessCode {
     CONSULTANT_INFO_UPDATE_SUCCESS(OK, "0123", "전문가 소개 수정 성공"),
     CONSULTANT_INFO_TYPE_UPDATE_SUCCESS(OK, "0124", "전문가 소개 - 상담 유형 수정 성공"),
     CONSULTANT_INFO_CATEGORY_UPDATE_SUCCESS(OK, "0125", "전문가 소개 - 상담 가능 분야 수정 성공"),
+    /* 마이페이지 */
+    MYPAGE_SUCCESS(OK, "0126", "마이페이지 - 조회 성공")
     ;
 
 

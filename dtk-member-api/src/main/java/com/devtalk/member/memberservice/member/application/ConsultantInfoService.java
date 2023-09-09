@@ -7,7 +7,6 @@ import com.devtalk.member.memberservice.member.adapter.in.web.dto.ConsultantInpu
 import com.devtalk.member.memberservice.member.adapter.in.web.dto.ConsultationCategoryInput;
 import com.devtalk.member.memberservice.member.application.port.in.ConsultantInfoUseCase;
 import com.devtalk.member.memberservice.member.application.port.in.dto.ConsultantRes;
-import com.devtalk.member.memberservice.member.application.port.in.dto.ConsultantTypeRes;
 import com.devtalk.member.memberservice.member.application.port.out.repository.*;
 import com.devtalk.member.memberservice.member.domain.category.Category;
 import com.devtalk.member.memberservice.member.domain.category.MemberCategory;
@@ -51,11 +50,15 @@ public class ConsultantInfoService implements ConsultantInfoUseCase {
     public ConsultantRes.InfoRes updateInfo(String token, ConsultantInput.InfoInput input) {
         Member member = getMember(token);
         ConsultantInfo info = consultantInfoRepo.findByMember(member);
-        System.out.println("input.toReq().getYear() = " + input.toReq().getYear());
         ConsultantInfo newInfo = info.update(input.toReq());
-        log.info("info 객체 : {}", info.getYear());
-        log.info("newInfo 객체 : {}", newInfo.getYear());
         return ConsultantRes.InfoRes.of(consultantInfoRepo.save(newInfo));
+    }
+
+    @Override
+    public ConsultantRes.TypeRes updateType(String token, ConsultantInput.TypeInput input) {
+        Member member = getMember(token);
+
+        return null;
     }
 
     @Override
@@ -65,11 +68,6 @@ public class ConsultantInfoService implements ConsultantInfoUseCase {
         List<String> result = new ArrayList<>();
         categories.forEach((category) -> result.add(category.getCategory().getCategory()));
         return result;
-    }
-
-    @Override
-    public ConsultantTypeRes updateType(String token, List<String> type) {
-        return null;
     }
 
     @Override
