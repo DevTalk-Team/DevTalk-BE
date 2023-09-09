@@ -1,10 +1,9 @@
-package com.devtalk.product.productservice.product.application;
+package com.devtalk.product.productservice.product.application.service.product;
 
 import com.devtalk.product.productservice.global.error.exception.NotFoundException;
 import com.devtalk.product.productservice.product.adapter.out.web.persistence.MemberQueryRepo;
-import com.devtalk.product.productservice.product.application.port.in.RegistUseCase;
+import com.devtalk.product.productservice.product.application.port.in.product.RegistUseCase;
 import com.devtalk.product.productservice.product.application.port.in.dto.ProductReq;
-import com.devtalk.product.productservice.product.application.port.out.repository.MemberRepo;
 import com.devtalk.product.productservice.product.application.port.out.repository.ProductRepo;
 import com.devtalk.product.productservice.product.domain.member.Consultant;
 import com.devtalk.product.productservice.product.domain.product.Product;
@@ -19,7 +18,6 @@ import static com.devtalk.product.productservice.global.error.ErrorCode.NOT_FOUN
 @RequiredArgsConstructor
 public class RegistService implements RegistUseCase {
     ProductRepo productRepo;
-    MemberRepo memberRepo;
     MemberQueryRepo memberQueryRepo;
     @Transactional
     public void registProduct(ProductReq.RegistProdReq registProdReq) {

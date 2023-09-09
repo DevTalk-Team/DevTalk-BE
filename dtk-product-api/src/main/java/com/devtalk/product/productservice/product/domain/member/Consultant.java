@@ -1,5 +1,6 @@
 package com.devtalk.product.productservice.product.domain.member;
 
+import com.devtalk.product.productservice.product.application.port.in.dto.ConsultantPrivacyReq;
 import com.devtalk.product.productservice.product.domain.product.ReservedProceedType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -44,5 +45,14 @@ public class Consultant extends Member {
         else
             return 0;
     }
+
+    public Consultant updatePrivacy(ConsultantPrivacyReq consultantPrivacyReq){
+        return   Consultant.builder()
+                .NF2F_Price(consultantPrivacyReq.getNF2F_Price())
+                .F2F_Price(consultantPrivacyReq.getF2F_Price())
+                .region(consultantPrivacyReq.getRegion())
+                .build();
+    }
+
 }
 
