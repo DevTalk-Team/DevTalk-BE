@@ -1,8 +1,8 @@
-package com.devtalk.product.productservice.product.application;
+package com.devtalk.product.productservice.product.application.service.product;
 
 import com.devtalk.product.productservice.global.error.exception.NotFoundException;
 import com.devtalk.product.productservice.product.adapter.out.web.persistence.MemberQueryRepo;
-import com.devtalk.product.productservice.product.application.port.in.SearchUseCase;
+import com.devtalk.product.productservice.product.application.port.in.product.SearchUseCase;
 import com.devtalk.product.productservice.product.application.port.in.dto.ProductRes;
 import com.devtalk.product.productservice.product.application.port.out.repository.ProductRepo;
 import com.devtalk.product.productservice.product.application.port.out.repository.ReservedProductRepo;
@@ -68,11 +68,11 @@ public class SearchService implements SearchUseCase {
                         .consultationId(productReservedDetail.getId())
                         .consultantId(productReservedDetail.getProduct().getConsultant().getId())
                         .consulterId(productReservedDetail.getConsulterId())
-                        .status("예약 중")
+                        .status(productReservedDetail.getStatus())
                         .reservationAt(productReservedDetail.getProduct().getReservationAt())
                         .price(productReservedDetail.getPrice())
                         .reservedProceedType(productReservedDetail.getReservedProceedType())
-                        .area(productReservedDetail.getRegion())
+                        .region(productReservedDetail.getRegion())
                         .build())
                 .collect(Collectors.toList());
     }

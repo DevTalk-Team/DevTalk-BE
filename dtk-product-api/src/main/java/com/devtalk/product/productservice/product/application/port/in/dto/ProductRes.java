@@ -37,7 +37,7 @@ public class ProductRes {
         private LocalDateTime reservationAt;
         private int price;
         private ReservedProceedType reservedProceedType;
-        private String area;
+        private String region;
     }
 
     public static ReservedProductRes loadInfo(ProductReservedDetails productReservedDetails){
@@ -46,11 +46,11 @@ public class ProductRes {
                 .consultationId(productReservedDetails.getId())
                 .consultantId(productReservedDetails.getProduct().getConsultant().getId())
                 .consulterId(productReservedDetails.getConsulterId())
-                .status("예약 중")
+                .status(productReservedDetails.getStatus())
                 .reservationAt(productReservedDetails.getProduct().getReservationAt())
                 .price(productReservedDetails.getPrice())
                 .reservedProceedType(productReservedDetails.getReservedProceedType())
-                .area(productReservedDetails.getRegion())
+                .region(productReservedDetails.getRegion())
                 .build();
     }
 }

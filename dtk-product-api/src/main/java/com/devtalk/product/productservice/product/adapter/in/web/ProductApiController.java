@@ -5,16 +5,14 @@ import com.devtalk.product.productservice.global.vo.SuccessResponse;
 import com.devtalk.product.productservice.product.adapter.in.web.dto.ProductInput;
 import com.devtalk.product.productservice.product.adapter.in.web.dto.ProductOutput;
 import com.devtalk.product.productservice.product.adapter.out.web.producer.KafkaProducer;
-import com.devtalk.product.productservice.product.application.port.in.*;
-import com.devtalk.product.productservice.product.application.port.in.dto.ProductReq.ReserveProdReq;
 
 import com.devtalk.product.productservice.product.application.port.in.dto.ProductRes;
-import com.devtalk.product.productservice.product.application.port.out.repository.MemberRepo;
+import com.devtalk.product.productservice.product.application.port.in.product.DeleteUseCase;
+import com.devtalk.product.productservice.product.application.port.in.product.RegistUseCase;
+import com.devtalk.product.productservice.product.application.port.in.product.SearchUseCase;
+import com.devtalk.product.productservice.product.application.port.in.product.UpdateUseCase;
 import com.devtalk.product.productservice.product.domain.member.Consultant;
-import com.devtalk.product.productservice.product.domain.member.Member;
 import com.devtalk.product.productservice.product.domain.member.MemberType;
-import com.devtalk.product.productservice.product.domain.product.Product;
-import com.devtalk.product.productservice.product.domain.product.ProductProceedType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -43,7 +41,6 @@ import java.util.List;
 @RequiredArgsConstructor
 
 class ProductApiController {
-    private final MemberRepo memberRepo;
     private final DeleteUseCase deleteUseCase;
     private final RegistUseCase registUseCase;
     private final SearchUseCase searchUseCase;
@@ -95,16 +92,14 @@ class ProductApiController {
                     content = @Content(mediaType = "application/json"))
     })
     @GetMapping("/search/consultant/{consultantid}")
-    //@ApiOperation(value = "상품 등록", notes = "상담자가 상담 가능한 시간을 설정한다")
     public ResponseEntity<ProductOutput> searchProductList(@PathVariable Long consultantId) {
         List<ProductRes.ConsultantProductListRes> consultantProductListRes = searchUseCase.searchList(consultantId);
         ProductOutput productOutput
-                = new ProductOutput("0500", "조회 성공", consultantProductListRes);
+                = new ProductOutput("0502", "조회 성공", consultantProductListRes);
         return ResponseEntity.status(HttpStatus.OK).body(productOutput);
     }
 
     //상품 수정 - 완료
-    //상담 진행 방식을 수정한다.
     @Operation(summary = "상담 진행 방식 수정 API", description = "상담 진행 방식을 수정한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "예약 가능 상품 조회 성공",
@@ -126,7 +121,7 @@ class ProductApiController {
             @ApiResponse(responseCode = "201", description = "예약 상품 삭제 성공",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = SuccessResponse.class))),
-            @ApiResponse(responseCode = "401", description = "예약 상품 삭제실패",
+            @ApiResponse(responseCode = "401", description = "예약 상품 삭제 실패",
                     content = @Content(mediaType = "application/json"))
     })
     @DeleteMapping("delete/{consultationId}")
@@ -134,8 +129,6 @@ class ProductApiController {
         deleteUseCase.deleteReservation(consultationId);
         return ResponseEntity.ok().build();
     }
-
-
 
     //마이페이지 예약 리스트 조회 - 완료
     @Operation(summary = "마이페이지 예약 리스트 조회 API", description = "나의 예약된 상담을 조회한다.")
@@ -154,27 +147,10 @@ class ProductApiController {
         return ResponseEntity.status(HttpStatus.OK).body(productOutput);
     }
 
-//    //상품예약API - 완료
-//    @PostMapping("/productId/{productId}/")
-//    public ResponseEntity<?> reserveProduct(@RequestBody @Validated ProductInput.ReservationInput reservationInput,
-//                                            @PathVariable Long productId)
-//    {
-//        productUseCase.reserveProduct(reservationInput.toReq(productId));
-//        return ResponseEntity.ok().build();
-//    }
-//
-//    //예약상품조회API - 완료
-//    @GetMapping("search?consultation={consultationId}")
-//    public ResponseEntity<?> searchProduct(@PathVariable Long consultationId)
-//    {
-//        productUseCase.searchReservedDetatils(consultationId);
-//        return ResponseEntity.ok().build();
-//    }
-//
 @PostMapping("")
     public ResponseEntity<?> reserveConsultation() {
          Consultant consultant = Consultant.builder()
-                .phoneNumber("01020477221")
+                 .phoneNumber("01020477221")
                  .memberType(MemberType.CONSULTANT)
                  .name("김수현")
                  .NF2F_Price(50000)

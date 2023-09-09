@@ -1,7 +1,7 @@
-package com.devtalk.product.productservice.product.application;
+package com.devtalk.product.productservice.product.application.service.product;
 
 import com.devtalk.product.productservice.global.error.exception.NotFoundException;
-import com.devtalk.product.productservice.product.application.port.in.DeleteUseCase;
+import com.devtalk.product.productservice.product.application.port.in.product.DeleteUseCase;
 import com.devtalk.product.productservice.product.application.port.in.dto.ProductRes;
 import com.devtalk.product.productservice.product.application.port.out.repository.ProductRepo;
 import com.devtalk.product.productservice.product.application.port.out.repository.ReservedProductRepo;
@@ -21,7 +21,7 @@ public class DeleteService implements DeleteUseCase {
     private final ProductRepo productRepo;
     private final ReservedProductRepo reservedProductRepo;
 
-    //예약 상품 삭제
+    //1.예약 상품 삭제
     @Transactional
     public void deleteReservation(Long consultationId) {
         ProductRes.ReservedProductRes reservedDetails = searchReservedDetatils(consultationId);
@@ -32,7 +32,7 @@ public class DeleteService implements DeleteUseCase {
         return;
     }
 
-    //DB에서 예약 세부사항 조회
+    //2.DB에서 예약 세부사항 조회
     @Transactional
     public ProductRes.ReservedProductRes searchReservedDetatils(Long reservationId) {
         ProductReservedDetails productReservedDetails = reservedProductRepo.findById(reservationId)

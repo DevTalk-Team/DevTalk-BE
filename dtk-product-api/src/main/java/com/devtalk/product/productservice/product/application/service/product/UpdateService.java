@@ -1,7 +1,7 @@
-package com.devtalk.product.productservice.product.application;
+package com.devtalk.product.productservice.product.application.service.product;
 
 import com.devtalk.product.productservice.global.error.exception.NotFoundException;
-import com.devtalk.product.productservice.product.application.port.in.UpdateUseCase;
+import com.devtalk.product.productservice.product.application.port.in.product.UpdateUseCase;
 import com.devtalk.product.productservice.product.application.port.in.dto.ProductReq;
 import com.devtalk.product.productservice.product.application.port.out.repository.ProductRepo;
 import com.devtalk.product.productservice.product.domain.product.Product;
