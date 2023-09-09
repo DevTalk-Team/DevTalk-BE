@@ -6,7 +6,6 @@ import com.devtalk.member.memberservice.global.success.SuccessResponseNoResult;
 import com.devtalk.member.memberservice.member.adapter.in.web.dto.ConsultantInput;
 import com.devtalk.member.memberservice.member.adapter.in.web.dto.ConsultationCategoryInput;
 import com.devtalk.member.memberservice.member.application.port.in.ConsultantInfoUseCase;
-import com.devtalk.member.memberservice.member.application.port.in.dto.ConsultantRegionDto;
 import com.devtalk.member.memberservice.member.application.port.in.dto.ConsultantRes;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -44,12 +43,12 @@ public class ConsultantInfoApiController {
 //        return SuccessResponse.toResponseEntity();
 //    }
 
-//    @PutMapping("/info/type")
-//    public SuccessResponse<ConsultantTypeRes> updateType(@RequestBody ConsultantTypeInput input, HttpServletRequest request) {
-//        String token = jwtTokenProvider.resolveToken(request);
-//        ConsultantTypeRes res = consultantInfoUseCase.updateType(token, );
-//        return new SuccessResponse<>(CONSULTANT_INFO_TYPE_UPDATE_SUCCESS, res);
-//    }
+    @PutMapping("/info/type")
+    public ResponseEntity<?> updateType(@RequestBody ConsultantInput.TypeInput input, HttpServletRequest request) {
+        String token = jwtTokenProvider.resolveToken(request);
+        ConsultantRes.TypeRes res = consultantInfoUseCase.updateType(token, input);
+        return SuccessResponse.toResponseEntity(CONSULTANT_INFO_TYPE_UPDATE_SUCCESS, res);
+    }
 
     @GetMapping("/info/category") // 상담 가능 카테고리 (예: 웹, DB ...)
     public ResponseEntity<?> getCategory(HttpServletRequest request) {
@@ -66,7 +65,7 @@ public class ConsultantInfoApiController {
     }
 
     @GetMapping("/info/region") // 상담 가능 지역
-    public SuccessResponse<ConsultantRegionDto> getRegion() {
+    public SuccessResponse<ConsultantRes.RegionRes> getRegion() {
         return new SuccessResponse<>();
     }
 }
