@@ -15,7 +15,7 @@ import static com.devtalk.member.memberservice.global.success.SuccessCode.*;
 
 @Tag(name = "내 정보 찾기", description = "이메일 찾기, 임시 비밀번호 발급, 비밀번호 재설정")
 @RestController
-@RequestMapping("/api/members")
+@RequestMapping("/member/profile")
 @RequiredArgsConstructor
 public class FindProfileApiController {
     private final FindProfileUseCase findProfileUseCase;

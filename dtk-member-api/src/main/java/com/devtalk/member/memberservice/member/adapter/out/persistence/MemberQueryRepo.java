@@ -10,7 +10,6 @@ import static com.devtalk.member.memberservice.member.domain.member.QMember.memb
 
 @Repository
 public class MemberQueryRepo implements MemberQueryableRepo {
-
     @Autowired
     EntityManager em;
 
@@ -20,13 +19,10 @@ public class MemberQueryRepo implements MemberQueryableRepo {
     public String findEmailByNameAndPhoneNumber(String name, String phoneNumber) {
         queryFactory = new JPAQueryFactory(em);
 
-        String s = queryFactory
+        return queryFactory
                 .select(member.email)
                 .from(member)
                 .where(member.name.eq(name), member.phoneNumber.eq(phoneNumber))
                 .fetchOne();
-
-        System.out.println("s = " + s);
-        return s;
     }
 }

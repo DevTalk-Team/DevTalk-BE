@@ -2,6 +2,7 @@ package com.devtalk.member.memberservice.global.config;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
@@ -15,7 +16,8 @@ import java.util.Map;
 @EnableKafka
 @Configuration
 public class KafkaProducerConfig {
-    String bootstrapServer = "3.85.62.111:9092, 54.208.52.31:9092, 54.162.48.198:9092";
+    @Value("${kafka.bootstrap-server}")
+    String bootstrapServer;
 
     @Bean
     public ProducerFactory<String, String> producerFactory() {
