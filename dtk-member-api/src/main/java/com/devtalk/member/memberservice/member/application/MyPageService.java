@@ -35,7 +35,7 @@ public class MyPageService implements MyPageUseCase {
     @Override
     public MyPageRes.InfoRes getMyPage(String token) {
         Member member = getMember(token);
-        List<MemberCategory> categories = memberCategoryRepo.findAllByMember(member);
+        List<MemberCategory> categories = memberCategoryRepo.findAllByMemberId(member.getId());
         List<String> result = new ArrayList<>();
         categories.forEach((category) -> result.add(category.getCategory().getCategory()));
         return MyPageRes.InfoRes.of(member, result);
