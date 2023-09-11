@@ -3,6 +3,8 @@ package com.devtalk.member.memberservice.member.application.port.in.dto;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.List;
+
 public class ConsultantReq {
 
     @Builder
@@ -18,5 +20,11 @@ public class ConsultantReq {
         private Integer call30m;
         private Integer video30m;
         private Integer f2f1h;
+    }
+
+    @Builder
+    @Getter
+    public static class CategoryReq {
+        private List<String> categories;
     }
 }
