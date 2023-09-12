@@ -1,7 +1,9 @@
 package com.devtalk.member.memberservice.member.adapter.out.producer;
 
 import com.devtalk.member.memberservice.global.config.CustomLocalDateTimeSerializer;
+import com.devtalk.member.memberservice.member.domain.consultation.ConsultantInfo;
 import com.devtalk.member.memberservice.member.domain.member.Member;
+import com.devtalk.member.memberservice.member.domain.region.MemberRegion;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -20,18 +22,37 @@ import java.time.LocalDateTime;
 public class KafkaProducer {
     private final KafkaTemplate<String, String> kafkaTemplate;
 
-    //*** 두번째 파라미터를 변경해주세요 ***//
-    public void send(String topic, Member member) {
-        String jsonInString = "";
-        try{
-            //*** payment에는 보내고 싶은 객체를 넣어주세요 ***//
-            jsonInString = serializeMapper().writeValueAsString(member);
+    public void sendMember(Member member) {
+        String jsoinInString = "";
+        try {
+            jsoinInString = serializeMapper().writeValueAsString(member);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        kafkaTemplate.send(topic, jsonInString);
-        //*** 로그 확인 ***//
-        log.info("카프카 메시지 전송 성공 : " + member);
+        kafkaTemplate.send("member-signup", jsoinInString);
+        log.info("카프카 - 회원가입 멤버 전송 성공 : " + member);
+    }
+
+    public void sendConsultantInfo(ConsultantInfo consultantInfo) {
+        String jsoinInString = "";
+        try {
+            jsoinInString = serializeMapper().writeValueAsString(consultantInfo);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        kafkaTemplate.send("consultant-info", jsoinInString);
+        log.info("카프카 - 전문가 정보 전송 성공 : " + consultantInfo);
+    }
+
+    public void sendConsultantRegion(MemberRegion memberRegion) {
+        String jsoinInString = "";
+        try {
+            jsoinInString = serializeMapper().writeValueAsString(memberRegion);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        kafkaTemplate.send("consultant-info", jsoinInString);
+        log.info("카프카 - 전문가 지역 전송 성공 : " + memberRegion);
     }
 
     public ObjectMapper serializeMapper() {

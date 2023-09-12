@@ -1,8 +1,7 @@
 package com.devtalk.member.memberservice.member.application;
 
-import com.devtalk.member.memberservice.global.error.ErrorCode;
-import com.devtalk.member.memberservice.global.error.exception.MemberNotFoundException;
 import com.devtalk.member.memberservice.global.util.RedisUtil;
+import com.devtalk.member.memberservice.member.adapter.in.web.dto.FindProfileOutput;
 import com.devtalk.member.memberservice.member.application.port.in.FindProfileUseCase;
 import com.devtalk.member.memberservice.member.application.port.out.repository.MemberQueryableRepo;
 import com.devtalk.member.memberservice.member.application.port.out.repository.MemberRepo;
@@ -11,23 +10,22 @@ import com.devtalk.member.memberservice.member.domain.member.Member;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.UnsupportedEncodingException;
 
 @Slf4j
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class FindProfileService implements FindProfileUseCase {
 
     private final MemberQueryableRepo memberQueryableRepo;
-    private final MemberRepo memberRepo;
     private final FindProfileValidator validator;
     private final JavaMailSender javaMailSender;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -58,9 +56,7 @@ public class FindProfileService implements FindProfileUseCase {
             mimeMessage.setRecipients(MimeMessage.RecipientType.TO, email);
             mimeMessage.setSubject("Devtalk 임시 비밀번호 발급");
             mimeMessage.setText(tempPassword + "\n임시 비밀번호로 로그인해주세요.");
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
+        } catch (MessagingException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
 
@@ -69,7 +65,9 @@ public class FindProfileService implements FindProfileUseCase {
 
      String createTempPassword() {
          char[] charSet = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
-                 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
+                 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'r',
+         'w', 'x', 'y', 'z'};
          // 문자 배열 길이의 값을 랜덤으로 10개를 뽑아 구문을 작성함
          int idx = 0;
          tempPassword = "";
@@ -80,9 +78,15 @@ public class FindProfileService implements FindProfileUseCase {
          return tempPassword;
     }
 
+    @Transactional
     @Override
     public void changePassword(String password, String newPassword) {
         Member member = validator.changePasswordValidate(password, newPassword);
         member.updatePassword(bCryptPasswordEncoder.encode(newPassword));
+    }
+
+    @Override
+    public FindProfileOutput.MemberOutput findMember(Long memberId) {
+        return memberQueryableRepo.findNameAndEmailById(memberId);
     }
 }

@@ -29,7 +29,6 @@ import static com.devtalk.member.memberservice.global.success.SuccessCode.*;
 @RequestMapping("/member/signup")
 @RequiredArgsConstructor
 public class SignUpApiController {
-
     private final SignUpUseCase signUpUseCase;
     private final VerifyEmailUseCase verifyEmailUseCase;
     private final KafkaProducer kafkaProducer;
@@ -65,7 +64,7 @@ public class SignUpApiController {
     public ResponseEntity<?> consulterSignUp(@Valid @RequestBody MemberInput.SignUpInput input) {
         MemberReq.SignUpReq req = input.toReq(MemberType.CONSULTER);
         Member member = signUpUseCase.signUp(req);
-        kafkaProducer.send("member-signup", member);
+        kafkaProducer.sendMember(member);
         return SuccessResponseNoResult.toResponseEntity(CONSULTER_SIGNUP_SUCCESS);
     }
     /* 전문가 회원가입 */
@@ -77,7 +76,7 @@ public class SignUpApiController {
     public ResponseEntity<?> consultantSignUp(@Valid @RequestBody MemberInput.SignUpInput input) {
         MemberReq.SignUpReq req = input.toReq(MemberType.CONSULTANT);
         Member member = signUpUseCase.signUp(req);
-        kafkaProducer.send("member-signup", member);
+        kafkaProducer.sendMember(member);
         return SuccessResponseNoResult.toResponseEntity(CONSULTANT_SIGNUP_SUCCESS);
     }
 
