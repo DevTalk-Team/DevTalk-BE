@@ -18,16 +18,41 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ReserveService implements ReserveUseCase {
-    ProductRepo productRepo;
-    ReservedProductRepo reservedProductRepo;
+    private final ProductRepo productRepo;
+    private final ReservedProductRepo reservedProductRepo;
+
     @Override
     public void reserveProduct(ProductReservedDetailsReq productReservedDetailsReq) {
+
+        // Validate input data
+        if (productReservedDetailsReq.getConsultantId() == null) {
+            throw new IllegalArgumentException("Consultant ID cannot be null");
+        }
+
+        if (productReservedDetailsReq.getConsulterId() == null) {
+            throw new IllegalArgumentException("Consulter ID cannot be null");
+        }
+
+        if (productReservedDetailsReq.getReservationAt() == null) {
+            throw new IllegalArgumentException("Reservation time cannot be null");
+        }
+
         Optional<Product> optionalProduct = productRepo.findByConsultantIdAndReservationAt(
                 productReservedDetailsReq.getConsultantId(),
                 productReservedDetailsReq.getReservationAt()
         );
 
-        Product product = optionalProduct.orElseThrow(() -> new NoSuchElementException("No Product found with the given criteria"));
+        // Check if a Product with the given consultant id and reservation time exists
+        if (!optionalProduct.isPresent()) {
+            throw new NoSuchElementException("No Product found with the given criteria");
+        }
+
+        Product product = optionalProduct.get();
+
+        // Check if the consultant id of the found Product is not null
+        if (product.getConsultant().getId() == null) {
+            throw new IllegalStateException("The consultant id of the found Product is unexpectedly null");
+        }
 
         ProductReservedDetails productReservedDetails = ProductReservedDetails.builder()
                 .product(product)
@@ -38,6 +63,5 @@ public class ReserveService implements ReserveUseCase {
                 .build();
 
         reservedProductRepo.save(productReservedDetails);
-
     }
 }

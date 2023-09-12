@@ -35,7 +35,7 @@ public class ProductRes {
         private Long consulterId;
         private String status;
         private LocalDateTime reservationAt;
-        private int price;
+        private Long price;
         private ReservedProceedType reservedProceedType;
         private String region;
     }

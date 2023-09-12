@@ -17,8 +17,8 @@ import static com.devtalk.product.productservice.global.error.ErrorCode.NOT_FOUN
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class RegistService implements RegistUseCase {
-    ProductRepo productRepo;
-    MemberQueryRepo memberQueryRepo;
+    private final ProductRepo productRepo;
+    private final MemberQueryRepo memberQueryRepo;
     @Transactional
     public void registProduct(ProductReq.RegistProdReq registProdReq) {
         //todo 검증절차 필요한지 확인하기
