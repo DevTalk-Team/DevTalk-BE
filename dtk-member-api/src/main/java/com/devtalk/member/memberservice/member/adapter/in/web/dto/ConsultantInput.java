@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ConsultantInput {
 
-    @Getter // TODO 추가했더니 해결됐다...
+    @Getter
     @AllArgsConstructor
     public static class InfoInput {
         private int year;
@@ -36,9 +36,11 @@ public class ConsultantInput {
                     .f2f1h(f2f1h)
                     .build();
         }
+
     }
 
-    public static class TypeInput {
-        private List<String> consultantType;
+    @Getter
+    public static class ListInput {
+        private List<String> list;
     }
 }

@@ -4,9 +4,7 @@ import com.devtalk.member.memberservice.global.jwt.JwtTokenProvider;
 import com.devtalk.member.memberservice.global.success.SuccessResponse;
 import com.devtalk.member.memberservice.global.success.SuccessResponseNoResult;
 import com.devtalk.member.memberservice.member.adapter.in.web.dto.ConsultantInput;
-import com.devtalk.member.memberservice.member.adapter.in.web.dto.ConsultationCategoryInput;
 import com.devtalk.member.memberservice.member.application.port.in.ConsultantInfoUseCase;
-import com.devtalk.member.memberservice.member.application.port.in.dto.ConsultantRegionDto;
 import com.devtalk.member.memberservice.member.application.port.in.dto.ConsultantRes;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -34,22 +32,23 @@ public class ConsultantInfoApiController {
     @PutMapping("/info")
     public ResponseEntity<?> updateInfo(@RequestBody ConsultantInput.InfoInput input, HttpServletRequest request) {
         String token = jwtTokenProvider.resolveToken(request);
-        ConsultantRes.InfoRes infoRes = consultantInfoUseCase.updateInfo(token, input);
-        return SuccessResponse.toResponseEntity(CONSULTANT_INFO_UPDATE_SUCCESS, infoRes);
+        ConsultantRes.InfoRes res = consultantInfoUseCase.updateInfo(token, input);
+        return SuccessResponse.toResponseEntity(CONSULTANT_INFO_UPDATE_SUCCESS, res);
     }
 
-//    @GetMapping("/info/type") // 상담 가능 유형 (예: 커리어 상담, 멘토섭외 ...)
-//    public ResponseEntity<?> getType(HttpServletRequest request) {
-//        String token = jwtTokenProvider.resolveToken(request);
-//        return SuccessResponse.toResponseEntity();
-//    }
+    @GetMapping("/info/type") // 상담 가능 유형 (예: 커리어 상담, 멘토섭외 ...)
+    public ResponseEntity<?> getType(HttpServletRequest request) {
+        String token = jwtTokenProvider.resolveToken(request);
+        List<String> res = consultantInfoUseCase.getType(token);
+        return SuccessResponse.toResponseEntity(CONSULTANT_INFO_TYPE_SUCCESS, res);
+    }
 
-//    @PutMapping("/info/type")
-//    public SuccessResponse<ConsultantTypeRes> updateType(@RequestBody ConsultantTypeInput input, HttpServletRequest request) {
-//        String token = jwtTokenProvider.resolveToken(request);
-//        ConsultantTypeRes res = consultantInfoUseCase.updateType(token, );
-//        return new SuccessResponse<>(CONSULTANT_INFO_TYPE_UPDATE_SUCCESS, res);
-//    }
+    @PutMapping("/info/type")
+    public ResponseEntity<?> updateType(@RequestBody ConsultantInput.ListInput input, HttpServletRequest request) {
+        String token = jwtTokenProvider.resolveToken(request);
+        consultantInfoUseCase.updateType(token, input);
+        return SuccessResponseNoResult.toResponseEntity(CONSULTANT_INFO_TYPE_UPDATE_SUCCESS);
+    }
 
     @GetMapping("/info/category") // 상담 가능 카테고리 (예: 웹, DB ...)
     public ResponseEntity<?> getCategory(HttpServletRequest request) {
@@ -58,15 +57,24 @@ public class ConsultantInfoApiController {
         return SuccessResponse.toResponseEntity(CONSULTANT_INFO_CATEGORY_SUCCESS, res);
     }
 
-    @PostMapping("/info/category")
-    public ResponseEntity<?> updateCategory(@RequestBody ConsultationCategoryInput input, HttpServletRequest request) {
+    @PutMapping("/info/category")
+    public ResponseEntity<?> updateCategory(@RequestBody ConsultantInput.ListInput input, HttpServletRequest request) {
         String token = jwtTokenProvider.resolveToken(request);
         consultantInfoUseCase.updateCategory(token, input); // TODO input 검증
         return SuccessResponseNoResult.toResponseEntity(CONSULTANT_INFO_CATEGORY_UPDATE_SUCCESS);
     }
 
     @GetMapping("/info/region") // 상담 가능 지역
-    public SuccessResponse<ConsultantRegionDto> getRegion() {
-        return new SuccessResponse<>();
+    public ResponseEntity<?> getRegion(HttpServletRequest request) {
+        String token = jwtTokenProvider.resolveToken(request);
+        List<String> res = consultantInfoUseCase.getRegion(token);
+        return SuccessResponse.toResponseEntity(CONSULTANT_INFO_REGION_SUCCESS, res);
+    }
+
+    @PutMapping("/info/region")
+    public ResponseEntity<?> updateRegion(@RequestBody ConsultantInput.ListInput input, HttpServletRequest request) {
+        String token = jwtTokenProvider.resolveToken(request);
+        consultantInfoUseCase.updateRegion(token, input); // TODO input 검증
+        return SuccessResponseNoResult.toResponseEntity(CONSULTANT_INFO_REGION_UPDATE_SUCCESS);
     }
 }
