@@ -4,6 +4,7 @@ import com.devtalk.member.memberservice.global.jwt.JwtTokenProvider;
 import com.devtalk.member.memberservice.global.success.SuccessResponse;
 import com.devtalk.member.memberservice.global.success.SuccessResponseNoResult;
 import com.devtalk.member.memberservice.member.adapter.in.web.dto.ConsultantInput;
+import com.devtalk.member.memberservice.member.adapter.out.producer.KafkaProducer;
 import com.devtalk.member.memberservice.member.application.port.in.ConsultantInfoUseCase;
 import com.devtalk.member.memberservice.member.application.port.in.dto.ConsultantRes;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,18 +22,20 @@ import static com.devtalk.member.memberservice.global.success.SuccessCode.*;
 public class ConsultantInfoApiController {
     private final ConsultantInfoUseCase consultantInfoUseCase;
     private final JwtTokenProvider jwtTokenProvider;
+    private final KafkaProducer kafkaProducer;
 
     @GetMapping("/info")
     public ResponseEntity<?> getInfo(HttpServletRequest request) {
         String token = jwtTokenProvider.resolveToken(request);
-        ConsultantRes.InfoRes infoRes = consultantInfoUseCase.getInfo(token);
-        return SuccessResponse.toResponseEntity(CONSULTANT_INFO_SUCCESS, infoRes);
+        ConsultantRes.InfoRes res = consultantInfoUseCase.getInfo(token);
+        return SuccessResponse.toResponseEntity(CONSULTANT_INFO_SUCCESS, res);
     }
 
     @PutMapping("/info")
     public ResponseEntity<?> updateInfo(@RequestBody ConsultantInput.InfoInput input, HttpServletRequest request) {
         String token = jwtTokenProvider.resolveToken(request);
         ConsultantRes.InfoRes res = consultantInfoUseCase.updateInfo(token, input);
+        kafkaProducer.sendConsultantInfo(res.toEntity());
         return SuccessResponse.toResponseEntity(CONSULTANT_INFO_UPDATE_SUCCESS, res);
     }
 

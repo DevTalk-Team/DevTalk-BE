@@ -2,13 +2,12 @@ package com.devtalk.member.memberservice.member.adapter.in.web;
 
 import com.devtalk.member.memberservice.global.success.SuccessResponse;
 import com.devtalk.member.memberservice.global.success.SuccessResponseNoResult;
-import com.devtalk.member.memberservice.member.adapter.in.web.dto.ChangePasswordInput;
-import com.devtalk.member.memberservice.member.adapter.in.web.dto.FindEmailInput;
-import com.devtalk.member.memberservice.member.adapter.in.web.dto.FindEmailOutput;
-import com.devtalk.member.memberservice.member.adapter.in.web.dto.SendPasswordInput;
+import com.devtalk.member.memberservice.member.adapter.in.web.dto.FindProfileInput;
+import com.devtalk.member.memberservice.member.adapter.in.web.dto.FindProfileOutput;
 import com.devtalk.member.memberservice.member.application.port.in.FindProfileUseCase;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static com.devtalk.member.memberservice.global.success.SuccessCode.*;
@@ -21,22 +20,27 @@ public class FindProfileApiController {
     private final FindProfileUseCase findProfileUseCase;
 
     @PostMapping("/find-email")
-    public SuccessResponse<FindEmailOutput> findEmail(@RequestBody FindEmailInput input) {
+    public ResponseEntity<?> findEmail(@RequestBody FindProfileInput.EmailInput input) {
         String findEmail = findProfileUseCase.findEmail(input.getName(), input.getPhoneNumber());
-        FindEmailOutput findEmailOutput = new FindEmailOutput(findEmail);
-        return new SuccessResponse<>(FIND_EMAIL_SUCCESS, findEmailOutput);
+        FindProfileOutput.EmailOutput output = new FindProfileOutput.EmailOutput(findEmail);
+        return SuccessResponse.toResponseEntity(FIND_EMAIL_SUCCESS, output);
     }
 
     @GetMapping("/send-password")
-    public SuccessResponseNoResult sendPassword(@RequestBody SendPasswordInput input) {
+    public ResponseEntity<?> sendPassword(@RequestBody FindProfileInput.SendPasswordInput input) {
         findProfileUseCase.sendTempPassword(input.getName(), input.getEmail());
-        return new SuccessResponseNoResult(TEMP_PASSWORD_SUCCESS);
+        return SuccessResponseNoResult.toResponseEntity(TEMP_PASSWORD_SUCCESS);
     }
 
     @PostMapping("/change-password")
-    public SuccessResponseNoResult changePassword(@RequestBody ChangePasswordInput input) {
+    public ResponseEntity<?> changePassword(@RequestBody FindProfileInput.ChangePasswordInput input) {
         findProfileUseCase.changePassword(input.getPassword(), input.getNewPassword());
-        return new SuccessResponseNoResult(CHANGE_PASSWORD_SUCCESS);
+        return SuccessResponseNoResult.toResponseEntity(CHANGE_PASSWORD_SUCCESS);
     }
 
+    @GetMapping("/{memberId}")
+    public ResponseEntity<?> findMember(@PathVariable Long memberId) {
+        FindProfileOutput.MemberOutput output = findProfileUseCase.findMember(memberId);
+        return SuccessResponse.toResponseEntity(FIND_MEMBER_SUCCESS, output);
+    }
 }

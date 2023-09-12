@@ -22,6 +22,7 @@ public enum SuccessCode {
     FIND_EMAIL_SUCCESS(OK, "0117", "이메일 찾기 성공"),
     TEMP_PASSWORD_SUCCESS(OK, "0118", "임시 비밀번호 발급 성공"),
     CHANGE_PASSWORD_SUCCESS(OK, "0119", "비밀번호 재설정 성공"),
+    FIND_MEMBER_SUCCESS(OK, "0129", "ID로 멤버 조회 성공"),
     /* 전문가 소개 페이지 */
     CONSULTANT_INFO_SUCCESS(OK, "0120", "전문가 소개 페이지 조회 성공"),
     CONSULTANT_INFO_UPDATE_SUCCESS(OK, "0121", "전문가 소개 페이지 수정 성공"),

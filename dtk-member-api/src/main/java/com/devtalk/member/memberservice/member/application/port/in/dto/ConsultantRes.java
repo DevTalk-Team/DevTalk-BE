@@ -35,5 +35,20 @@ public class ConsultantRes {
                     .f2f1h(info.getF2f1h())
                     .build();
         }
+
+        public ConsultantInfo toEntity() {
+            return ConsultantInfo.builder()
+                    .year(year)
+                    .company(company)
+                    .selfIntroduction(selfIntroduction)
+                    .career(career)
+                    .field(field)
+                    .skill(skill)
+                    .call15m(call15m)
+                    .call30m(call30m)
+                    .video30m(video30m)
+                    .f2f1h(f2f1h)
+                    .build();
+        }
     }
 }
