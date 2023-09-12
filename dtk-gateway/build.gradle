@@ -22,7 +22,9 @@ ext {
 	set('springCloudVersion', "2022.0.3")
 }
 
+
 dependencies {
+	//gateway & eureka 의존성 추가
 	implementation 'org.springframework.cloud:spring-cloud-starter-gateway'
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 	compileOnly 'org.projectlombok:lombok'

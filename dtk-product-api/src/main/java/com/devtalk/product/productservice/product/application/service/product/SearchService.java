@@ -25,9 +25,9 @@ import static com.devtalk.product.productservice.global.error.ErrorCode.NOT_FOUN
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class SearchService implements SearchUseCase {
-    ProductRepo productRepo;
-    MemberQueryRepo memberQueryRepo;
-    ReservedProductRepo reservedProductRepo;
+    private final ProductRepo productRepo;
+    private final MemberQueryRepo memberQueryRepo;
+    private final ReservedProductRepo reservedProductRepo;
     //상담자 예약 가능 상품 조회
     @Transactional
     public List<ProductRes.ConsultantProductListRes> searchList(Long consultantId) {

@@ -24,7 +24,7 @@ public class ProductReservedDetails extends Product {
     private Long consulterId;
 
     @Column(name = "price")
-    private int price;
+    private Long price;
 
     @Column(name = "ReservedProceedType")
     @Enumerated(EnumType.STRING)

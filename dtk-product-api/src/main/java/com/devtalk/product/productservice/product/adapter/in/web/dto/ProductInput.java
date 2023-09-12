@@ -15,7 +15,7 @@ public class ProductInput {
     @Getter
     public static class RegistrationInput{
 
-        //private Long consultantId;
+        private Long consultantId;
         private  LocalDateTime reservationAt;
         private ProductProceedType type;
 

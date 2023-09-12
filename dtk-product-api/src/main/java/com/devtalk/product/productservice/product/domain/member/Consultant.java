@@ -17,10 +17,18 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder // 👈 여기 추가
 public class Consultant extends Member {
 
-    private int NF2F_Price;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "consultant_id")
+    private Long id;
 
-    private int F2F_Price;
+    @Column
+    private Long nf2f_Price;
 
+    @Column
+    private Long f2f_Price;
+
+    @Column
     private String region;
 
 //    public static Consultant createConsulter(Long memberId, String loginId, String name, MemberType memberType,
@@ -35,21 +43,21 @@ public class Consultant extends Member {
 //                .region(region)
 //                .build();
 //    }
-    public int getPrice(ReservedProceedType reservedProceedType) {
-        if (reservedProceedType == ReservedProceedType.NF2F) {
-            return this.NF2F_Price;
-        }
-        if (reservedProceedType == ReservedProceedType.F2F){
-            return this.F2F_Price;
-        }
-        else
-            return 0;
-    }
+//    public Long getPrice(ReservedProceedType reservedProceedType) {
+//        if (reservedProceedType == ReservedProceedType.NF2F) {
+//            return this.NF2F_Price;
+//        }
+//        if (reservedProceedType == ReservedProceedType.F2F){
+//            return this.F2F_Price;
+//        }
+//        else
+//            return 0l;
+//    }
 
     public Consultant updatePrivacy(ConsultantPrivacyReq consultantPrivacyReq){
         return   Consultant.builder()
-                .NF2F_Price(consultantPrivacyReq.getNF2F_Price())
-                .F2F_Price(consultantPrivacyReq.getF2F_Price())
+                .nf2f_Price(consultantPrivacyReq.getNf2f_Price())
+                .f2f_Price(consultantPrivacyReq.getF2f_Price())
                 .region(consultantPrivacyReq.getRegion())
                 .build();
     }

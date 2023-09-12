@@ -15,6 +15,6 @@ public class ProductReservedDetailsReq {
     private Long consulterId;
     private LocalDateTime reservationAt;
     private ReservedProceedType reservedProceedType;
-    private int price;
+    private Long price;
     private String region;
 }

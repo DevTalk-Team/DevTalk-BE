@@ -1,6 +1,8 @@
+#API-Gateway 포트번호 : 클라이언트는 모든 요청을 API-Gateway로 보냄
 server:
   port: 8800
 
+#각 서비스들의 요청과 해당 MS를 LoadBalancing 하기 위해 eureka 서버 등록
 eureka:
   client:
     register-with-eureka: true
@@ -12,14 +14,27 @@ spring:
   application:
     name: apigateway-service
   cloud:
-    gateway:
-      default-filters:
-        - AuthorizationHeaderFilter  # AuthorizationHeaderFilter 추가
+    gateway: #라우팅 설정
+      default-filters: #디폴트 필터 : 모든 요청에 대햇 필터링할 예정
+#        - name: LoggingFilter
+#        - AuthorizationHeaderFilter  # AuthorizationHeaderFilter (JWT 검사)
+#        - name: GlobalFilter # 적용할 필터의 클래스명
+#          args: # 필터 클래스의 Config 클래스 필드값 정보 세팅
+#            baseMessage: Spring Cloud Gateway Logger
+#            preLogger: true
+#            postLogger: true
       routes:
-        - id: board-service
-          uri: lb://BOARD-SERVICE
-          predicates:
+        - id: board-service #구분하기 위한 ID 값 임의로 변경해도 무관
+          uri: lb://BOARD-SERVICE #유레카 서버에 등록된 service name 명시
+          predicates: #요청이 들어올 주소
             - Path=/board-service/**
+          filters:
+            # url 재정의
+            # ?<변수명>은 뒤에 나오는 정규식을 변수처럼 사용할 수 있도록 한다. ()는 하나의 묶음 처리 -> segment는 (.*)를 의미
+            # 콤마(,)를 기준으로 왼쪽 url을 오른쪽 url로 재정의한다.
+            # 콤마 기준 오른쪽 부분은 ${변수명}으로 url 가져오고 앞에 / 붙여준거라고 보면 된다.
+            # 즉, @RequestMapping("/boardservice) 매핑을 생략하기 위한 과정
+            - RewritePath=/first-service/(?<segment>.*), /$\{segment}
         - id: matching-service
           uri: lb://MATCHING-SERVICE
           predicates:
@@ -27,7 +42,31 @@ spring:
         - id: member-service
           uri: lb://MEMBER-SERVICE
           predicates:
-            - Path=/member-service/**
+            - Path=/matching-service/**
+        - id: member-service
+          uri: lb://MEMBER-SERVICE
+          predicates:
+            - Path=/member-service/login
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/member-service/(?<segment>,*),/$\{segment}
+        - id: member-service
+          uri: lb://MEMBER-SERVICE
+          predicates:
+            - Path=/member-service/signup/consulter
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/member-service/(?<segment>,*),/$\{segment}
+        - id: member-service
+          uri: lb://MEMBER-SERVICE
+          predicates:
+            - Path=/member-service/signup/consultant
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/member-service/(?<segment>,*),/$\{segment}
         - id: payment-service
           uri: lb://PAYMENT-SERVICE
           predicates:
@@ -35,4 +74,31 @@ spring:
         - id: product-service
           uri: lb://PRODUCT-SERVICE
           predicates:
-            - Path=/product/**
+            - Path=/products/**
+        - id: user_route
+          uri: http://localhost:9999
+          metadata:
+            sampleKey: sampleValue    # 필터에서 사용 가능한 별도 파라미터
+          predicates:
+            - After=2022-01-01T08:00:00.000+09:00[Asia/Seoul]
+            - Before=2022-12-31T22:00:00.000+09:00[Asia/Seoul]
+            - Between=2022-01-01T08:00:00.000+09:00[Asia/Seoul], 2022-12-31T22:00:00.000+09:00[Asia/Seoul]
+            - Cookie=chocolate, ch.p
+            - Header=X-Request-Id, \d+
+            - Host=**.example.com,**.example.org  # Host Header 기반
+            - Method=GET,POST
+            - Path=/user/{segment}                # Path 기반              - Query=green
+            - Query=debug, true
+            - RemoteAddr=192.168.1.1/24
+        - id: user_route
+          uri: lb://user
+          predicates:
+            - Path=/user/**
+          filters:
+            - AddRequestHeader=X-Request-red, blue
+            - AddRequestParameter=red, blue
+            - AddResponseHeader=X-Response-Red, Blue
+            - PrefixPath=/v1
+            - RedirectTo=302, https://acme.org
+            - RewritePath=/user/?(?<segment>.*), /$\{segment}
+            - SetPath=/{segment}

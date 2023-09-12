@@ -7,9 +7,9 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-public class ConsultantPrivacyReq{
-    private Long id;
-    private Long nf2f_Price;
-    private Long f2f_Price;
-    private String region;
+public class ConsulterReq {
+    private String phoneNumber;
+    private MemberType memberType;
+    private String name;
+
 }

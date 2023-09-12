@@ -66,11 +66,8 @@ public class Product extends BaseTime {
                 .build();
     }
 
-    public static Product updateProductType(Product product){
-        return Product.builder()
-                .id(product.getId())
-                .type(product.getType())
-                .build();
+    public void updateProductType(ProductProceedType type){
+        this.type = type;
     }
 
 

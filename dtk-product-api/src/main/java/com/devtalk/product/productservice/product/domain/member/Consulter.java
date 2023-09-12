@@ -1,7 +1,6 @@
 package com.devtalk.product.productservice.product.domain.member;
 
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,5 +13,8 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @SuperBuilder // 👈 여기 추가
 public class Consulter extends Member {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "consulter_id")
+    private Long id;
 }

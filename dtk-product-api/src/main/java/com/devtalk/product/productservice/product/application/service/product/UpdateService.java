@@ -15,13 +15,11 @@ import static com.devtalk.product.productservice.global.error.ErrorCode.NOT_FOUN
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UpdateService implements UpdateUseCase {
-    ProductRepo productRepo;
+    private final ProductRepo productRepo;
     @Transactional
     public void updateProductType(ProductReq.UpdateProdReq updateProdReq){
-        Product updateProduct = productRepo.findById(updateProdReq.getProductId())
+        Product product = productRepo.findById(updateProdReq.getProductId())
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_PRODUCT));
-        updateProduct.updateProductType(updateProduct);
-        productRepo.save(updateProduct);
-        return;
+        product.updateProductType(updateProdReq.getType());
     }
 }

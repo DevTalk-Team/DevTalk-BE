@@ -2,15 +2,17 @@ package com.devtalk.product.productservice.product.adapter.in.web;
 
 
 import com.devtalk.product.productservice.global.vo.SuccessResponse;
+import com.devtalk.product.productservice.product.adapter.in.web.dto.MemberInput;
 import com.devtalk.product.productservice.product.adapter.in.web.dto.ProductInput;
 import com.devtalk.product.productservice.product.adapter.in.web.dto.ProductOutput;
 import com.devtalk.product.productservice.product.adapter.out.web.producer.KafkaProducer;
 
+import com.devtalk.product.productservice.product.application.port.in.dto.ConsultantReq;
+import com.devtalk.product.productservice.product.application.port.in.dto.ConsulterReq;
 import com.devtalk.product.productservice.product.application.port.in.dto.ProductRes;
-import com.devtalk.product.productservice.product.application.port.in.product.DeleteUseCase;
-import com.devtalk.product.productservice.product.application.port.in.product.RegistUseCase;
-import com.devtalk.product.productservice.product.application.port.in.product.SearchUseCase;
-import com.devtalk.product.productservice.product.application.port.in.product.UpdateUseCase;
+import com.devtalk.product.productservice.product.application.port.in.dto.ProductReservedDetailsReq;
+import com.devtalk.product.productservice.product.application.port.in.member.SignUpUseCase;
+import com.devtalk.product.productservice.product.application.port.in.product.*;
 import com.devtalk.product.productservice.product.domain.member.Consultant;
 import com.devtalk.product.productservice.product.domain.member.MemberType;
 import io.swagger.v3.oas.annotations.Operation;
@@ -45,9 +47,13 @@ class ProductApiController {
     private final RegistUseCase registUseCase;
     private final SearchUseCase searchUseCase;
     private final UpdateUseCase updateUseCase;
+    private final ReserveUseCase reserveUseCase;
+
 
     private final KafkaProducer kafkaProducer;
     private final Environment env;
+
+    private final SignUpUseCase signUpUseCase;
 
 
 
@@ -76,7 +82,7 @@ class ProductApiController {
             @ApiResponse(responseCode = "401", description = "상품 등록 실패",
                     content = @Content(mediaType = "application/json"))
     })
-    @PostMapping("/consultant/{consultantid}/register")
+    @PostMapping("/consultant/{consultantId}/register")
     public ResponseEntity<?> registProduct(@RequestBody @Validated ProductInput.RegistrationInput registrationInput,
                                            @PathVariable Long consultantId) {
         registUseCase.registProduct(registrationInput.toReq(consultantId));
@@ -91,7 +97,7 @@ class ProductApiController {
             @ApiResponse(responseCode = "401", description = "예약 가능 상품 조회 실패",
                     content = @Content(mediaType = "application/json"))
     })
-    @GetMapping("/search/consultant/{consultantid}")
+    @GetMapping("/search/consultant/{consultantId}")
     public ResponseEntity<ProductOutput> searchProductList(@PathVariable Long consultantId) {
         List<ProductRes.ConsultantProductListRes> consultantProductListRes = searchUseCase.searchList(consultantId);
         ProductOutput productOutput
@@ -108,7 +114,7 @@ class ProductApiController {
             @ApiResponse(responseCode = "401", description = "예약 가능 상품 조회 실패",
                     content = @Content(mediaType = "application/json"))
     })
-    @PutMapping("/api/products/update/{productId}")
+    @PutMapping("/update/{productId}")
     public ResponseEntity<?> updateProduct(@RequestBody @Validated ProductInput.UpdateInput updateInput,
                                            @PathVariable Long productId) {
         updateUseCase.updateProductType(updateInput.toReq(productId));
@@ -147,21 +153,24 @@ class ProductApiController {
         return ResponseEntity.status(HttpStatus.OK).body(productOutput);
     }
 
-@PostMapping("")
-    public ResponseEntity<?> reserveConsultation() {
-         Consultant consultant = Consultant.builder()
-                 .phoneNumber("01020477221")
-                 .memberType(MemberType.CONSULTANT)
-                 .name("김수현")
-                 .NF2F_Price(50000)
-                 .F2F_Price(100000)
-                 .region("강남")
-                 .build();
 
-				//*** 주입 받은 KafkaProducer를 사용 ***//
-        kafkaProducer.sendPaymentStatus("member-signup", consultant);
-
+    //상담자등록
+    @PostMapping("/regist/consultant")
+    public ResponseEntity<?> registConsultant(@RequestBody MemberInput.ConsultantInput consultantInput) {
+    signUpUseCase.signupConsultant(consultantInput.toReq());
+    return ResponseEntity.ok().build();
+    }
+    //내담자등록
+    @PostMapping("/regist/consulter")
+    public ResponseEntity<?> registConsulter(@RequestBody ConsulterReq consulterReq) {
+        signUpUseCase.signupConsulter(consulterReq);
         return ResponseEntity.ok().build();
     }
 
+    //상담예약
+    @PostMapping("/reserveConsultation")
+    public ResponseEntity<?> reserveConsultation(@RequestBody ProductReservedDetailsReq productReservedDetailsReq) {
+        reserveUseCase.reserveProduct(productReservedDetailsReq);
+        return ResponseEntity.ok().build();
+    }
 }
