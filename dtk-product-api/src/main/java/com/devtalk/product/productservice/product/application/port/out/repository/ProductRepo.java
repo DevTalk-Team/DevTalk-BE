@@ -14,6 +14,6 @@ public interface ProductRepo extends JpaRepository<Product, Long>, ProductQuerya
     Product findAllById(Long consultationid);
 
     List<Product> findAllByConsultantId(Long consultant);
-    Optional<Product> findByConsultantIdAndReservationAt(Long consultantId, LocalDateTime reservationAt);
+    Optional<Product> findByConsultantIdAndProductId(Long consultantId, Long ProductId);
 
 }
