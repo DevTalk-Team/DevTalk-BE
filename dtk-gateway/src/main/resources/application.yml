@@ -17,12 +17,12 @@ spring:
     gateway: #라우팅 설정
       default-filters: #디폴트 필터 : 모든 요청에 대햇 필터링할 예정
 #        - name: LoggingFilter
-#        - AuthorizationHeaderFilter  # AuthorizationHeaderFilter (JWT 검사)
-#        - name: GlobalFilter # 적용할 필터의 클래스명
-#          args: # 필터 클래스의 Config 클래스 필드값 정보 세팅
-#            baseMessage: Spring Cloud Gateway Logger
-#            preLogger: true
-#            postLogger: true
+      #        - AuthorizationHeaderFilter  # AuthorizationHeaderFilter (JWT 검사)
+      #        - name: GlobalFilter # 적용할 필터의 클래스명
+      #          args: # 필터 클래스의 Config 클래스 필드값 정보 세팅
+      #            baseMessage: Spring Cloud Gateway Logger
+      #            preLogger: true
+      #            postLogger: true
       routes:
         - id: board-service #구분하기 위한 ID 값 임의로 변경해도 무관
           uri: lb://BOARD-SERVICE #유레카 서버에 등록된 service name 명시
@@ -35,38 +35,42 @@ spring:
             # 콤마 기준 오른쪽 부분은 ${변수명}으로 url 가져오고 앞에 / 붙여준거라고 보면 된다.
             # 즉, @RequestMapping("/boardservice) 매핑을 생략하기 위한 과정
             - RewritePath=/first-service/(?<segment>.*), /$\{segment}
-        - id: matching-service
-          uri: lb://MATCHING-SERVICE
-          predicates:
-            - Path=/matching-service/**
         - id: member-service
           uri: lb://MEMBER-SERVICE
           predicates:
-            - Path=/matching-service/**
-        - id: member-service
-          uri: lb://MEMBER-SERVICE
-          predicates:
-            - Path=/member-service/login
-            - Method=POST
-          filters:
-            - RemoveRequestHeader=Cookie
-            - RewritePath=/member-service/(?<segment>,*),/$\{segment}
-        - id: member-service
-          uri: lb://MEMBER-SERVICE
-          predicates:
-            - Path=/member-service/signup/consulter
-            - Method=POST
-          filters:
-            - RemoveRequestHeader=Cookie
-            - RewritePath=/member-service/(?<segment>,*),/$\{segment}
-        - id: member-service
-          uri: lb://MEMBER-SERVICE
-          predicates:
-            - Path=/member-service/signup/consultant
-            - Method=POST
-          filters:
-            - RemoveRequestHeader=Cookie
-            - RewritePath=/member-service/(?<segment>,*),/$\{segment}
+            - Path=/member/**
+#        - id: member-service-welcome
+#          uri: lb://MEMBER-SERVICE
+#          predicates:
+#            - Path=/member-service/member/signup/welcome
+#        - id: member-service-health-check
+#          uri: lb://MEMBER-SERVICE
+#          predicates:
+#            - Path=/member-service/member/signup/health_check
+#        - id: member-service-login
+#          uri: lb://MEMBER-SERVICE
+#          predicates:
+#            - Path=/member-service/login**
+#            - Method=POST
+#          filters:
+#            - RemoveRequestHeader=Cookie
+#            - RewritePath=/member-service/(?<segment>.**),/$\{segment}
+#        - id: member-service
+#          uri: lb://MEMBER-SERVICE
+#          predicates:
+#            - Path=/member-service/signup/consulter
+#            - Method=POST
+#          filters:
+#            - RemoveRequestHeader=Cookie
+#            - RewritePath=/member-service/(?<segment>,*),/$\{segment}
+#        - id: member-service
+#          uri: lb://MEMBER-SERVICE
+#          predicates:
+#            - Path=/member-service/signup/consultant
+#            - Method=POST
+#          filters:
+#            - RemoveRequestHeader=Cookie
+#            - RewritePath=/member-service/(?<segment>,*),/$\{segment}
         - id: payment-service
           uri: lb://PAYMENT-SERVICE
           predicates:

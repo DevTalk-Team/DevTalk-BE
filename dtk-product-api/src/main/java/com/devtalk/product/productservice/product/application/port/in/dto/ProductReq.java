@@ -1,7 +1,6 @@
 package com.devtalk.product.productservice.product.application.port.in.dto;
 
 import com.devtalk.product.productservice.product.domain.product.ProductProceedType;
-import com.devtalk.product.productservice.product.domain.product.ReservedProceedType;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -14,7 +13,7 @@ public class ProductReq {
     public static class RegistProdReq {
         private Long consultantId;
         private LocalDateTime reservationAt;
-        private ProductProceedType type;
+        private ProductProceedType productProceedType;
     }
 
     @Builder
@@ -24,7 +23,7 @@ public class ProductReq {
     public static class ReserveProdReq {
         private Long productId;
         private Long consulterId;
-        private ReservedProceedType reservedProceedType;
+//        private ReservedProceedType reservedProceedType;
     }
 
     @Builder
@@ -42,7 +41,7 @@ public class ProductReq {
     public static class UpdateProdReq {
         private Long productId;
         private LocalDateTime reservationAt;
-        private ProductProceedType type;
+        private ProductProceedType productProceedType;
     }
 }
 
