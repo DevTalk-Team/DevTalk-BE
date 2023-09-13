@@ -4,6 +4,8 @@ import com.devtalk.payment.paymentservice.application.ConsultationService;
 import com.devtalk.payment.paymentservice.application.PaymentService;
 import com.devtalk.payment.paymentservice.application.port.in.EmailUseCase;
 import com.devtalk.payment.paymentservice.application.port.in.dto.PaymentRes;
+import com.devtalk.payment.paymentservice.application.port.out.client.MemberServiceClient;
+import com.devtalk.payment.paymentservice.application.port.out.client.dto.MemberRes;
 import com.devtalk.payment.paymentservice.application.port.out.repository.ConsultationRepo;
 import com.devtalk.payment.paymentservice.application.port.out.repository.PaymentRepo;
 import com.devtalk.payment.paymentservice.domain.consultation.Consultation;
@@ -28,6 +30,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static com.devtalk.payment.paymentservice.application.port.in.dto.PaymentRes.*;
+import static com.devtalk.payment.paymentservice.application.port.out.client.dto.MemberRes.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
@@ -40,6 +43,13 @@ class PaymentServiceUnitTest {
     @Mock PaymentRepo paymentRepo;
     @Mock ConsultationRepo consultationRepo;
     @Mock EmailUseCase emailUseCase;
+    @Mock MemberServiceClient memberServiceClient;
+
+    @Test
+    void 페인클라이언트(){
+        MemberInfoRes consulter = memberServiceClient.getMemberInfo(1L);
+        System.out.println(consulter.toString());
+    }
 
     @Test
     void 이메일_전송(){
@@ -65,64 +75,6 @@ class PaymentServiceUnitTest {
 
         // then
         assertThat(paymentInfoRes).isEqualTo(paymentInfo);
-    }
-
-    @Test
-    void 결제링크생성(){
-        String token = paymentService.getToken();
-        String impUid = "imp67671220";
-        Consultation consultation = getConsultationInfo();
-        String paymentInfo = String.format(
-                "{" +
-                        "\\\"title\\\":\\\"데브톡 - %s\\\"," +
-                        "\\\"user_code\\\":\\\"%s\\\"," +
-                        "\\\"amount\\\":%d," +
-                        "\\\"merchant_uid\\\":\\\"%s\\\"," +
-                        "\\\"name\\\":\\\"%s\\\"," +
-                        "\\\"currency\\\":\\\"KRW\\\"," +
-                        "\\\"buyer_name\\\":\\\"%s\\\"," +
-                        "\\\"buyer_tel\\\":\\\"010-1234-1234\\\"," +
-                        "\\\"buyer_email\\\":\\\"%s\\\"," +
-                        "\\\"custom_data\\\":\\\"json_object\\\"," +
-                        "\\\"notice_url\\\":\\\"결제 결과를 받을 url\\\"," +
-                        "\\\"pay_methods\\\":[" +
-                        "{\\\"pg\\\":\\\"INIpayTest\\\",\\\"pay_method\\\":\\\"card\\\",\\\"label\\\":\\\"신용/체크카드\\\"}," +
-                        "{\\\"pg\\\":\\\"INIpayTest\\\",\\\"pay_method\\\":\\\"naverpay\\\",\\\"label\\\":\\\"네이버페이\\\"}," +
-                        "{\\\"pg\\\":\\\"INIpayTest\\\",\\\"pay_method\\\":\\\"kakaopay\\\",\\\"label\\\":\\\"카카오페이\\\"}" +
-                        "]" +
-                        "}",
-                consultation.getConsultationType(),
-                impUid,
-                consultation.getCost(),
-                consultation.getId(),
-                consultation.getConsultationType(),
-                consultation.getConsulter(),
-                consultation.getConsulterEmail());
-        // Add other payment methods
-
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("payment_info", paymentInfo);
-        requestBody.put("expired_at", (System.currentTimeMillis()/1000 + 1800));
-
-        WebClient wc = WebClient.create("https://api.iamport.co/api/supplements/v1/link/payment");
-
-        String response = wc.post()
-                .header("Authorization", "Bearer " + token)
-                .bodyValue(requestBody)
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
-
-        try {
-            // ObjectMapper를 사용하여 JSON 파싱
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode node = objectMapper.readTree(response);
-            String paymentLink = node.get("shortenedUrl").asText();
-            System.out.println(paymentLink);
-            System.out.println(paymentInfo);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
     }
 
     private Payment getPaymentInfo(){
