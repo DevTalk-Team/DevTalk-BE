@@ -28,7 +28,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation "org.springframework.cloud:spring-cloud-starter-openfeign"
-	implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '3.1.0'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
@@ -36,6 +35,11 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	// mariaDB
+	implementation 'org.mariadb.jdbc:mariadb-java-client:3.1.4'
+
+	// kafka
+	implementation 'org.springframework.kafka:spring-kafka'
 
 	// config
 	implementation 'org.springframework.cloud:spring-cloud-starter-config'
