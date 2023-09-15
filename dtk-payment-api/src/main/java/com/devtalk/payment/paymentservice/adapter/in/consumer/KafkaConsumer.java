@@ -41,6 +41,11 @@ public class KafkaConsumer {
         dataSynchronization(consultation);
     }
 
+    // TODO: 결제 취소건 topic 받기
+    public void receiveRefundInfo(String kafkaMessage) {
+
+    }
+
     // TODO: 예약건DB에 맞게 매핑해서 받아와야함
     private void dataSynchronization(Consultation consultation) {
         consultationRepo.save(consultation);

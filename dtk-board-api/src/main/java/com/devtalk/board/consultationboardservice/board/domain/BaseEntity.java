@@ -1,4 +1,4 @@
-package com.devtalk.payment.paymentservice.domain;
+package com.devtalk.board.consultationboardservice.board.domain;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
@@ -19,3 +19,4 @@ public abstract class BaseEntity {
     @LastModifiedDate
     private LocalDateTime modifiedAt;
 }
+
