@@ -26,8 +26,8 @@ public class ConsultationReq {
         private String consultantName;
         private Long productId;
         private ProcessMean processMean;
-        private String largeArea;
-        private String detailArea;
+
+        private String region;
         private LocalDateTime reservationAT;
         private String content;
 
@@ -38,8 +38,7 @@ public class ConsultationReq {
         public Consultation toEntity(List<AttachedFile> attachedFileList) {
             ConsultationDetails consultationDetails = ConsultationDetails.builder()
                     .processMean(processMean)
-                    .largeArea(largeArea)
-                    .detailArea(detailArea)
+                    .region(region)
                     .reservationAT(reservationAT)
                     .attachedFileList(attachedFileList)
                     .content(content)

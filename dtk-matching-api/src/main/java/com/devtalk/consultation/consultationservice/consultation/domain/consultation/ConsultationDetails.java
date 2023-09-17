@@ -19,10 +19,8 @@ public class ConsultationDetails {
     private ProcessMean processMean;
 
     @Column(nullable = false, length = 20)
-    private String largeArea;
+    private String region;
 
-    @Column(nullable = false, length = 20)
-    private String detailArea;
 
     @Column(nullable = false, length = 30)
     private LocalDateTime reservationAT;

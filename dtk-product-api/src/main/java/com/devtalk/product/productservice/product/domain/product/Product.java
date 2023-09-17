@@ -43,11 +43,21 @@ public class Product extends BaseTime {
     @Enumerated(EnumType.STRING)
     private ProductProceedType productProceedType;
 
-    public Product(Long consultantId, String status, LocalDateTime reservationAt, ProductProceedType type){
+    @Column(name = "nf2f_price")
+    private Integer NF2FPrice;
+
+    @Column(name = "f2f_price")
+    private Integer F2FPrice;
+
+
+    public Product(Long consultantId, String status, LocalDateTime reservationAt, ProductProceedType type
+                   ,Integer F2FPrice,Integer NF2FPrice){
         this.consultantId=consultantId;
         this.status=status;
         this.reservationAt=reservationAt;
         this.productProceedType=type;
+        this.F2FPrice=F2FPrice;
+        this.NF2FPrice=NF2FPrice;
     }
 
 //    public Product(Consultant consultant, String status, LocalDateTime reservationAt, ProductProceedType type){
@@ -60,12 +70,15 @@ public class Product extends BaseTime {
 
 
 
-    public static Product registProduct(Long consultantId, LocalDateTime reservationAt, ProductProceedType productProceedType){
+    public static Product registProduct(Long consultantId, LocalDateTime reservationAt, ProductProceedType productProceedType
+    ,Integer F2FPrice,Integer NF2FPrice){
         return Product.builder()
                 .consultantId(consultantId)
                 .status("예약 가능")
                 .reservationAt(reservationAt)
                 .productProceedType(productProceedType)
+                .F2FPrice(F2FPrice)
+                .NF2FPrice(NF2FPrice)
                 .build();
     }
 
@@ -74,6 +87,7 @@ public class Product extends BaseTime {
     }
 
     public void reserveProduct(){
+
         this.status = "예약 불가";
     }
 
