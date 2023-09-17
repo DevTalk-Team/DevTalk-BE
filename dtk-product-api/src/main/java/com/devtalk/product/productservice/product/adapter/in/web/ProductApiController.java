@@ -39,7 +39,7 @@ import java.util.List;
 @EnableDiscoveryClient
 @RestController
 @Slf4j
-@RequestMapping("/products")
+@RequestMapping("/product")
 @RequiredArgsConstructor
 
 class ProductApiController {
@@ -82,7 +82,7 @@ class ProductApiController {
             @ApiResponse(responseCode = "401", description = "상품 등록 실패",
                     content = @Content(mediaType = "application/json"))
     })
-    @PostMapping("/consultant/{consultantId}/register")
+    @PostMapping("/consultants/{consultantId}/register")
     public ResponseEntity<?> registProduct(@RequestBody @Validated ProductInput.RegistrationInput registrationInput,
                                            @PathVariable Long consultantId) {
         registUseCase.registProduct(registrationInput.toReq(consultantId));
@@ -97,7 +97,7 @@ class ProductApiController {
             @ApiResponse(responseCode = "401", description = "예약 가능 상품 조회 실패",
                     content = @Content(mediaType = "application/json"))
     })
-    @GetMapping("/search/consultant/{consultantId}")
+    @GetMapping("/search/consultants/{consultantId}")
     public ResponseEntity<ProductOutput> searchProductList(@PathVariable Long consultantId) {
         List<ProductRes.ConsultantProductListRes> consultantProductListRes = searchUseCase.searchList(consultantId);
         ProductOutput productOutput
@@ -114,7 +114,7 @@ class ProductApiController {
             @ApiResponse(responseCode = "401", description = "예약 가능 상품 조회 실패",
                     content = @Content(mediaType = "application/json"))
     })
-    @PutMapping("/update/{productId}")
+    @PutMapping("/update/prodocuts/{productId}")
     public ResponseEntity<?> updateProduct(@RequestBody @Validated ProductInput.UpdateInput updateInput,
                                            @PathVariable Long productId) {
         updateUseCase.updateProductType(updateInput.toReq(productId));

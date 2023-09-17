@@ -34,11 +34,9 @@ public class ConsultationInput {
         @NotBlank @Size(max = 10)
         private ProcessMean processMean;
 
-        @NotBlank @Size(max = 20)
-        private String largeArea;
 
         @NotBlank @Size(max = 20)
-        private String detailArea;
+        private String region;
 
         @NotBlank
         @Future
@@ -61,8 +59,7 @@ public class ConsultationInput {
                     .consultantName(consultantName)
                     .productId(productId)
                     .processMean(processMean)
-                    .largeArea(largeArea)
-                    .detailArea(detailArea)
+                    .region(region)
                     .reservationAT(reservationAT)
                     .content(content)
                     .attachedFileList(attachedFileList)

@@ -10,7 +10,6 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableDiscoveryClient
 @EnableFeignClients
 @ComponentScan(basePackages = {"com.devtalk.product"})
-
 public class ProductServiceApplication {
 
     public static void main(String[] args) {
