@@ -20,6 +20,13 @@ public class UpdateService implements UpdateUseCase {
     public void updateProductType(ProductReq.UpdateProdReq updateProdReq){
         Product product = productRepo.findById(updateProdReq.getProductId())
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_PRODUCT));
-        product.updateProductType(updateProdReq.getType());
+        product.updateProductType(updateProdReq.getProductProceedType());
+    }
+
+    @Transactional
+    public void reserveProductType(ProductReq.UpdateProdReq updateProdReq){
+        Product product = productRepo.findById(updateProdReq.getProductId())
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND_PRODUCT));
+        product.updateProductType(updateProdReq.getProductProceedType());
     }
 }

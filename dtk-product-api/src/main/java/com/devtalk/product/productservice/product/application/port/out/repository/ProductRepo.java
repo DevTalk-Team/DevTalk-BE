@@ -11,9 +11,9 @@ import java.util.Optional;
 @Repository
 public interface ProductRepo extends JpaRepository<Product, Long>, ProductQueryableRepo {
 
-    Product findAllById(Long consultationid);
+    Product findAllById(Long Id);
 
     List<Product> findAllByConsultantId(Long consultant);
-    Optional<Product> findByConsultantIdAndReservationAt(Long consultantId, LocalDateTime reservationAt);
+    Optional<Product> findByConsultantIdAndId(Long consultantId, Long id);
 
 }

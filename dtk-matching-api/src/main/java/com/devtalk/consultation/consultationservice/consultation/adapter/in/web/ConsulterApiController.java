@@ -9,7 +9,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +20,11 @@ import org.springframework.web.bind.annotation.*;
 import static com.devtalk.consultation.consultationservice.consultation.adapter.in.web.dto.ConsultationInput.*;
 import static com.devtalk.consultation.consultationservice.consultation.application.port.in.dto.ConsultationRes.*;
 
+@Tag(name = "매칭 서비스", description = "데브톡 - 매칭 서비스 REST API")
+@EnableDiscoveryClient
 @RestController
-@RequestMapping("/api")
+@Slf4j
+@RequestMapping("/matching")
 @RequiredArgsConstructor
 public class ConsulterApiController {
 
@@ -31,7 +37,7 @@ public class ConsulterApiController {
     @Operation(summary = "내담자 - 상담 예약", responses = {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
     })
-    @PostMapping("/v1/consulters/{consulterId}/consultations")
+    @PostMapping("/consulters/{consulterId}/consultations")
     public ResponseEntity<?> reserveConsultation(@RequestBody @Validated ReservationInput reservationInput,
                                                  @PathVariable Long consulterId) {
         reserveUseCase.reserve(reservationInput.toReq(consulterId));
