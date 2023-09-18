@@ -6,8 +6,6 @@ import com.devtalk.payment.global.vo.SuccessResponseWithoutResult;
 import com.devtalk.payment.paymentservice.adapter.in.web.dto.PaymentInput.WebhookInput;
 import com.devtalk.payment.paymentservice.application.port.in.PaymentUseCase;
 import com.devtalk.payment.paymentservice.application.port.in.RefundUseCase;
-import com.devtalk.payment.paymentservice.application.port.out.client.MemberServiceClient;
-import com.devtalk.payment.paymentservice.application.port.out.client.dto.MemberRes;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -111,11 +109,11 @@ class PaymentApiController {
     }
 
 
-    private final MemberServiceClient memberServiceClient;
-    //test
-    @GetMapping("/test/{memberId}")
-    public void memberInfo(@PathVariable Long memberId) {
-        MemberRes<MemberRes.MemberInfoRes> consulter = memberServiceClient.getMemberInfo(memberId);
-        log.info(consulter.toString());
-    }
+//    private final MemberServiceClient memberServiceClient;
+//    //test
+//    @GetMapping("/test/{memberId}")
+//    public void memberInfo(@PathVariable Long memberId) {
+//        MemberRes<MemberRes.MemberInfoRes> consulter = memberServiceClient.getMemberInfo(memberId);
+//        log.info(consulter.toString());
+//    }
 }

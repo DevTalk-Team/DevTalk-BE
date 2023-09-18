@@ -24,20 +24,19 @@ public class QConsulter extends EntityPathBase<Consulter> {
     //inherited
     public final StringPath createdAt = _super.createdAt;
 
-    //inherited
-    public final NumberPath<Long> id = _super.id;
+    public final NumberPath<Long> id = createNumber("id", Long.class);
 
     //inherited
     public final StringPath lastModifiedAt = _super.lastModifiedAt;
 
     //inherited
-    public final StringPath loginId = _super.loginId;
+    public final EnumPath<MemberType> memberType = _super.memberType;
 
     //inherited
     public final StringPath name = _super.name;
 
     //inherited
-    public final EnumPath<RoleType> role = _super.role;
+    public final StringPath phoneNumber = _super.phoneNumber;
 
     public QConsulter(String variable) {
         super(Consulter.class, forVariable(variable));
