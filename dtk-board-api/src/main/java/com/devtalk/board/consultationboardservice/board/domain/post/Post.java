@@ -26,7 +26,7 @@ public class Post extends BaseEntity {
     private String content;
 
     @Column(nullable = false)
-    private Long writerId;
+    private Long userId;
 
     @Column(nullable = false)
     private Integer viewCount;

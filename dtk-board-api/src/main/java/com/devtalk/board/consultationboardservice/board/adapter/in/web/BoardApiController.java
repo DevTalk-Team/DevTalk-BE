@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,5 +38,13 @@ public class BoardApiController {
     @GetMapping("/{postId}")
     public ResponseEntity<SuccessResponse> getPost(@PathVariable Long postId) {
         return SuccessResponse.toResponseEntity(SuccessCode.BOARD_VIEW_SUCCESS, postUseCase.viewPost(postId));
+    }
+
+    @Operation(summary = "게시판 - 사용자ID로 게시글 조회 API", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponse.class)))
+    })
+    @GetMapping
+    public ResponseEntity<SuccessResponse> getPostByUserId(@RequestParam("userId") Long userId) {
+        return SuccessResponse.toResponseEntity(SuccessCode.USER_POST_LIST_SEARCH_SUCCESS, postUseCase.getPostList(userId));
     }
 }

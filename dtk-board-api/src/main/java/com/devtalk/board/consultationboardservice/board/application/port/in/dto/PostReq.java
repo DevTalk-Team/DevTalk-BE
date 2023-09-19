@@ -8,5 +8,5 @@ import lombok.Getter;
 public class PostReq {
     private String title;
     private String content;
-    private Long writerId;
+    private Long userId;
 }

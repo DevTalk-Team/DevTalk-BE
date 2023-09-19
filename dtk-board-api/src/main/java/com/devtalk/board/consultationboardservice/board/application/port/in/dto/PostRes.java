@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 public class PostRes {
     private String title;
     private String content;
-    private Long writerId;
+    private Long userId;
     private Integer viewCount;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
@@ -20,7 +20,7 @@ public class PostRes {
         return PostRes.builder()
                 .title(post.getTitle())
                 .content(post.getContent())
-                .writerId(post.getWriterId())
+                .userId(post.getUserId())
                 .viewCount(post.getViewCount())
                 .createdAt(post.getCreatedAt())
                 .modifiedAt(post.getModifiedAt())

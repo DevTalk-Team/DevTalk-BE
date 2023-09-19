@@ -8,8 +8,9 @@ import static org.springframework.http.HttpStatus.OK;
 @Getter
 public enum SuccessCode {
     // 게시글 등록
-    BOARD_POST_SUCCESS(OK, "0400", "게시글이 등록되었습니다."),
-    BOARD_VIEW_SUCCESS(OK, "0401", "게시글을 조회했습니다"),
+    BOARD_POST_SUCCESS(OK, "0400", "게시글 등록 성공"),
+    BOARD_VIEW_SUCCESS(OK, "0401", "해당 게시글 조회 성공"),
+    USER_POST_LIST_SEARCH_SUCCESS(OK, "0402", "해당 사용자 게시글 조회 성공")
     ;
 
     private final HttpStatus httpStatus;

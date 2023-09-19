@@ -6,6 +6,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.devtalk.board.consultationboardservice.board.domain.post.QPost.post;
@@ -18,10 +19,16 @@ public class PostQueryRepo implements PostQueryableRepo {
     @Override
     public Optional<Post> findPostByPostId(Long postId) {
         return Optional.ofNullable(
-                queryFactory.select(post)
-                        .from(post)
+                queryFactory.selectFrom(post)
                         .where(post.id.eq(postId))
                         .fetchOne()
         );
+    }
+
+    @Override
+    public List<Post> findPostsByUserId(Long userId) {
+        return queryFactory.selectFrom(post)
+                .where(post.userId.eq(userId))
+                .fetch();
     }
 }

@@ -25,7 +25,7 @@ public class PostService implements PostUseCase {
     // TODO : 제목, 내용, 작성자에 대한 validation 필요
     public void writePost(PostInput postInput) {
         Post newPost = Post.builder()
-                .writerId(postInput.getWriterId())
+                .userId(postInput.getUserId())
                 .title(postInput.getTitle())
                 .content(postInput.getContent())
                 .viewCount(0)
@@ -41,5 +41,12 @@ public class PostService implements PostUseCase {
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_POST));
         post.increaseViewCount();
         return PostRes.of(post);
+    }
+
+    @Override
+    public List<PostRes> getPostList(Long userId) {
+        List<Post> posts = postQueryableRepo.findPostsByUserId(userId);
+
+        return posts.stream().map(post -> PostRes.of(post)).toList();
     }
 }
