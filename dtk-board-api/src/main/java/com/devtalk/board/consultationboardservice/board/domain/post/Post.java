@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 @Table
 @Entity
@@ -27,8 +26,12 @@ public class Post extends BaseEntity {
     private String content;
 
     @Column(nullable = false)
-    private String writer;
+    private Long writerId;
 
     @Column(nullable = false)
     private Integer viewCount;
+
+    public void increaseViewCount() {
+        this.viewCount += 1;
+    }
 }

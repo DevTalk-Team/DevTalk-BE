@@ -7,6 +7,6 @@ public class BoardInput {
     public static class PostInput{
         private String title;
         private String content;
-        private String writer;
+        private Long writerId;
     }
 }

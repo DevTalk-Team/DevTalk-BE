@@ -6,8 +6,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class PostReq {
-    private Long id;
     private String title;
     private String content;
-    private String writer;
+    private Long writerId;
 }
