@@ -107,4 +107,13 @@ class PaymentApiController {
         refundUseCase.cancelPayment(consultationId);
         return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.REFUND_REQUEST_SUCCESS);
     }
+
+
+//    private final MemberServiceClient memberServiceClient;
+//    //test
+//    @GetMapping("/test/{memberId}")
+//    public void memberInfo(@PathVariable Long memberId) {
+//        MemberRes<MemberRes.MemberInfoRes> consulter = memberServiceClient.getMemberInfo(memberId);
+//        log.info(consulter.toString());
+//    }
 }

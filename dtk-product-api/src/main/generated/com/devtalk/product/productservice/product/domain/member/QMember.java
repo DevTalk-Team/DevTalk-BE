@@ -29,11 +29,11 @@ public class QMember extends EntityPathBase<Member> {
     //inherited
     public final StringPath lastModifiedAt = _super.lastModifiedAt;
 
-    public final StringPath loginId = createString("loginId");
+    public final EnumPath<MemberType> memberType = createEnum("memberType", MemberType.class);
 
     public final StringPath name = createString("name");
 
-    public final EnumPath<RoleType> role = createEnum("role", RoleType.class);
+    public final StringPath phoneNumber = createString("phoneNumber");
 
     public QMember(String variable) {
         super(Member.class, forVariable(variable));

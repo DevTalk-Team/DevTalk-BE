@@ -21,31 +21,28 @@ public class QConsultant extends EntityPathBase<Consultant> {
 
     public final QMember _super = new QMember(this);
 
-    public final StringPath area = createString("area");
-
     //inherited
     public final StringPath createdAt = _super.createdAt;
 
-    public final NumberPath<Integer> F2F = createNumber("F2F", Integer.class);
+    public final NumberPath<Long> f2f_Price = createNumber("f2f_Price", Long.class);
 
-    public final NumberPath<Integer> f2F = createNumber("f2F", Integer.class);
-
-    //inherited
-    public final NumberPath<Long> id = _super.id;
+    public final NumberPath<Long> id = createNumber("id", Long.class);
 
     //inherited
     public final StringPath lastModifiedAt = _super.lastModifiedAt;
 
     //inherited
-    public final StringPath loginId = _super.loginId;
+    public final EnumPath<MemberType> memberType = _super.memberType;
 
     //inherited
     public final StringPath name = _super.name;
 
-    public final NumberPath<Integer> NF2F = createNumber("NF2F", Integer.class);
+    public final NumberPath<Long> nf2f_Price = createNumber("nf2f_Price", Long.class);
 
     //inherited
-    public final EnumPath<RoleType> role = _super.role;
+    public final StringPath phoneNumber = _super.phoneNumber;
+
+    public final StringPath region = createString("region");
 
     public QConsultant(String variable) {
         super(Consultant.class, forVariable(variable));

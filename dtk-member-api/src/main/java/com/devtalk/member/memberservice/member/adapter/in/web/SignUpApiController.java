@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 
 import static com.devtalk.member.memberservice.global.success.SuccessCode.*;
 
-
 @Tag(name = "회원가입", description = "이메일 중복 확인, 인증 코드, 회원가입")
 @RestController
 @RequestMapping("/member/signup")

@@ -69,7 +69,7 @@ public class PaymentService implements PaymentUseCase {
     @Transactional
     public String getPaymentLink(Long consultationId) {
         String impUid = paymentProperty.getImpUid();
-        String webhookUrl = "https://125a-218-159-171-101.ngrok-free.app/payment/webhook";
+        String webhookUrl = paymentProperty.getWebhookUrl();
         Consultation consultation = consultationUseCase.searchConsultationInfo(consultationId);
         String paymentInfo = String.format(
                 "{" +

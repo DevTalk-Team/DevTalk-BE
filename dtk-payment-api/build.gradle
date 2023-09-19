@@ -60,6 +60,9 @@ dependencies {
     testImplementation 'org.mockito:mockito-junit-jupiter:5.2.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
 
+    // feign client
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
     // 아임포트 관련 //
     implementation group: 'com.github.iamport', name: 'iamport-rest-client-java', version: '0.2.22'
     implementation group: 'com.squareup.retrofit2', name: 'adapter-rxjava2', version: '2.9.0'

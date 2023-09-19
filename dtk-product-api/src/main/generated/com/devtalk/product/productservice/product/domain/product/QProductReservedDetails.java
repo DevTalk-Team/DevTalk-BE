@@ -24,8 +24,6 @@ public class QProductReservedDetails extends EntityPathBase<ProductReservedDetai
 
     public final QProduct _super;
 
-    public final StringPath area = createString("area");
-
     // inherited
     public final com.devtalk.product.productservice.product.domain.member.QConsultant consultant;
 
@@ -39,9 +37,11 @@ public class QProductReservedDetails extends EntityPathBase<ProductReservedDetai
     //inherited
     public final StringPath lastModifiedAt;
 
-    public final NumberPath<Integer> price = createNumber("price", Integer.class);
+    public final NumberPath<Long> price = createNumber("price", Long.class);
 
     public final QProduct product;
+
+    public final StringPath region = createString("region");
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> reservationAt;
