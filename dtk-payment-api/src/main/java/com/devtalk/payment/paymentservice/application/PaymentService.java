@@ -3,13 +3,17 @@ package com.devtalk.payment.paymentservice.application;
 import com.devtalk.payment.global.code.ErrorCode;
 import com.devtalk.payment.global.config.property.PaymentProperty;
 import com.devtalk.payment.global.error.exception.NotFoundException;
+import com.devtalk.payment.paymentservice.adapter.in.web.dto.ConsultationInput;
 import com.devtalk.payment.paymentservice.adapter.out.producer.KafkaProducer;
 import com.devtalk.payment.paymentservice.application.port.in.ConsultationUseCase;
 import com.devtalk.payment.paymentservice.application.port.in.EmailUseCase;
 import com.devtalk.payment.paymentservice.application.port.in.PaymentUseCase;
+import com.devtalk.payment.paymentservice.application.port.out.repository.ConsultationRepo;
 import com.devtalk.payment.paymentservice.application.port.out.repository.PaymentRepo;
 import com.devtalk.payment.paymentservice.domain.consultation.Consultation;
+import com.devtalk.payment.paymentservice.domain.consultation.ProcessStatus;
 import com.devtalk.payment.paymentservice.domain.payment.Payment;
+import com.devtalk.payment.paymentservice.domain.payment.PaymentStatus;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,8 +23,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import static com.devtalk.payment.paymentservice.application.port.in.dto.PaymentReq.*;
 import static com.devtalk.payment.paymentservice.application.port.in.dto.PaymentRes.*;
@@ -30,6 +36,7 @@ import static com.devtalk.payment.paymentservice.application.port.in.dto.Payment
 @Slf4j
 @RequiredArgsConstructor
 public class PaymentService implements PaymentUseCase {
+    private final ConsultationRepo consultationRepo;
     private final PaymentRepo paymentRepo;
     private final ConsultationUseCase consultationUseCase;
     private final EmailUseCase emailUseCase;
@@ -154,5 +161,29 @@ public class PaymentService implements PaymentUseCase {
                 .paidAt(payment.getPaidAt())
                 .cost(payment.getCost())
                 .build();
+    }
+
+    @Override
+    public void createPaymentInfo(ConsultationInput consultationInput) {
+        Consultation consultation = Consultation.builder()
+                .cost(consultationInput.getCost())
+                .consultant(consultationInput.getConsultant())
+                .consulter(consultationInput.getConsultant())
+                .consultationType(consultationInput.getConsultationType())
+                .consulterEmail(consultationInput.getConsulterEmail())
+                .merchantId(UUID.randomUUID().toString())
+                .consultationAt(LocalDateTime.now())
+                .processStatus(ProcessStatus.APPROVED)
+                .build();
+
+        consultationRepo.save(consultation);
+        paymentRepo.save(Payment.builder()
+                .consultation(consultation)
+                .paymentUid(null)
+                .merchantId(consultation.getMerchantId())
+                .cost(consultation.getCost())
+                .paidAt(null)
+                .status(PaymentStatus.READY)
+                .build());
     }
 }

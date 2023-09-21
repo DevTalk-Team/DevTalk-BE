@@ -29,9 +29,9 @@ public class Post extends BaseEntity {
     private Long userId;
 
     @Column(nullable = false)
-    private Integer viewCount;
+    private Integer views;
 
-    public void increaseViewCount() {
-        this.viewCount += 1;
+    public void increaseViews() {
+        this.views += 1;
     }
 }

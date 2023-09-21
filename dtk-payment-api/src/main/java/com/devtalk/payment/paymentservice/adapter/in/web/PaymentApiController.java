@@ -3,6 +3,7 @@ package com.devtalk.payment.paymentservice.adapter.in.web;
 import com.devtalk.payment.global.code.SuccessCode;
 import com.devtalk.payment.global.vo.SuccessResponse;
 import com.devtalk.payment.global.vo.SuccessResponseWithoutResult;
+import com.devtalk.payment.paymentservice.adapter.in.web.dto.ConsultationInput;
 import com.devtalk.payment.paymentservice.adapter.in.web.dto.PaymentInput.WebhookInput;
 import com.devtalk.payment.paymentservice.application.port.in.PaymentUseCase;
 import com.devtalk.payment.paymentservice.application.port.in.RefundUseCase;
@@ -108,6 +109,15 @@ class PaymentApiController {
         return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.REFUND_REQUEST_SUCCESS);
     }
 
+
+    @Operation(summary = "[테스트]결제 서비스 - 임시 결제 정보 생성", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
+    })
+    @PostMapping("/test")
+    public ResponseEntity<?> insertPaymentInfo(@RequestBody ConsultationInput consultationInput) {
+        paymentUseCase.createPaymentInfo(consultationInput);
+        return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.CREATE_TEMP_PAYMENT_INFO_SUCCESS);
+    }
 
 //    private final MemberServiceClient memberServiceClient;
 //    //test

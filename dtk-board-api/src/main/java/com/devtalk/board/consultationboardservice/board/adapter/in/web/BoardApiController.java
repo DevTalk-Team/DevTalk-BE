@@ -47,4 +47,6 @@ public class BoardApiController {
     public ResponseEntity<SuccessResponse> getPostByUserId(@RequestParam("userId") Long userId) {
         return SuccessResponse.toResponseEntity(SuccessCode.USER_POST_LIST_SEARCH_SUCCESS, postUseCase.getPostList(userId));
     }
+
+
 }

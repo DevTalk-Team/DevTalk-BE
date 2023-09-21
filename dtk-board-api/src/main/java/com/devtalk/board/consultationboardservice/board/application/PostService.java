@@ -28,7 +28,7 @@ public class PostService implements PostUseCase {
                 .userId(postInput.getUserId())
                 .title(postInput.getTitle())
                 .content(postInput.getContent())
-                .viewCount(0)
+                .views(0)
                 .build();
 
         postRepo.save(newPost);
@@ -39,7 +39,7 @@ public class PostService implements PostUseCase {
     public PostRes viewPost(Long postId) {
         Post post = postQueryableRepo.findPostByPostId(postId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_POST));
-        post.increaseViewCount();
+        post.increaseViews();
         return PostRes.of(post);
     }
 

@@ -22,7 +22,7 @@ public class BoardUnitTest {
                     .userId(i)
                     .title(i + "번째 게시물")
                     .content(i + "번째 게시물 내용")
-                    .viewCount(0)
+                    .views(0)
                     .build();
 
             postRepo.save(newPost);
