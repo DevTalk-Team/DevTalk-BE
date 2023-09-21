@@ -22,7 +22,7 @@ public class LoggingFilter extends AbstractGatewayFilterFactory<LoggingFilter.Co
     @Override
     public GatewayFilter apply(Config config) {
 
-        GatewayFilter filter = new OrderedGatewayFilter((exchange, chain) -> {
+        return new OrderedGatewayFilter((exchange, chain) -> {
             // custom pre filter
             ServerHttpRequest request = exchange.getRequest();
             ServerHttpResponse response = exchange.getResponse();
@@ -40,9 +40,7 @@ public class LoggingFilter extends AbstractGatewayFilterFactory<LoggingFilter.Co
                     log.info("Logging Post Filter : response code -> {}",response.getStatusCode());
                 }
             }));
-        }, Ordered.HIGHEST_PRECEDENCE); // 모든 필터보다 가장 우선으로 적용
-
-        return filter;
+        }, Ordered.HIGHEST_PRECEDENCE);
     }
 
     // yml 파일에서 값을 주입받는다.

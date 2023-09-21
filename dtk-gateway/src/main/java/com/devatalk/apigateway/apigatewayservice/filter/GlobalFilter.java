@@ -12,7 +12,6 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @Component
 public class GlobalFilter extends AbstractGatewayFilterFactory<GlobalFilter.Config> {
-
     public GlobalFilter(){
         super(Config.class);
     }
