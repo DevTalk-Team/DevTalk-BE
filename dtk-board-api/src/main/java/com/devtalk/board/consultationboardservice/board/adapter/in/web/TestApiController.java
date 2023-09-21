@@ -25,12 +25,12 @@ public class TestApiController {
 
     @PostMapping("/bulk")
     public void bulk(){
-        for (long i = 0; i < 100; i++) {
+        for (long i = 1; i <= 100; i++) {
             Post newPost = Post.builder()
                     .userId(i)
                     .title(i + "번째 게시물")
                     .content(i + "번째 게시물 내용")
-                    .viewCount(0)
+                    .views(0)
                     .build();
 
             postRepo.save(newPost);
