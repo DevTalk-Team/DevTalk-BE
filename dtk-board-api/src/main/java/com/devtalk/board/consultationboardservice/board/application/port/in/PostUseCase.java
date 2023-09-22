@@ -1,10 +1,9 @@
 package com.devtalk.board.consultationboardservice.board.application.port.in;
 
+import com.devtalk.board.consultationboardservice.board.adapter.in.web.dto.PostInput;
 import com.devtalk.board.consultationboardservice.board.application.port.in.dto.PostRes;
 
 import java.util.List;
-
-import static com.devtalk.board.consultationboardservice.board.adapter.in.web.dto.BoardInput.*;
 
 public interface PostUseCase {
     void writePost(PostInput post);

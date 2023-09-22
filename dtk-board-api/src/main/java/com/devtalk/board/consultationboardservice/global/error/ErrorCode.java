@@ -7,8 +7,8 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Getter
 public enum ErrorCode {
-    NOT_FOUND_POST(NOT_FOUND, "04001", "해당하는 게시물이 없습니다."),
-
+    NOT_FOUND_POST(NOT_FOUND, "04001", "해당 게시글 찾기 실패"),
+    NOT_FOUND_COMMENT(NOT_FOUND, "04002", "해당 댓글 찾기 실패")
     ;
 
     private final HttpStatus httpStatus;

@@ -1,5 +1,6 @@
 package com.devtalk.board.consultationboardservice.board.adapter.in.web;
 
+import com.devtalk.board.consultationboardservice.board.adapter.in.web.dto.PostInput;
 import com.devtalk.board.consultationboardservice.board.application.port.in.PostUseCase;
 import com.devtalk.board.consultationboardservice.global.success.SuccessCode;
 import com.devtalk.board.consultationboardservice.global.success.SuccessResponse;
@@ -12,8 +13,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import static com.devtalk.board.consultationboardservice.board.adapter.in.web.dto.BoardInput.*;
 
 @Tag(name = "게시판", description = "게시판 API")
 @RestController
@@ -36,7 +35,7 @@ public class PostApiController {
     })
     @GetMapping("/all")
     public ResponseEntity<SuccessResponse> getAllPosts() {
-        return SuccessResponse.toResponseEntity(SuccessCode.BOARD_VIEW_SUCCESS, postUseCase.getAllPosts());
+        return SuccessResponse.toResponseEntity(SuccessCode.GET_BOARD_SUCCESS, postUseCase.getAllPosts());
     }
 
     @Operation(summary = "게시판 - 게시글 단건 조회 API", responses = {
@@ -44,7 +43,7 @@ public class PostApiController {
     })
     @GetMapping("/{postId}")
     public ResponseEntity<SuccessResponse> getPost(@PathVariable Long postId) {
-        return SuccessResponse.toResponseEntity(SuccessCode.BOARD_VIEW_SUCCESS, postUseCase.viewPost(postId));
+        return SuccessResponse.toResponseEntity(SuccessCode.GET_BOARD_SUCCESS, postUseCase.viewPost(postId));
     }
 
     @Operation(summary = "게시판 - 사용자ID로 게시글 조회 API", responses = {
@@ -52,7 +51,7 @@ public class PostApiController {
     })
     @GetMapping
     public ResponseEntity<SuccessResponse> getPostByUserId(@RequestParam("userId") Long userId) {
-        return SuccessResponse.toResponseEntity(SuccessCode.USER_POST_LIST_SEARCH_SUCCESS, postUseCase.getPostList(userId));
+        return SuccessResponse.toResponseEntity(SuccessCode.GET_USER_POST_LIST_SUCCESS, postUseCase.getPostList(userId));
     }
 
     @Operation(summary = "게시판 - 게시글 수정 API", responses = {
@@ -61,7 +60,7 @@ public class PostApiController {
     @PutMapping("/{postId}")
     public ResponseEntity<?> modifyPost(@PathVariable Long postId, @RequestBody PostInput postInput) {
         postUseCase.modifyPost(postId, postInput);
-        return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.BOARD_MODIFY_SUCCESS);
+        return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.MODIFY_BOARD_SUCCESS);
     }
 
     @Operation(summary = "게시판 - 게시글 삭제 API", responses = {
@@ -70,6 +69,6 @@ public class PostApiController {
     @DeleteMapping("/{postId}")
     public ResponseEntity<?> deletePost(@PathVariable Long postId) {
         postUseCase.deletePost(postId);
-        return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.BOARD_DELETE_SUCCESS);
+        return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.DELETE_BOARD_SUCCESS);
     }
 }

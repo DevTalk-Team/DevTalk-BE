@@ -1,5 +1,6 @@
 package com.devtalk.board.consultationboardservice.board.application;
 
+import com.devtalk.board.consultationboardservice.board.adapter.in.web.dto.PostInput;
 import com.devtalk.board.consultationboardservice.board.application.port.in.PostUseCase;
 import com.devtalk.board.consultationboardservice.board.application.port.in.dto.PostRes;
 import com.devtalk.board.consultationboardservice.board.application.port.out.repository.PostQueryableRepo;
@@ -13,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.devtalk.board.consultationboardservice.board.adapter.in.web.dto.BoardInput.*;
 
 @Service
 @RequiredArgsConstructor
