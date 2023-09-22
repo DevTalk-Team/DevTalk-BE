@@ -57,4 +57,12 @@ public class PostService implements PostUseCase {
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_POST));
         post.modify(postInput.getTitle(), postInput.getContent());
     }
+
+    @Override
+    @Transactional
+    public void deletePost(Long postId) {
+        Post post = postQueryableRepo.findPostByPostId(postId)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_POST));
+        postRepo.delete(post);
+    }
 }

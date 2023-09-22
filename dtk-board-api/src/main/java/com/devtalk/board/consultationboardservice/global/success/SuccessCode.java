@@ -12,6 +12,7 @@ public enum SuccessCode {
     BOARD_VIEW_SUCCESS(OK, "0401", "해당 게시글 조회 성공"),
     USER_POST_LIST_SEARCH_SUCCESS(OK, "0402", "해당 사용자 게시글 조회 성공"),
     BOARD_MODIFY_SUCCESS(OK, "0403", "게시글 수정 성공"),
+    BOARD_DELETE_SUCCESS(OK, "0404", "게시글 삭제 성공"),
     ;
 
     private final HttpStatus httpStatus;

@@ -56,4 +56,13 @@ public class BoardApiController {
         postUseCase.modifyPost(postId, postInput);
         return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.BOARD_MODIFY_SUCCESS);
     }
+
+    @Operation(summary = "게시판 - 게시글 삭제 API", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
+    })
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<?> deletePost(@PathVariable Long postId) {
+        postUseCase.deletePost(postId);
+        return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.BOARD_DELETE_SUCCESS);
+    }
 }
