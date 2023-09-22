@@ -12,4 +12,6 @@ public interface PostUseCase {
     PostRes viewPost(Long postId);
 
     List<PostRes> getPostList(Long userId);
+
+    void modifyPost(Long postId, PostInput postInput);
 }

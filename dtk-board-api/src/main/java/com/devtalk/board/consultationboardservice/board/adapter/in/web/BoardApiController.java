@@ -48,5 +48,12 @@ public class BoardApiController {
         return SuccessResponse.toResponseEntity(SuccessCode.USER_POST_LIST_SEARCH_SUCCESS, postUseCase.getPostList(userId));
     }
 
-
+    @Operation(summary = "게시판 - 게시글 수정 API", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
+    })
+    @PutMapping("/{postId}")
+    public ResponseEntity<?> modifyPost(@PathVariable Long postId, @RequestBody PostInput postInput) {
+        postUseCase.modifyPost(postId, postInput);
+        return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.BOARD_MODIFY_SUCCESS);
+    }
 }

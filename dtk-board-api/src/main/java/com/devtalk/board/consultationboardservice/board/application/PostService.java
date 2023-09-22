@@ -49,4 +49,12 @@ public class PostService implements PostUseCase {
 
         return posts.stream().map(post -> PostRes.of(post)).toList();
     }
+
+    @Override
+    @Transactional
+    public void modifyPost(Long postId, PostInput postInput) {
+        Post post = postQueryableRepo.findPostByPostId(postId)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_POST));
+        post.modify(postInput.getTitle(), postInput.getContent());
+    }
 }
