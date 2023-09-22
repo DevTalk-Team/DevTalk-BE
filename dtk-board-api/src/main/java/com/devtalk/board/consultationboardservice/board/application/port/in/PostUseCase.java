@@ -13,6 +13,8 @@ public interface PostUseCase {
 
     List<PostRes> getPostList(Long userId);
 
+    List<PostRes> getAllPosts();
+
     void modifyPost(Long postId, PostInput postInput);
 
     void deletePost(Long postId);

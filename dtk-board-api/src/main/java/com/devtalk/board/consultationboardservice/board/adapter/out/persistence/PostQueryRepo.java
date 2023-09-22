@@ -31,4 +31,10 @@ public class PostQueryRepo implements PostQueryableRepo {
                 .where(post.userId.eq(userId))
                 .fetch();
     }
+
+    @Override
+    public List<Post> findAllPosts() {
+        return queryFactory.selectFrom(post)
+                .fetch();
+    }
 }

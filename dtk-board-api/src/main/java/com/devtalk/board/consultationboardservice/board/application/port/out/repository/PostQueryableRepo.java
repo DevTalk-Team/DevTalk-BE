@@ -9,4 +9,6 @@ public interface PostQueryableRepo {
     Optional<Post> findPostByPostId(Long postId);
 
     List<Post> findPostsByUserId(Long userId);
+
+    List<Post> findAllPosts();
 }

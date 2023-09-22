@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,9 +17,9 @@ import static com.devtalk.board.consultationboardservice.board.adapter.in.web.dt
 
 @Tag(name = "게시판", description = "게시판 API")
 @RestController
-@RequestMapping("/board")
+@RequestMapping("/board/post")
 @RequiredArgsConstructor
-public class BoardApiController {
+public class PostApiController {
     private final PostUseCase postUseCase;
 
     @Operation(summary = "게시판 - 게시글 작성 API", responses = {
@@ -29,10 +28,18 @@ public class BoardApiController {
     @PostMapping
     public ResponseEntity<?> post(@RequestBody PostInput postInput) {
         postUseCase.writePost(postInput);
-        return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.BOARD_POST_SUCCESS);
+        return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.CREATE_POST_SUCCESS);
     }
 
-    @Operation(summary = "게시판 - 게시글 조회 API", responses = {
+    @Operation(summary = "게시판 - 게시글 전체 조회 API", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponse.class)))
+    })
+    @GetMapping("/all")
+    public ResponseEntity<SuccessResponse> getAllPosts() {
+        return SuccessResponse.toResponseEntity(SuccessCode.BOARD_VIEW_SUCCESS, postUseCase.getAllPosts());
+    }
+
+    @Operation(summary = "게시판 - 게시글 단건 조회 API", responses = {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponse.class)))
     })
     @GetMapping("/{postId}")

@@ -46,7 +46,12 @@ public class PostService implements PostUseCase {
     @Override
     public List<PostRes> getPostList(Long userId) {
         List<Post> posts = postQueryableRepo.findPostsByUserId(userId);
+        return posts.stream().map(post -> PostRes.of(post)).toList();
+    }
 
+    @Override
+    public List<PostRes> getAllPosts() {
+        List<Post> posts = postQueryableRepo.findAllPosts();
         return posts.stream().map(post -> PostRes.of(post)).toList();
     }
 

@@ -9,4 +9,10 @@ public class BoardInput {
         private String content;
         private Long userId; // TODO : input에서 userId를 받아야 하는가, controller에서 받아야 하는가
     }
+
+    @Getter
+    public static class CommentInput{
+        private Long userId;
+        private String content;
+    }
 }
