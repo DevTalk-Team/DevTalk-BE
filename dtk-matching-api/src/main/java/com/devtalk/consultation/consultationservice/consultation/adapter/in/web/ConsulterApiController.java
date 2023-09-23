@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,17 @@ public class ConsulterApiController {
     private final ModifyConsultationUseCase modifyUseCase;
     private final SearchConsultationUseCase searchUseCase;
     private final ReviewConsultationUseCase reviewUseCase;
+    private final Environment env;
 
+
+    @GetMapping("/consulters/health_check")
+    public String status() {
+        return String.format("It's Working in User Service"
+                + ", port(local.server.port)=" + env.getProperty("local.server.port")
+                + ", port(server.port)=" + env.getProperty("server.port")
+                + ", token secret=" + env.getProperty("token.secret")
+                + ", token expiration time=" + env.getProperty("token.expiration_time"));
+    }
     @Operation(summary = "내담자 - 상담 예약", responses = {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
     })
