@@ -15,6 +15,7 @@ public enum SuccessCode {
     DELETE_BOARD_SUCCESS(OK, "0404", "게시글 삭제 성공"),
     CREATE_COMMENT_SUCCESS(OK, "0405", "댓글 등록 성공"),
     GET_COMMENT_SUCCESS(OK, "0406", "댓글 조회 성공"),
+    MODIFY_COMMENT_SUCCESS(OK, "0407", "댓글 수정 성공"),
 
     ;
 

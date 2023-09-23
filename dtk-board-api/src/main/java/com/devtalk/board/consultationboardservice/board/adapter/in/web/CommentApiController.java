@@ -45,4 +45,13 @@ public class CommentApiController {
     public ResponseEntity<SuccessResponse> getCommentsFromPost(@RequestParam("postId") Long postId) {
         return SuccessResponse.toResponseEntity(SuccessCode.GET_COMMENT_SUCCESS, commentUseCase.getCommentsFromPost(postId));
     }
+
+    @Operation(summary = "게시판 댓글 - 게시글 댓글 수정 API", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
+    })
+    @PutMapping("/{commentId}")
+    public ResponseEntity<?> modifyComment(@PathVariable Long commentId, @RequestBody CommentInput commentInput) {
+        commentUseCase.modifyComment(commentId, commentInput);
+        return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.MODIFY_COMMENT_SUCCESS);
+    }
 }

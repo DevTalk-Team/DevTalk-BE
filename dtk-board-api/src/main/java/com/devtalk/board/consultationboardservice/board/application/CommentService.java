@@ -13,6 +13,7 @@ import com.devtalk.board.consultationboardservice.global.error.ErrorCode;
 import com.devtalk.board.consultationboardservice.global.error.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -50,5 +51,14 @@ public class CommentService implements CommentUseCase {
         List<Comment> comments = commentQueryableRepo.findCommentsByPostId(postId);
 
         return comments.stream().map(CommentRes::of).toList();
+    }
+
+    @Override
+    @Transactional
+    public void modifyComment(Long commentId, CommentInput commentInput) {
+        Comment comment = commentQueryableRepo.findByCommentId(commentId)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_COMMENT));
+
+        comment.modify(commentInput.getContent());
     }
 }
