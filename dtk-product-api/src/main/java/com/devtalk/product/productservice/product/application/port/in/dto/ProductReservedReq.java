@@ -1,6 +1,7 @@
 package com.devtalk.product.productservice.product.application.port.in.dto;
 
 //import com.devtalk.product.productservice.product.domain.product.ReservedProceedType;
+import com.devtalk.product.productservice.product.domain.product.ProcessStatus;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 public class ProductReservedReq {
     private Long productId;
-//    private Long consultantId;
-//    private LocalDateTime reservationAt;
+    private ProcessStatus status;
+    //    private LocalDateTime reservationAt;
 }
 

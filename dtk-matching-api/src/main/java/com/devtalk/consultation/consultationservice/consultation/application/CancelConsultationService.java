@@ -1,5 +1,7 @@
 package com.devtalk.consultation.consultationservice.consultation.application;
 
+import com.devtalk.consultation.consultationservice.consultation.adapter.out.producer.PaymentKafkaProducer;
+import com.devtalk.consultation.consultationservice.consultation.adapter.out.producer.ProductKafkaProducer;
 import com.devtalk.consultation.consultationservice.consultation.application.port.in.CancelConsultationUseCase;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.client.PaymentServiceClient;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.client.ProductServiceClient;
@@ -22,6 +24,8 @@ public class CancelConsultationService implements CancelConsultationUseCase {
     private final ConsultationQueryableRepo consultationQueryableRepo;
     private final ProductServiceClient productServiceClient;
     private final PaymentServiceClient paymentServiceClient;
+    private final PaymentKafkaProducer paymentKafkaProducer;
+    private final ProductKafkaProducer productKafkaProducer;
 
     // TODO: 결제가 이미 된 매칭이라면
     // 1. 결제 서비스에 결제 취소요청
@@ -36,10 +40,10 @@ public class CancelConsultationService implements CancelConsultationUseCase {
         ProcessStatus originProcessStatus = consultation.getStatus();
 
         consultation.cancelByConsulter(cancellationReq.getReason());
-        productServiceClient.cancelProduct(consultation.getProductId());
+        productKafkaProducer.sendConsultationInfoPayment("product-update-consultation", consultation);
 
         if (originProcessStatus.equals(ProcessStatus.PAID)) {
-            paymentServiceClient.refund(consultation.getId());
+            paymentKafkaProducer.sendConsultationInfoPayment("product-update-consultation", consultation);
         }
     }
 
@@ -52,10 +56,10 @@ public class CancelConsultationService implements CancelConsultationUseCase {
         ProcessStatus originProcessStatus = consultation.getStatus();
 
         consultation.cancelByConsultant(cancellationReq.getReason());
-        productServiceClient.cancelProduct(consultation.getProductId());
+        productKafkaProducer.sendConsultationInfoPayment("product-update-consultation", consultation);
 
         if (originProcessStatus.equals(ProcessStatus.PAID)) {
-            paymentServiceClient.refund(consultation.getId());
+            paymentKafkaProducer.sendConsultationInfoPayment("product-update-consultation", consultation);
         }
     }
 }
