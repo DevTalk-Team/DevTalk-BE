@@ -45,7 +45,11 @@ spring:
         - id: product-service
           uri: lb://PRODUCT-SERVICE
           predicates:
-            - Path=/products/**
+            - Path=/product/**
+        - id: matching-service
+          uri: lb://MATCHING-SERVICE
+          predicates:
+            - Path=/matching/**
         - id: user_route
           uri: http://localhost:9999
           metadata:
