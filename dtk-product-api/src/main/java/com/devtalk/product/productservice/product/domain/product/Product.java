@@ -43,21 +43,21 @@ public class Product extends BaseTime {
     @Enumerated(EnumType.STRING)
     private ProductProceedType productProceedType;
 
-    @Column(name = "nf2f_price")
-    private Integer NF2FPrice;
+    @Column(name = "nf2f_cost")
+    private Integer NF2FCost;
 
-    @Column(name = "f2f_price")
-    private Integer F2FPrice;
+    @Column(name = "f2f_cost")
+    private Integer F2FCost;
 
 
     public Product(Long consultantId, String status, LocalDateTime reservationAt, ProductProceedType type
-                   ,Integer F2FPrice,Integer NF2FPrice){
+                   ,Integer F2FCost,Integer NF2FCost){
         this.consultantId=consultantId;
         this.status=status;
         this.reservationAt=reservationAt;
         this.productProceedType=type;
-        this.F2FPrice=F2FPrice;
-        this.NF2FPrice=NF2FPrice;
+        this.F2FCost=F2FCost;
+        this.NF2FCost=NF2FCost;
     }
 
 //    public Product(Consultant consultant, String status, LocalDateTime reservationAt, ProductProceedType type){
@@ -71,14 +71,14 @@ public class Product extends BaseTime {
 
 
     public static Product registProduct(Long consultantId, LocalDateTime reservationAt, ProductProceedType productProceedType
-    ,Integer F2FPrice,Integer NF2FPrice){
+    ,Integer F2FCost,Integer NF2FCost){
         return Product.builder()
                 .consultantId(consultantId)
-                .status("예약 가능")
+                .status("AVAILABLE")
                 .reservationAt(reservationAt)
                 .productProceedType(productProceedType)
-                .F2FPrice(F2FPrice)
-                .NF2FPrice(NF2FPrice)
+                .F2FCost(F2FCost)
+                .NF2FCost(NF2FCost)
                 .build();
     }
 
@@ -88,12 +88,12 @@ public class Product extends BaseTime {
 
     public void reserveProduct(){
 
-        this.status = "예약 불가";
+        this.status = "UNAVAILABLE";
     }
 
 
     public void cancleConsultation(){
-        this.status = "예약 가능";
+        this.status = "AVAILABLE";
     }
 
 

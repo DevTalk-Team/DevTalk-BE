@@ -1,5 +1,6 @@
 package com.devtalk.consultation.consultationservice.consultation.application;
 
+import com.devtalk.consultation.consultationservice.consultation.adapter.out.producer.ProductKafkaProducer;
 import com.devtalk.consultation.consultationservice.consultation.application.port.in.AcceptConsultationUseCase;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.client.ProductServiceClient;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.ConsultationQueryableRepo;
@@ -17,7 +18,7 @@ import static com.devtalk.consultation.consultationservice.global.error.ErrorCod
 public class AcceptConsultationService implements AcceptConsultationUseCase {
 
     private final ConsultationQueryableRepo consultationQueryableRepo;
-    private final ProductServiceClient productServiceClient;
+    private final ProductKafkaProducer productKafkaProducer;
 
     @Override
     public void acceptConsultation(Long consultantId, Long consultationId) {
@@ -25,6 +26,6 @@ public class AcceptConsultationService implements AcceptConsultationUseCase {
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_CONSULTATION));
 
         findConsultation.accept();
-        productServiceClient.acceptProduct(findConsultation.getProductId());
+        productKafkaProducer.sendConsultationInfoPayment("product-update-consultation", findConsultation);
     }
 }

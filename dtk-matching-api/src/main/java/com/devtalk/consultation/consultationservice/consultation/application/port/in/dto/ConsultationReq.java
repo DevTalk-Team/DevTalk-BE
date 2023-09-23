@@ -3,7 +3,7 @@ package com.devtalk.consultation.consultationservice.consultation.application.po
 import com.devtalk.consultation.consultationservice.consultation.domain.consultation.AttachedFile;
 import com.devtalk.consultation.consultationservice.consultation.domain.consultation.Consultation;
 import com.devtalk.consultation.consultationservice.consultation.domain.consultation.ConsultationDetails;
-import com.devtalk.consultation.consultationservice.consultation.domain.consultation.ProcessMean;
+import com.devtalk.consultation.consultationservice.consultation.domain.consultation.ProductProceedType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -25,7 +25,7 @@ public class ConsultationReq {
         private Long consultantId;
         private String consultantName;
         private Long productId;
-        private ProcessMean processMean;
+        private ProductProceedType productProceedType;
 
         private String region;
         private LocalDateTime reservationAT;
@@ -37,7 +37,7 @@ public class ConsultationReq {
 
         public Consultation toEntity(List<AttachedFile> attachedFileList) {
             ConsultationDetails consultationDetails = ConsultationDetails.builder()
-                    .processMean(processMean)
+                    .productProceedType(productProceedType)
                     .region(region)
                     .reservationAT(reservationAT)
                     .attachedFileList(attachedFileList)

@@ -2,7 +2,9 @@ package com.devtalk.product.productservice.product.adapter.in.consumer;
 
 import com.devtalk.product.productservice.global.config.CustomLocalDateTimeDeserializer;
 import com.devtalk.product.productservice.product.application.port.in.dto.ProductReservedReq;
+import com.devtalk.product.productservice.product.application.port.in.product.CancleUseCase;
 import com.devtalk.product.productservice.product.application.port.in.product.ReserveUseCase;
+import com.devtalk.product.productservice.product.domain.product.ProcessStatus;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -18,11 +20,12 @@ import java.time.LocalDateTime;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class ConsultationReserveKafkaConsumer {
+public class MatchingKafkaConsumer {
+    private final CancleUseCase cancleUseCase;
     private final ReserveUseCase reserveUseCase;
 
     // *** Topic은 변경할 수 있습니다. "test" 토픽으로 메시지를 확인해보세요 ***//
-    @KafkaListener(topics = "consultation-reserve")
+    @KafkaListener(topics = "product-update-consultation")
     public void receiveConsultationInfo(String kafkaMessage) {
         log.info("Kafka Message: " + kafkaMessage); // 로그 확인
 
@@ -42,7 +45,14 @@ public class ConsultationReserveKafkaConsumer {
     //**********************************************************//
     // *** 수행할 행동 *** //
     private void dataSynchronization(ProductReservedReq productReservedReq) {
-        reserveUseCase.reserveProduct(productReservedReq);
+        if (productReservedReq.getStatus() == ProcessStatus.ACCEPTED) {
+            cancleUseCase.cancleConsultation(productReservedReq);
+        }
+        if (productReservedReq.getStatus() == ProcessStatus.CONSULTANT_CANCELED
+                || productReservedReq.getStatus() == ProcessStatus.CONSULTER_CANCELED
+                || productReservedReq.getStatus() == ProcessStatus.PAID){
+            reserveUseCase.reserveProduct(productReservedReq);
+        }
     }
 
     //**********************************************************//

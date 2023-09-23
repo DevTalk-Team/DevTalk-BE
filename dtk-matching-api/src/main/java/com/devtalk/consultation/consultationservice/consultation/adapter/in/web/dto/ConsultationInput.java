@@ -1,6 +1,6 @@
 package com.devtalk.consultation.consultationservice.consultation.adapter.in.web.dto;
 
-import com.devtalk.consultation.consultationservice.consultation.domain.consultation.ProcessMean;
+import com.devtalk.consultation.consultationservice.consultation.domain.consultation.ProductProceedType;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,7 +32,7 @@ public class ConsultationInput {
         private Long productId;
 
         @NotBlank @Size(max = 10)
-        private ProcessMean processMean;
+        private ProductProceedType productProceedType;
 
 
         @NotBlank @Size(max = 20)
@@ -58,7 +58,7 @@ public class ConsultationInput {
                     .consultantId(consultantId)
                     .consultantName(consultantName)
                     .productId(productId)
-                    .processMean(processMean)
+                    .productProceedType(productProceedType)
                     .region(region)
                     .reservationAT(reservationAT)
                     .content(content)

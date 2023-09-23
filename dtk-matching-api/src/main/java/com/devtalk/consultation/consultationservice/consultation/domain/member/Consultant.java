@@ -11,27 +11,22 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @DiscriminatorValue("CONSULTER")
 @SuperBuilder
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Consultant extends Member {
 
-    private String occupation;
-
-    private Integer career;
+//    private String occupation;
+//
+//    private Integer career;
 
     /**
      * 상담 서비스에 전문가가 존재하지 않을 때만 생성함
      */
-    public static Consultant createConsulter(Long memberId, String loginId, String name, RoleType roleType,
-                                             String occupation, Integer career) {
+    public static Consultant createConsultant(Long memberId, String name) {
         return Consultant.builder()
                 .id(memberId)
-                .loginId(loginId)
                 .name(name)
-                .role(roleType)
-                .occupation(occupation)
-                .career(career)
+                .memberType(MemberType.CONSULTANT)
                 .build();
     }
 
