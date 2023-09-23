@@ -11,7 +11,7 @@ public class MemberReq {
     @Getter
     public static class ConsultantPriceReq {
         private Long consultantId;
-        private Integer NF2F_Price;
-        private Integer F2F_Price;
+        private Integer NF2F_Cost;
+        private Integer F2F_Cost;
     }
 }

@@ -16,7 +16,7 @@ public class ConsultationDetails {
 
     @Column(nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
-    private ProcessMean processMean;
+    private ProductProceedType productProceedType;
 
     @Column(nullable = false, length = 20)
     private String region;

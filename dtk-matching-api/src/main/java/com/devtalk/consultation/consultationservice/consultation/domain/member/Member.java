@@ -25,6 +25,6 @@ public class Member extends BaseTime {
 
     @Column(nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
-    private RoleType role;
+    private MemberType memberType;
 
 }
