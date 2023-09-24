@@ -37,7 +37,7 @@ import static com.devtalk.payment.paymentservice.application.port.in.dto.Payment
  * - http 응답을 반환하기
  * */
 @Tag(name = "결제 서비스", description = "데브톡 - 결제 서비스 REST API")
-@Controller
+@RestController
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/payment")
