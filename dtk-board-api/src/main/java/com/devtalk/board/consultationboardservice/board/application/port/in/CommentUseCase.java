@@ -11,6 +11,8 @@ public interface CommentUseCase {
 
     void modifyComment(Long commentId, CommentInput contentInput);
 
+    void deleteComment(Long commentId);
+
     CommentRes getComment(Long commentId);
 
     List<CommentRes> getCommentsFromPost(Long postId);

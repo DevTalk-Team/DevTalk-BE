@@ -54,4 +54,13 @@ public class CommentApiController {
         commentUseCase.modifyComment(commentId, commentInput);
         return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.MODIFY_COMMENT_SUCCESS);
     }
+
+    @Operation(summary = "게시판 댓글 - 게시글 댓글 삭제 API", responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
+    })
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<?> deleteComment(@PathVariable Long commentId) {
+        commentUseCase.deleteComment(commentId);
+        return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.DELETE_COMMENT_SUCCESS);
+    }
 }

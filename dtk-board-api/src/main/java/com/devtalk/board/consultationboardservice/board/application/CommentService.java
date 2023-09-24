@@ -3,7 +3,6 @@ package com.devtalk.board.consultationboardservice.board.application;
 import com.devtalk.board.consultationboardservice.board.adapter.in.web.dto.CommentInput;
 import com.devtalk.board.consultationboardservice.board.application.port.in.CommentUseCase;
 import com.devtalk.board.consultationboardservice.board.application.port.in.dto.CommentRes;
-import com.devtalk.board.consultationboardservice.board.application.port.in.dto.PostRes;
 import com.devtalk.board.consultationboardservice.board.application.port.out.repository.CommentQueryableRepo;
 import com.devtalk.board.consultationboardservice.board.application.port.out.repository.CommentRepo;
 import com.devtalk.board.consultationboardservice.board.application.port.out.repository.PostQueryableRepo;
@@ -60,5 +59,13 @@ public class CommentService implements CommentUseCase {
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_COMMENT));
 
         comment.modify(commentInput.getContent());
+    }
+
+    @Override
+    @Transactional
+    public void deleteComment(Long commentId) {
+        Comment comment = commentQueryableRepo.findByCommentId(commentId)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_COMMENT));
+        commentRepo.delete(comment);
     }
 }
