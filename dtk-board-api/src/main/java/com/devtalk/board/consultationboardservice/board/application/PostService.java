@@ -1,5 +1,6 @@
 package com.devtalk.board.consultationboardservice.board.application;
 
+import com.devtalk.board.consultationboardservice.board.adapter.in.web.dto.PostInput;
 import com.devtalk.board.consultationboardservice.board.application.port.in.PostUseCase;
 import com.devtalk.board.consultationboardservice.board.application.port.in.dto.PostRes;
 import com.devtalk.board.consultationboardservice.board.application.port.out.repository.PostQueryableRepo;
@@ -13,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.devtalk.board.consultationboardservice.board.adapter.in.web.dto.BoardInput.*;
 
 @Service
 @RequiredArgsConstructor
@@ -46,7 +46,28 @@ public class PostService implements PostUseCase {
     @Override
     public List<PostRes> getPostList(Long userId) {
         List<Post> posts = postQueryableRepo.findPostsByUserId(userId);
-
         return posts.stream().map(post -> PostRes.of(post)).toList();
+    }
+
+    @Override
+    public List<PostRes> getAllPosts() {
+        List<Post> posts = postQueryableRepo.findAllPosts();
+        return posts.stream().map(post -> PostRes.of(post)).toList();
+    }
+
+    @Override
+    @Transactional
+    public void modifyPost(Long postId, PostInput postInput) {
+        Post post = postQueryableRepo.findPostByPostId(postId)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_POST));
+        post.modify(postInput.getTitle(), postInput.getContent());
+    }
+
+    @Override
+    @Transactional
+    public void deletePost(Long postId) {
+        Post post = postQueryableRepo.findPostByPostId(postId)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_POST));
+        postRepo.delete(post);
     }
 }

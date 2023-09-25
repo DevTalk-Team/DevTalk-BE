@@ -14,12 +14,11 @@ public class Consulter extends Member {
     /**
      * 상담 서비스에 내담자가 존재하지 않을 때만 생성함
      */
-    public static Consulter createConsulter(Long memberId, String loginId, String name, RoleType roleType) {
+    public static Consulter createConsulter(Long memberId, String name) {
         return Consulter.builder()
                 .id(memberId)
-                .loginId(loginId)
                 .name(name)
-                .role(roleType)
+                .memberType(MemberType.CONSULTER)
                 .build();
     }
 }

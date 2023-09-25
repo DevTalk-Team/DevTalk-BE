@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -36,7 +37,7 @@ import static com.devtalk.payment.paymentservice.application.port.in.dto.Payment
  * - http 응답을 반환하기
  * */
 @Tag(name = "결제 서비스", description = "데브톡 - 결제 서비스 REST API")
-@Controller
+@RestController
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/payment")
@@ -44,6 +45,17 @@ class PaymentApiController {
     private final PaymentUseCase paymentUseCase;
     private final RefundUseCase refundUseCase;
     private final ModelMapper modelMapper;
+    private final Environment env;
+
+
+    @GetMapping("/health_check")
+    public String status() {
+        return String.format("It's Working in Payment Service"
+                + ", port(local.server.port)=" + env.getProperty("local.server.port")
+                + ", port(server.port)=" + env.getProperty("server.port")
+                + ", token secret=" + env.getProperty("token.secret")
+                + ", token expiration time=" + env.getProperty("token.expiration_time"));
+    }
 
     // 결제 링크 요청
     @Operation(summary = "결제 링크 생성 API", description = "해당 예약건의 결제 링크를 생성합니다.")

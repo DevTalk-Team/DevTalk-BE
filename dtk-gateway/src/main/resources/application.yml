@@ -23,7 +23,7 @@ spring:
             - Path=/member/signup/**, /member/login
           filters:
             - RemoveRequestHeader=Cookie
-        #            - RewritePath=/member/(?<segment>,*),/$\{segment}
+#            - RewritePath=/member/(?<segment>,*),/$\{segment}
         - id: member-service-auth
           uri: lb://MEMBER-SERVICE
           predicates:
@@ -31,10 +31,10 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - AuthorizationHeaderFilter
-        #        - id: member-service-health-check
-        #          uri: lb://MEMBER-SERVICE
-        #          predicates:
-        #            - Path=/member-service/member/signup/health_check
+#        - id: member-service-health-check
+#          uri: lb://MEMBER-SERVICE
+#          predicates:
+#            - Path=/member-service/member/signup/health_check
         - id: user_route
           uri: http://localhost:9999
           metadata:

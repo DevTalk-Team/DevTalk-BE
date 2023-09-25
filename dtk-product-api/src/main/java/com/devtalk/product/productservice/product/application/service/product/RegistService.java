@@ -26,8 +26,8 @@ public class RegistService implements RegistUseCase {
         Product product = Product.registProduct(registProdReq.getConsultantId(),
                 registProdReq.getReservationAt(),
                 registProdReq.getProductProceedType(),
-                consultantPriceReq.getF2F_Price(),
-                consultantPriceReq.getNF2F_Price());
+                consultantPriceReq.getF2F_Cost(),
+                consultantPriceReq.getNF2F_Cost());
         productRepo.save(product);
     }
 }
