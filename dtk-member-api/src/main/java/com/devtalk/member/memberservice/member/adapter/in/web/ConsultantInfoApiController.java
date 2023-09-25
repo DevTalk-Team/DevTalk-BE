@@ -1,6 +1,7 @@
 package com.devtalk.member.memberservice.member.adapter.in.web;
 
 import com.devtalk.member.memberservice.global.jwt.JwtTokenProvider;
+import com.devtalk.member.memberservice.global.jwt.MemberDetails;
 import com.devtalk.member.memberservice.global.success.SuccessResponse;
 import com.devtalk.member.memberservice.global.success.SuccessResponseNoResult;
 import com.devtalk.member.memberservice.member.adapter.in.web.dto.ConsultantInput;
@@ -9,13 +10,16 @@ import com.devtalk.member.memberservice.member.application.port.in.ConsultantInf
 import com.devtalk.member.memberservice.member.application.port.in.dto.ConsultantRes;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 import static com.devtalk.member.memberservice.global.success.SuccessCode.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/member/consultant")
 @RequiredArgsConstructor
@@ -25,8 +29,10 @@ public class ConsultantInfoApiController {
     private final KafkaProducer kafkaProducer;
 
     @GetMapping("/info")
-    public ResponseEntity<?> getInfo(HttpServletRequest request) {
-        String token = jwtTokenProvider.resolveToken(request);
+    public ResponseEntity<?> getInfo(@AuthenticationPrincipal MemberDetails memberDetails) {
+        String email = memberDetails.getUsername();
+        log.info("로그인한 email -> {}", email);
+        String token = "";
         ConsultantRes.InfoRes res = consultantInfoUseCase.getInfo(token);
         return SuccessResponse.toResponseEntity(CONSULTANT_INFO_SUCCESS, res);
     }
