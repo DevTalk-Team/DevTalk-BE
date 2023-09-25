@@ -57,7 +57,7 @@ public class PostQueryRepo implements PostQueryableRepo {
         }
 
         if (StringUtils.hasText(postInput.getContent())) {
-            builder.and(contentLike(postInput.getContent()));
+            builder.or(contentLike(postInput.getContent()));
         }
 
         return builder;
