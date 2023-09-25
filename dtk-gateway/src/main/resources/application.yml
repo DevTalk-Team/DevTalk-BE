@@ -23,7 +23,7 @@ spring:
             - Path=/member/signup/**, /member/login
           filters:
             - RemoveRequestHeader=Cookie
-#            - RewritePath=/member/(?<segment>,*),/$\{segment}
+        #            - RewritePath=/member/(?<segment>,*),/$\{segment}
         - id: member-service-auth
           uri: lb://MEMBER-SERVICE
           predicates:
@@ -31,21 +31,10 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - AuthorizationHeaderFilter
-#        - id: member-service-health-check
-#          uri: lb://MEMBER-SERVICE
-#          predicates:
-#            - Path=/member-service/member/signup/health_check
-        - id: payment-service
-          uri: lb://PAYMENT-SERVICE
-          predicates:
-            - Path=/payment/**
-          filters:
-            - RemoveRequestHeader=Cookie
-            - AuthorizationHeaderFilter
-        - id: product-service
-          uri: lb://PRODUCT-SERVICE
-          predicates:
-            - Path=/products/**
+        #        - id: member-service-health-check
+        #          uri: lb://MEMBER-SERVICE
+        #          predicates:
+        #            - Path=/member-service/member/signup/health_check
         - id: user_route
           uri: http://localhost:9999
           metadata:
@@ -73,6 +62,23 @@ spring:
             - RedirectTo=302, https://acme.org
             - RewritePath=/user/?(?<segment>.*), /$\{segment}
             - SetPath=/{segment}
+        - id: payment-service
+          uri: lb://PAYMENT-SERVICE
+          predicates:
+            - Path=/payment/**
+          filters:
+        - id: product-service
+          uri: lb://PRODUCT-SERVICE
+          predicates:
+            - Path=/product/**
+        - id: matching-service
+          uri: lb://MATCHING-SERVICE
+          predicates:
+            - Path=/matching/**
+        - id: board-service
+          uri: lb://BOARD-SERVICE
+          predicates:
+            - Path=/board/**
 
 jwt:
   token:
