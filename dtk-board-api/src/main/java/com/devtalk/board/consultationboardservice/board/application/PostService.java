@@ -44,7 +44,7 @@ public class PostService implements PostUseCase {
     }
 
     @Override
-    public List<PostRes> getPostList(Long userId) {
+    public List<PostRes> getPostsByUserId(Long userId) {
         List<Post> posts = postQueryableRepo.findPostsByUserId(userId);
         return posts.stream().map(post -> PostRes.of(post)).toList();
     }
@@ -69,5 +69,11 @@ public class PostService implements PostUseCase {
         Post post = postQueryableRepo.findPostByPostId(postId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_POST));
         postRepo.delete(post);
+    }
+
+    @Override
+    public List<PostRes> searchPosts(PostInput postInput) {
+        List<Post> posts = postQueryableRepo.findPostsWithSearchOption(postInput);
+        return posts.stream().map(post -> PostRes.of(post)).toList();
     }
 }

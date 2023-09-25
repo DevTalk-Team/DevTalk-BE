@@ -35,7 +35,7 @@ public class PostApiController {
     })
     @GetMapping("/all")
     public ResponseEntity<SuccessResponse> getAllPosts() {
-        return SuccessResponse.toResponseEntity(SuccessCode.GET_BOARD_SUCCESS, postUseCase.getAllPosts());
+        return SuccessResponse.toResponseEntity(SuccessCode.GET_POST_SUCCESS, postUseCase.getAllPosts());
     }
 
     @Operation(summary = "게시판 - 게시글 단건 조회 API", responses = {
@@ -43,7 +43,7 @@ public class PostApiController {
     })
     @GetMapping("/{postId}")
     public ResponseEntity<SuccessResponse> getPost(@PathVariable Long postId) {
-        return SuccessResponse.toResponseEntity(SuccessCode.GET_BOARD_SUCCESS, postUseCase.viewPost(postId));
+        return SuccessResponse.toResponseEntity(SuccessCode.GET_POST_SUCCESS, postUseCase.viewPost(postId));
     }
 
     @Operation(summary = "게시판 - 사용자ID로 게시글 조회 API", responses = {
@@ -51,7 +51,7 @@ public class PostApiController {
     })
     @GetMapping
     public ResponseEntity<SuccessResponse> getPostByUserId(@RequestParam("userId") Long userId) {
-        return SuccessResponse.toResponseEntity(SuccessCode.GET_USER_POST_LIST_SUCCESS, postUseCase.getPostList(userId));
+        return SuccessResponse.toResponseEntity(SuccessCode.GET_USER_POST_LIST_SUCCESS, postUseCase.getPostsByUserId(userId));
     }
 
     @Operation(summary = "게시판 - 게시글 수정 API", responses = {
@@ -60,7 +60,7 @@ public class PostApiController {
     @PutMapping("/{postId}")
     public ResponseEntity<?> modifyPost(@PathVariable Long postId, @RequestBody PostInput postInput) {
         postUseCase.modifyPost(postId, postInput);
-        return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.MODIFY_BOARD_SUCCESS);
+        return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.MODIFY_POST_SUCCESS);
     }
 
     @Operation(summary = "게시판 - 게시글 삭제 API", responses = {
@@ -69,6 +69,22 @@ public class PostApiController {
     @DeleteMapping("/{postId}")
     public ResponseEntity<?> deletePost(@PathVariable Long postId) {
         postUseCase.deletePost(postId);
-        return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.DELETE_BOARD_SUCCESS);
+        return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.DELETE_POST_SUCCESS);
+    }
+
+    @Operation(summary = "게시판 - 게시글 통합 검색 API",
+            description = "title에만 값을 넣으면 제목 검색, content에만 값을 넣으면 내용 검색, title과 content에 같은 내용을 넣으면 제목+내용 검색 입니다",
+            responses = {
+            @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponse.class)))
+    })
+    @GetMapping("/search")
+    public ResponseEntity<SuccessResponse> searchPosts(@RequestParam(name = "title", required = false) String title,
+                                                       @RequestParam(name = "content", required = false) String content) {
+        PostInput postInput = PostInput.builder()
+                .title(title)
+                .content(content)
+                .build();
+
+        return SuccessResponse.toResponseEntity(SuccessCode.GET_POST_SUCCESS, postUseCase.searchPosts(postInput));
     }
 }
