@@ -6,6 +6,8 @@ import com.devtalk.board.consultationboardservice.board.domain.post.Post;
 import java.util.List;
 import java.util.Optional;
 
+import static com.devtalk.board.consultationboardservice.board.adapter.in.web.dto.PostInput.*;
+
 public interface PostQueryableRepo {
     Optional<Post> findPostByPostId(Long postId);
 
@@ -13,5 +15,5 @@ public interface PostQueryableRepo {
 
     List<Post> findAllPosts();
 
-    List<Post> findPostsWithSearchOption(PostInput postInput);
+    List<Post> findPostsWithSearchOption(PostSearchInput postSearchInput);
 }

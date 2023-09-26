@@ -1,6 +1,5 @@
 package com.devtalk.board.consultationboardservice.board.adapter.in.web;
 
-import com.devtalk.board.consultationboardservice.board.adapter.in.web.dto.PostInput;
 import com.devtalk.board.consultationboardservice.board.application.port.in.PostUseCase;
 import com.devtalk.board.consultationboardservice.global.success.SuccessCode;
 import com.devtalk.board.consultationboardservice.global.success.SuccessResponse;
@@ -14,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static com.devtalk.board.consultationboardservice.board.adapter.in.web.dto.PostInput.*;
+
 @Tag(name = "게시판", description = "게시판 API")
 @RestController
 @RequestMapping("/board/post")
@@ -25,8 +26,8 @@ public class PostApiController {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
     })
     @PostMapping
-    public ResponseEntity<?> post(@RequestBody PostInput postInput) {
-        postUseCase.writePost(postInput);
+    public ResponseEntity<?> post(@RequestParam Long userId, @RequestBody PostCreationInput postCreationInput) {
+        postUseCase.writePost(postCreationInput.toReq(userId));
         return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.CREATE_POST_SUCCESS);
     }
 
@@ -58,8 +59,8 @@ public class PostApiController {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
     })
     @PutMapping("/{postId}")
-    public ResponseEntity<?> modifyPost(@PathVariable Long postId, @RequestBody PostInput postInput) {
-        postUseCase.modifyPost(postId, postInput);
+    public ResponseEntity<?> modifyPost(@PathVariable Long postId, @RequestBody PostCreationInput postCreationInput) {
+        postUseCase.modifyPost(postId, postCreationInput);
         return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.MODIFY_POST_SUCCESS);
     }
 
@@ -80,11 +81,13 @@ public class PostApiController {
     @GetMapping("/search")
     public ResponseEntity<SuccessResponse> searchPosts(@RequestParam(name = "title", required = false) String title,
                                                        @RequestParam(name = "content", required = false) String content) {
-        PostInput postInput = PostInput.builder()
+        PostSearchInput postSearchInput = PostSearchInput.builder()
                 .title(title)
                 .content(content)
                 .build();
 
-        return SuccessResponse.toResponseEntity(SuccessCode.GET_POST_SUCCESS, postUseCase.searchPosts(postInput));
+        return SuccessResponse.toResponseEntity(SuccessCode.GET_POST_SUCCESS, postUseCase.searchPosts(postSearchInput));
     }
+
+
 }

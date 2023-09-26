@@ -1,11 +1,15 @@
 package com.devtalk.board.consultationboardservice.board.domain.post;
 
 import com.devtalk.board.consultationboardservice.board.domain.BaseEntity;
+import com.devtalk.board.consultationboardservice.board.domain.attachedfile.AttachedFile;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Table
 @Entity
@@ -22,14 +26,28 @@ public class Post extends BaseEntity {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1000)
     private String content;
+
+    @Builder.Default
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<AttachedFile> attachedFileList = new ArrayList<>();
 
     @Column(nullable = false)
     private Long userId;
 
     @Column(nullable = false)
     private Integer views;
+
+    public static Post createPost(String title, String content, Long userId, List<AttachedFile> attachedFileList) {
+        return Post.builder()
+                .title(title)
+                .content(content)
+                .userId(userId)
+                .attachedFileList(attachedFileList)
+                .views(0)
+                .build();
+    }
 
     public void increaseViews() {
         this.views += 1;

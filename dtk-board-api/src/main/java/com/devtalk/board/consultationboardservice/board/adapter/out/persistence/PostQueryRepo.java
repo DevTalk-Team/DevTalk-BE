@@ -13,6 +13,7 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 import java.util.Optional;
 
+import static com.devtalk.board.consultationboardservice.board.adapter.in.web.dto.PostInput.*;
 import static com.devtalk.board.consultationboardservice.board.domain.post.QPost.post;
 
 @Repository
@@ -43,21 +44,21 @@ public class PostQueryRepo implements PostQueryableRepo {
     }
 
     @Override
-    public List<Post> findPostsWithSearchOption(PostInput postInput) {
+    public List<Post> findPostsWithSearchOption(PostSearchInput postInput) {
         return queryFactory.selectFrom(post)
                 .where(allSearchOption(postInput))
                 .fetch();
     }
 
-    private BooleanBuilder allSearchOption(PostInput postInput) {
+    private BooleanBuilder allSearchOption(PostSearchInput postSearchInput) {
         BooleanBuilder builder = new BooleanBuilder();
 
-        if (StringUtils.hasText(postInput.getTitle())) {
-            builder.and(titleLike(postInput.getTitle()));
+        if (StringUtils.hasText(postSearchInput.getTitle())) {
+            builder.and(titleLike(postSearchInput.getTitle()));
         }
 
-        if (StringUtils.hasText(postInput.getContent())) {
-            builder.or(contentLike(postInput.getContent()));
+        if (StringUtils.hasText(postSearchInput.getContent())) {
+            builder.or(contentLike(postSearchInput.getContent()));
         }
 
         return builder;

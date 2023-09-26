@@ -27,7 +27,7 @@ public class Comment extends BaseEntity {
     @Column(nullable = false)
     private Long userId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 500)
     private String content;
 
     public void modify(String content) {
