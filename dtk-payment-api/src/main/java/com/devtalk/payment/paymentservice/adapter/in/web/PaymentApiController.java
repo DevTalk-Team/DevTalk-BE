@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -126,7 +127,10 @@ class PaymentApiController {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
     })
     @PostMapping("/test")
-    public ResponseEntity<?> insertPaymentInfo(@RequestBody ConsultationInput consultationInput) {
+    public ResponseEntity<?> insertPaymentInfo(@RequestBody ConsultationInput consultationInput,
+                                               HttpServletRequest request) {
+        String userEmail= request.getHeader("User-Email");
+        log.info("User-Email : {}", userEmail);
         paymentUseCase.createPaymentInfo(consultationInput);
         return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.CREATE_TEMP_PAYMENT_INFO_SUCCESS);
     }

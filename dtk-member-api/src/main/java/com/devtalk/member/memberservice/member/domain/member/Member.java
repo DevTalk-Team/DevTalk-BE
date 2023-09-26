@@ -33,14 +33,13 @@ public class Member {
     private String phoneNumber;
 
     public static Member createMember(MemberReq.SignUpReq req, PasswordEncoder passwordEncoder) {
-        Member member = Member.builder()
+        return Member.builder()
                 .memberType(req.getMemberType())
                 .name(req.getName())
                 .email(req.getEmail())
                 .password(passwordEncoder.encode(req.getPassword()))
                 .phoneNumber(req.getPhoneNumber())
                 .build();
-        return member;
     }
 
     public Member updatePassword(String password) {

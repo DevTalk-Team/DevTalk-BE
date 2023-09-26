@@ -1,6 +1,8 @@
 package com.devatalk.apigateway.apigatewayservice.filter;
 
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -48,11 +50,23 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
             String authorizationHeader = Objects.requireNonNull(request.getHeaders().get(HttpHeaders.AUTHORIZATION)).get(0);
             String jwt = authorizationHeader.substring(7);
 
-            if (!isJwtValid(jwt)) {
-                return onError(exchange, "JWT token is not valid", HttpStatus.UNAUTHORIZED);
+            // JWT로부터 email 추출 -> header에 실어보내기
+            String email = isJwtValid(jwt);
 
+            if (email == null || email.isEmpty()) {
+                return onError(exchange, "JWT token is not valid", HttpStatus.UNAUTHORIZED);
             }
-            return chain.filter(exchange);
+            log.info("jwt로부터 email 추출 성공 -> {}", email);
+
+            ServerHttpRequest modifiedRequest = exchange.getRequest().mutate()
+                    .header("User-Email", email)
+                    .build();
+
+            ServerWebExchange modifiedExchange = exchange.mutate()
+                    .request(modifiedRequest)
+                    .build();
+
+            return chain.filter(modifiedExchange);
         };
     }
 
@@ -64,28 +78,20 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
         return response.setComplete();
     }
 
-    private boolean isJwtValid(String jwt) {
-        boolean returnValue = true;
-        String email = null;
+    private String isJwtValid(String jwt) {
         key = Keys.hmacShaKeyFor(Base64.getEncoder().encodeToString(secretKey.getBytes()).getBytes());
 
         try {
-            email = Jwts.parser()
+            return Jwts.parser()
                     .setSigningKey(key)
                     .parseClaimsJws(jwt)
                     .getBody()
                     .get("email")
                     .toString();
-            log.info("email = {}", email);
         } catch (Exception ex) {
             log.info("ex = {}", ex.getMessage());
-            returnValue = false;
+            return null;
         }
-
-        if (email == null || email.isEmpty()) {
-            returnValue = false;
-        }
-        return returnValue;
     }
 
 }
