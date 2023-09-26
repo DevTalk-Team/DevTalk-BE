@@ -10,7 +10,7 @@ import java.util.Collection;
 
 @RequiredArgsConstructor
 public class MemberDetails implements UserDetails {
-    // JWT 토큰을 생성하는 데 필요한 정보는 MemberDetails에서 가져온다.
+    // JWT 토큰을 생성할 때 필요한 정보는 MemberDetails에서 가져온다.
     private final Member member;
 
     @Override // 계정이 가지고 있는 권한 목록
