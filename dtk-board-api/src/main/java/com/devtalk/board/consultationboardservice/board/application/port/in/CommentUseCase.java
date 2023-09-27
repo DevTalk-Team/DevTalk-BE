@@ -9,6 +9,10 @@ import java.util.List;
 public interface CommentUseCase {
     void createComment(Long postId, CommentInput commentInput);
 
+    void modifyComment(Long commentId, CommentInput contentInput);
+
+    void deleteComment(Long commentId);
+
     CommentRes getComment(Long commentId);
 
     List<CommentRes> getCommentsFromPost(Long postId);

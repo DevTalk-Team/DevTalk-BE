@@ -3,7 +3,6 @@ package com.devtalk.board.consultationboardservice.board.application;
 import com.devtalk.board.consultationboardservice.board.adapter.in.web.dto.CommentInput;
 import com.devtalk.board.consultationboardservice.board.application.port.in.CommentUseCase;
 import com.devtalk.board.consultationboardservice.board.application.port.in.dto.CommentRes;
-import com.devtalk.board.consultationboardservice.board.application.port.in.dto.PostRes;
 import com.devtalk.board.consultationboardservice.board.application.port.out.repository.CommentQueryableRepo;
 import com.devtalk.board.consultationboardservice.board.application.port.out.repository.CommentRepo;
 import com.devtalk.board.consultationboardservice.board.application.port.out.repository.PostQueryableRepo;
@@ -13,6 +12,7 @@ import com.devtalk.board.consultationboardservice.global.error.ErrorCode;
 import com.devtalk.board.consultationboardservice.global.error.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -50,5 +50,22 @@ public class CommentService implements CommentUseCase {
         List<Comment> comments = commentQueryableRepo.findCommentsByPostId(postId);
 
         return comments.stream().map(CommentRes::of).toList();
+    }
+
+    @Override
+    @Transactional
+    public void modifyComment(Long commentId, CommentInput commentInput) {
+        Comment comment = commentQueryableRepo.findByCommentId(commentId)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_COMMENT));
+
+        comment.modify(commentInput.getContent());
+    }
+
+    @Override
+    @Transactional
+    public void deleteComment(Long commentId) {
+        Comment comment = commentQueryableRepo.findByCommentId(commentId)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_COMMENT));
+        commentRepo.delete(comment);
     }
 }
