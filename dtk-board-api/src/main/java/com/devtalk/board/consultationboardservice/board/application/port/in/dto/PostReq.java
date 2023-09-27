@@ -20,8 +20,8 @@ public class PostReq {
         @Builder.Default
         private List<MultipartFile> attachedFileList = new ArrayList<>();
 
-        public Post toEntity(List<AttachedFile> attachedFileList) {
-            return Post.createPost(title, content, userId, attachedFileList);
+        public Post toEntity() {
+            return Post.createPost(title, content, userId);
         }
     }
 }

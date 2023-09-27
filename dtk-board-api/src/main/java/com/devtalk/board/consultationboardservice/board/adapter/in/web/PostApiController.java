@@ -12,6 +12,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 import static com.devtalk.board.consultationboardservice.board.adapter.in.web.dto.PostInput.*;
 
@@ -26,7 +29,16 @@ public class PostApiController {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
     })
     @PostMapping
-    public ResponseEntity<?> post(@RequestParam Long userId, @RequestBody PostCreationInput postCreationInput) {
+    public ResponseEntity<?> post(@RequestParam Long userId,
+                                  @RequestParam String title,
+                                  @RequestParam String content,
+                                  @RequestPart(value = "files", required = false) List<MultipartFile> files) {
+        PostCreationInput postCreationInput = PostCreationInput.builder()
+                .title(title)
+                .content(content)
+                .attachedFileList(files)
+                .build();
+
         postUseCase.writePost(postCreationInput.toReq(userId));
         return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.CREATE_POST_SUCCESS);
     }

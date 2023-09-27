@@ -29,22 +29,17 @@ public class Post extends BaseEntity {
     @Column(nullable = false, length = 1000)
     private String content;
 
-    @Builder.Default
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<AttachedFile> attachedFileList = new ArrayList<>();
-
     @Column(nullable = false)
     private Long userId;
 
     @Column(nullable = false)
     private Integer views;
 
-    public static Post createPost(String title, String content, Long userId, List<AttachedFile> attachedFileList) {
+    public static Post createPost(String title, String content, Long userId) {
         return Post.builder()
                 .title(title)
                 .content(content)
                 .userId(userId)
-                .attachedFileList(attachedFileList)
                 .views(0)
                 .build();
     }

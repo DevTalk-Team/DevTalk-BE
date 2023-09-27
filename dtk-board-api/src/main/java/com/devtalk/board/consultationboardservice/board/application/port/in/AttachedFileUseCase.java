@@ -8,7 +8,12 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface AttachedFileUseCase {
+
+    List<BaseFile> uploadPostFileList(List<MultipartFile> multipartFiles);
     List<BaseFile> uploadFileList(List<MultipartFile> multipartFiles, String path);
 
     BaseFile uploadFile(MultipartFile multipartFile, String path);
+
+    void deletePostFileList(Long postId);
+    void deleteFile(String storedFileName, String path);
 }
