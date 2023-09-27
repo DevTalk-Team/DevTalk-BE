@@ -24,10 +24,10 @@ public class CommentService implements CommentUseCase {
     private final PostQueryableRepo postQueryableRepo;
 
     @Override
+    @Transactional
     public void createComment(Long postId, CommentInput commentInput) {
         Post post = postQueryableRepo.findPostByPostId(postId)
                 .orElseThrow(()->new NotFoundException(ErrorCode.NOT_FOUND_POST));
-
         Comment comment = Comment.builder()
                 .postId(post)
                 .userId(commentInput.getUserId())
@@ -35,13 +35,13 @@ public class CommentService implements CommentUseCase {
                 .build();
 
         commentRepo.save(comment);
+        post.increaseCommentCount();
     }
 
     @Override
     public CommentRes getComment(Long commentId) {
         Comment comment = commentQueryableRepo.findByCommentId(commentId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_COMMENT));
-
         return CommentRes.of(comment);
     }
 
@@ -66,6 +66,13 @@ public class CommentService implements CommentUseCase {
     public void deleteComment(Long commentId) {
         Comment comment = commentQueryableRepo.findByCommentId(commentId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_COMMENT));
+        comment.getPostId().decreaseCommentCount();
         commentRepo.delete(comment);
+    }
+
+    @Override
+    public void deleteAllByPostId(Long postId) {
+        List<Comment> comments = commentQueryableRepo.findCommentsByPostId(postId);
+        commentRepo.deleteAll(comments);
     }
 }

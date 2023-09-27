@@ -13,6 +13,7 @@ public interface CommentUseCase {
 
     void deleteComment(Long commentId);
 
+    void deleteAllByPostId(Long postId);
     CommentRes getComment(Long commentId);
 
     List<CommentRes> getCommentsFromPost(Long postId);
