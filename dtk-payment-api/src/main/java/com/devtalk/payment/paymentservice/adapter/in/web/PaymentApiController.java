@@ -19,7 +19,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,7 +45,6 @@ class PaymentApiController {
     private final RefundUseCase refundUseCase;
     private final ModelMapper modelMapper;
     private final Environment env;
-
 
     @GetMapping("/health_check")
     public String status() {
@@ -127,6 +125,9 @@ class PaymentApiController {
     })
     @PostMapping("/test")
     public ResponseEntity<?> insertPaymentInfo(@RequestBody ConsultationInput consultationInput) {
+//        String userEmail= request.getHeader("User-Email");
+//        String userEmail = memberDetails.getUsername();
+//        log.info("User-Email : {}", userEmail);
         paymentUseCase.createPaymentInfo(consultationInput);
         return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.CREATE_TEMP_PAYMENT_INFO_SUCCESS);
     }

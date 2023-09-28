@@ -1,4 +1,4 @@
-package com.devtalk.member.memberservice.member.application.port.in.dto;
+package com.devtalk.member.memberservice.member.application.port.out.dto;
 
 import com.devtalk.member.memberservice.member.domain.consultation.ConsultantInfo;
 import lombok.*;
@@ -16,10 +16,8 @@ public class ConsultantRes {
         private String career;
         private String field;
         private String skill;
-        private Integer call15m;
-        private Integer call30m;
-        private Integer video30m;
         private Integer f2f1h;
+        private Integer nf2f1h;
 
         public static InfoRes of(ConsultantInfo info) {
             return InfoRes.builder()
@@ -29,10 +27,8 @@ public class ConsultantRes {
                     .career(info.getCareer())
                     .field(info.getField())
                     .skill(info.getSkill())
-                    .call15m(info.getCall15m())
-                    .call30m(info.getCall30m())
-                    .video30m(info.getVideo30m())
                     .f2f1h(info.getF2f1h())
+                    .nf2f1h(info.getNf2f1h())
                     .build();
         }
 
@@ -44,10 +40,8 @@ public class ConsultantRes {
                     .career(career)
                     .field(field)
                     .skill(skill)
-                    .call15m(call15m)
-                    .call30m(call30m)
-                    .video30m(video30m)
                     .f2f1h(f2f1h)
+                    .nf2f1h(nf2f1h)
                     .build();
         }
     }

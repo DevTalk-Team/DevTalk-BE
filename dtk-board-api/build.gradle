@@ -57,6 +57,12 @@ dependencies {
     testImplementation 'org.mockito:mockito-junit-jupiter:5.2.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
 
+    // aws s3
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+    // File 관련
+    implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
+
     // ⭐ Spring boot 3.x이상에서 QueryDsl 패키지를 정의하는 방법
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
     annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"

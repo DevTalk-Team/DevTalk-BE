@@ -5,7 +5,7 @@ import com.devtalk.member.memberservice.global.error.exception.MemberNotFoundExc
 import com.devtalk.member.memberservice.global.jwt.JwtTokenProvider;
 import com.devtalk.member.memberservice.member.adapter.in.web.dto.ConsultantInput;
 import com.devtalk.member.memberservice.member.application.port.in.ConsultantInfoUseCase;
-import com.devtalk.member.memberservice.member.application.port.in.dto.ConsultantRes;
+import com.devtalk.member.memberservice.member.application.port.out.dto.ConsultantRes;
 import com.devtalk.member.memberservice.member.application.port.out.repository.*;
 import com.devtalk.member.memberservice.member.domain.category.Category;
 import com.devtalk.member.memberservice.member.domain.category.MemberCategory;

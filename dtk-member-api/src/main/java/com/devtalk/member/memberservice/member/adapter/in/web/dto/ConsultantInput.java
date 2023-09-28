@@ -17,10 +17,8 @@ public class ConsultantInput {
         private String career;
         private String field;
         private String skill;
-        private Integer call15m;
-        private Integer call30m;
-        private Integer video30m;
         private Integer f2f1h;
+        private Integer nf2f1h;
 
         public ConsultantReq.InfoReq toReq() {
             return ConsultantReq.InfoReq.builder()
@@ -30,10 +28,8 @@ public class ConsultantInput {
                     .career(career)
                     .field(field)
                     .skill(skill)
-                    .call15m(call15m)
-                    .call30m(call30m)
-                    .video30m(video30m)
                     .f2f1h(f2f1h)
+                    .nf2f1h(nf2f1h)
                     .build();
         }
 

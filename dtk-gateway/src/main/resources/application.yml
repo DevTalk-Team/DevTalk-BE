@@ -20,7 +20,7 @@ spring:
         - id: member-service
           uri: lb://MEMBER-SERVICE
           predicates:
-            - Path=/member/signup/**, /member/login
+            - Path=/member/signup/**, /member/login, /member/profile/**
           filters:
             - RemoveRequestHeader=Cookie
 #            - RewritePath=/member/(?<segment>,*),/$\{segment}
@@ -67,18 +67,29 @@ spring:
           predicates:
             - Path=/payment/**
           filters:
+            - RemoveRequestHeader=Cookie
+#            - AuthorizationHeaderFilter
         - id: product-service
           uri: lb://PRODUCT-SERVICE
           predicates:
             - Path=/product/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - AuthorizationHeaderFilter
         - id: matching-service
           uri: lb://MATCHING-SERVICE
           predicates:
             - Path=/matching/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - AuthorizationHeaderFilter
         - id: board-service
           uri: lb://BOARD-SERVICE
           predicates:
             - Path=/board/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - AuthorizationHeaderFilter
 
 jwt:
   token:

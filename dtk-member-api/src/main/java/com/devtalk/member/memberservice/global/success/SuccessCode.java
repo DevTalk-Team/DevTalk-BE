@@ -33,7 +33,8 @@ public enum SuccessCode {
     CONSULTANT_INFO_REGION_SUCCESS(OK, "0126", "전문가 소개 - 상담 가능 지역 조회 성공"),
     CONSULTANT_INFO_REGION_UPDATE_SUCCESS(OK, "0127", "전문가 소개 - 상담 가능 지역 수정 성공"),
     /* 마이페이지 */
-    MYPAGE_SUCCESS(OK, "0128", "마이페이지 - 조회 성공")
+    MYPAGE_PASSWORD_SUCCESS(OK, "0128", "마이페이지 - 비밀번호 확인 성공"),
+    MYPAGE_SUCCESS(OK, "0129", "마이페이지 - 조회 성공")
     ;
 
 
