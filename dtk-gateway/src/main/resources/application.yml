@@ -68,7 +68,7 @@ spring:
             - Path=/payment/**
           filters:
             - RemoveRequestHeader=Cookie
-            - AuthorizationHeaderFilter
+#            - AuthorizationHeaderFilter
         - id: product-service
           uri: lb://PRODUCT-SERVICE
           predicates:

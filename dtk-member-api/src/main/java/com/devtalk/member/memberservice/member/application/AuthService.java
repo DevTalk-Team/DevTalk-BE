@@ -1,15 +1,12 @@
 package com.devtalk.member.memberservice.member.application;
 
-import com.devtalk.member.memberservice.global.error.exception.MemberNotFoundException;
-import com.devtalk.member.memberservice.global.error.exception.PasswordMismatchingException;
 import com.devtalk.member.memberservice.global.jwt.JwtTokenProvider;
 import com.devtalk.member.memberservice.global.jwt.MemberDetails;
 import com.devtalk.member.memberservice.global.util.RedisUtil;
 import com.devtalk.member.memberservice.member.application.port.in.AuthUseCase;
 import com.devtalk.member.memberservice.member.application.port.in.dto.AuthReq;
-import com.devtalk.member.memberservice.member.application.port.in.dto.AuthRes;
+import com.devtalk.member.memberservice.member.application.port.out.dto.AuthRes;
 import com.devtalk.member.memberservice.member.application.port.out.repository.MemberRepo;
-import com.devtalk.member.memberservice.member.domain.member.Member;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,9 +16,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import static com.devtalk.member.memberservice.global.error.ErrorCode.MEMBER_NOT_FOUND;
-import static com.devtalk.member.memberservice.global.error.ErrorCode.WRONG_PASSWORD;
 
 @Slf4j
 @Service

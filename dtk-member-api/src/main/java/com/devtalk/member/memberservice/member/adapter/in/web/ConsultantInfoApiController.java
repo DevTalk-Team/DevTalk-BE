@@ -7,7 +7,7 @@ import com.devtalk.member.memberservice.global.success.SuccessResponseNoResult;
 import com.devtalk.member.memberservice.member.adapter.in.web.dto.ConsultantInput;
 import com.devtalk.member.memberservice.member.adapter.out.producer.KafkaProducer;
 import com.devtalk.member.memberservice.member.application.port.in.ConsultantInfoUseCase;
-import com.devtalk.member.memberservice.member.application.port.in.dto.ConsultantRes;
+import com.devtalk.member.memberservice.member.application.port.out.dto.ConsultantRes;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ public class ConsultantInfoApiController {
     private final ConsultantInfoUseCase consultantInfoUseCase;
     private final JwtTokenProvider jwtTokenProvider;
     private final KafkaProducer kafkaProducer;
-
+    // TODO @AuthenticationPrincipal MemberDetails memberDetails 리팩토링
     @GetMapping("/info")
     public ResponseEntity<?> getInfo(@AuthenticationPrincipal MemberDetails memberDetails) {
         String email = memberDetails.getUsername();

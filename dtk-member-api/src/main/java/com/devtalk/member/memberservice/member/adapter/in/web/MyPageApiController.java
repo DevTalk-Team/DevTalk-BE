@@ -5,7 +5,7 @@ import com.devtalk.member.memberservice.global.success.SuccessCode;
 import com.devtalk.member.memberservice.global.success.SuccessResponse;
 import com.devtalk.member.memberservice.global.success.SuccessResponseNoResult;
 import com.devtalk.member.memberservice.member.application.port.in.MyPageUseCase;
-import com.devtalk.member.memberservice.member.application.port.in.dto.MyPageRes;
+import com.devtalk.member.memberservice.member.application.port.out.dto.MyPageRes;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +20,8 @@ public class MyPageApiController {
     private final MyPageUseCase myPageUseCase;
 
     @PostMapping("/mypage")
-    public ResponseEntity<?> checkPassword(
-            @AuthenticationPrincipal MemberDetails memberDetails, @RequestParam String checkPassword) {
+    public ResponseEntity<?> checkPassword(@RequestParam String checkPassword,
+                                           @AuthenticationPrincipal MemberDetails memberDetails) {
         myPageUseCase.checkPassword(memberDetails.getUsername(), memberDetails.getPassword(), checkPassword);
         return SuccessResponseNoResult.toResponseEntity(SuccessCode.MYPAGE_PASSWORD_SUCCESS);
     }
@@ -32,7 +32,7 @@ public class MyPageApiController {
         return SuccessResponse.toResponseEntity(SuccessCode.MYPAGE_SUCCESS, res);
     }
 
-    @PatchMapping("/mypage")
+    @PutMapping("/mypage")
     public ResponseEntity<?> editProfile(@AuthenticationPrincipal MemberDetails memberDetails) {
 
         return SuccessResponse.toResponseEntity(SuccessCode.MYPAGE_SUCCESS, "");
