@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @FeignClient(name = "member-service")
 public interface MemberServiceClient {
-    @RequestMapping("/member/consultant/{consultantId}/info")
-    MemberReq.ConsultantPriceReq getPrice(@PathVariable Long consultantId);
+    @RequestMapping("/member/consultant/{memberId}/info")
+    MemberReq.ConsultantPriceReq getPrice(@PathVariable Long memberId);
 }

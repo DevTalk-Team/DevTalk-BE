@@ -16,6 +16,7 @@ public class MemberRes {
     public static class ConsultantRes {
         private Long consultantId;
         private String name;
+        private MemberType memberType;
     }
 
     @Builder
@@ -24,5 +25,6 @@ public class MemberRes {
     public static class ConsulterRes {
         private Long consulterId;
         private String name;
+        private MemberType memberType;
     }
 }

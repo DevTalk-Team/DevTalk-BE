@@ -14,6 +14,7 @@ import com.devtalk.consultation.consultationservice.consultation.domain.consulta
 import com.devtalk.consultation.consultationservice.consultation.domain.consultation.Consultation;
 import com.devtalk.consultation.consultationservice.consultation.domain.member.Consultant;
 import com.devtalk.consultation.consultationservice.consultation.domain.member.Consulter;
+import com.devtalk.consultation.consultationservice.consultation.domain.member.MemberType;
 import com.devtalk.consultation.consultationservice.global.error.execption.NotFoundException;
 import com.devtalk.consultation.consultationservice.global.util.FileUploadService;
 import com.devtalk.consultation.consultationservice.global.vo.BaseFile;
@@ -45,15 +46,18 @@ public class ReserveConsultationService implements ReserveConsultationUseCase {
         consultationValidator.validateReservation(reservationReq); //파일 정책 체크 + 회원 존재여부 체크 + 상품 매칭 가능여부 체크 + 매칭 중복 체크
         if (!memberQueryableRepo.existsByConsultantId(reservationReq.getConsultantId())){
             MemberRes.ConsultantRes consultantInfo = memberServiceClient.getConsultantInfo(reservationReq.getConsultantId());
-            Consultant newConsultant =  Consultant.createConsultant(consultantInfo.getConsultantId(), consultantInfo.getName() );
-            memberRepo.save(newConsultant);
+            if(consultantInfo.getMemberType() == MemberType.CONSULTANT) {
+                Consultant newConsultant = Consultant.createConsultant(consultantInfo.getConsultantId(), consultantInfo.getName());
+                memberRepo.save(newConsultant);
+            }
 
         }
         if (!memberQueryableRepo.existsByConsulterId(reservationReq.getConsulterId())){
             MemberRes.ConsulterRes consulterInfo = memberServiceClient.getConsulterInfo(reservationReq.getConsultantId());
-
-            Consulter newConsulter = Consulter.createConsulter(consulterInfo.getConsulterId(), consulterInfo.getName() );
-            memberRepo.save(newConsulter);
+            if(consulterInfo.getMemberType() == MemberType.CONSULTER) {
+                Consulter newConsulter = Consulter.createConsulter(consulterInfo.getConsulterId(), consulterInfo.getName());
+                memberRepo.save(newConsulter);
+            }
         }
 
         List<AttachedFile> attachedFileList = uploadAttachedFileList(reservationReq.getAttachedFileList());
