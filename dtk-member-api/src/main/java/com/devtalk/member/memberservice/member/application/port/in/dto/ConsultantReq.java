@@ -16,10 +16,8 @@ public class ConsultantReq {
         private String career;
         private String field;
         private String skill;
-        private Integer call15m;
-        private Integer call30m;
-        private Integer video30m;
         private Integer f2f1h;
+        private Integer nf2f1h;
     }
 
     @Builder

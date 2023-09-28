@@ -1,4 +1,4 @@
-package com.devtalk.member.memberservice.member.application.port.in.dto;
+package com.devtalk.member.memberservice.member.application.port.out.dto;
 
 import com.devtalk.member.memberservice.member.domain.member.Member;
 import lombok.Builder;

@@ -13,14 +13,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,7 +45,6 @@ class PaymentApiController {
     private final RefundUseCase refundUseCase;
     private final ModelMapper modelMapper;
     private final Environment env;
-
 
     @GetMapping("/health_check")
     public String status() {
@@ -127,10 +124,10 @@ class PaymentApiController {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
     })
     @PostMapping("/test")
-    public ResponseEntity<?> insertPaymentInfo(@RequestBody ConsultationInput consultationInput,
-                                               HttpServletRequest request) {
-        String userEmail= request.getHeader("User-Email");
-        log.info("User-Email : {}", userEmail);
+    public ResponseEntity<?> insertPaymentInfo(@RequestBody ConsultationInput consultationInput) {
+//        String userEmail= request.getHeader("User-Email");
+//        String userEmail = memberDetails.getUsername();
+//        log.info("User-Email : {}", userEmail);
         paymentUseCase.createPaymentInfo(consultationInput);
         return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.CREATE_TEMP_PAYMENT_INFO_SUCCESS);
     }

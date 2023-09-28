@@ -1,9 +1,7 @@
 package com.devtalk.member.memberservice.member.domain.consultation;
 
 import com.devtalk.member.memberservice.member.application.port.in.dto.ConsultantReq;
-import com.devtalk.member.memberservice.member.application.port.in.dto.ConsultantRes;
 import com.devtalk.member.memberservice.member.domain.member.Member;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,10 +30,8 @@ public class ConsultantInfo {
     private String career;
     private String field;
     private String skill;
-    private Integer call15m;
-    private Integer call30m;
-    private Integer video30m;
     private Integer f2f1h;
+    private Integer nf2f1h;
 
     public static ConsultantInfo setMember(Member member) {
         ConsultantInfo consultantInfo = new ConsultantInfo();
@@ -50,10 +46,8 @@ public class ConsultantInfo {
         this.career = req.getCareer();
         this.field = req.getField();
         this.skill = req.getSkill();
-        this.call15m = req.getCall15m();
-        this.call30m = req.getCall30m();
-        this.video30m = req.getVideo30m();
         this.f2f1h = req.getF2f1h();
+        this.nf2f1h = req.getNf2f1h();
         return this;
     }
 }

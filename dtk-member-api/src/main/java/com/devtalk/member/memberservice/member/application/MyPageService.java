@@ -4,7 +4,7 @@ import com.devtalk.member.memberservice.global.error.ErrorCode;
 import com.devtalk.member.memberservice.global.error.exception.MemberNotFoundException;
 import com.devtalk.member.memberservice.global.error.exception.PasswordMismatchingException;
 import com.devtalk.member.memberservice.member.application.port.in.MyPageUseCase;
-import com.devtalk.member.memberservice.member.application.port.in.dto.MyPageRes;
+import com.devtalk.member.memberservice.member.application.port.out.dto.MyPageRes;
 import com.devtalk.member.memberservice.member.application.port.out.repository.MemberCategoryRepo;
 import com.devtalk.member.memberservice.member.application.port.out.repository.MemberRepo;
 import com.devtalk.member.memberservice.member.domain.category.MemberCategory;
