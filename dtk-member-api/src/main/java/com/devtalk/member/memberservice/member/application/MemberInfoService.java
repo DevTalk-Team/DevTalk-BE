@@ -18,7 +18,7 @@ public class MemberInfoService implements MemberInfoUseCase {
     private final ConsultantInfoRepo consultantInfoRepo;
 
     @Override
-    public MemberRes.ConsultantRes findConsultant(Long consultant) {
+    public MemberRes.ConsultantRes findConsultantById(Long consultant) {
         Member member = memberRepo.findById(consultant)
                 .orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
         ConsultantInfo info = consultantInfoRepo.findByMember(member);
@@ -26,9 +26,16 @@ public class MemberInfoService implements MemberInfoUseCase {
     }
 
     @Override
-    public MemberRes.ConsulterRes findConsulter(Long consulter) {
+    public MemberRes.ConsulterRes findConsulterById(Long consulter) {
         Member member = memberRepo.findById(consulter)
                 .orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
         return MemberRes.ConsulterRes.of(member);
+    }
+
+    @Override
+    public MemberRes.ProfileRes findMemberByEmail(String email) {
+        Member member = memberRepo.findByEmail(email)
+                .orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+        return MemberRes.ProfileRes.of(member);
     }
 }
