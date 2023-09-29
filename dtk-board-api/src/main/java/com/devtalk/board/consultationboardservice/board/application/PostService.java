@@ -3,7 +3,9 @@ package com.devtalk.board.consultationboardservice.board.application;
 import com.devtalk.board.consultationboardservice.board.application.port.in.CommentUseCase;
 import com.devtalk.board.consultationboardservice.board.application.port.in.PostUseCase;
 import com.devtalk.board.consultationboardservice.board.application.port.in.AttachedFileUseCase;
+import com.devtalk.board.consultationboardservice.board.application.port.in.dto.MemberRes;
 import com.devtalk.board.consultationboardservice.board.application.port.in.dto.PostRes;
+import com.devtalk.board.consultationboardservice.board.application.port.out.client.MemberServiceClient;
 import com.devtalk.board.consultationboardservice.board.application.port.out.repository.AttachedFileQueruableRepo;
 import com.devtalk.board.consultationboardservice.board.application.port.out.repository.AttachedFileRepo;
 import com.devtalk.board.consultationboardservice.board.application.port.out.repository.PostQueryableRepo;
@@ -16,6 +18,7 @@ import com.devtalk.board.consultationboardservice.global.error.ErrorCode;
 import com.devtalk.board.consultationboardservice.global.error.exception.NotFoundException;
 import com.devtalk.board.consultationboardservice.global.vo.BaseFile;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,6 +33,7 @@ import static com.devtalk.board.consultationboardservice.board.application.port.
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PostService implements PostUseCase {
     private final PostQueryableRepo postQueryableRepo;
     private final PostRepo postRepo;
@@ -37,12 +41,16 @@ public class PostService implements PostUseCase {
     private final AttachedFileUseCase attachedFileUseCase;
     private final CommentUseCase commentUseCase;
     private final BoardValidator boardValidator;
+    private final MemberServiceClient memberServiceClient;
 
     @Override
     @Transactional
     // TODO : 제목, 내용, 작성자에 대한 validation 필요
     public void writePost(PostCreationReq postCreationReq) {
         boardValidator.validatePost(postCreationReq);
+        //
+        MemberRes memberRes = memberServiceClient.findMember(postCreationReq.getUserId());
+        log.info(memberRes.toString());
 
         Post newPost = postCreationReq.toEntity(); // 초기 빈 리스트와 함께 Post 생성
         newPost = postRepo.save(newPost);

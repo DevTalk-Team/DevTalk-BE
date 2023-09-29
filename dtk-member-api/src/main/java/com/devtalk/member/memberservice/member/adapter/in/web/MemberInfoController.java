@@ -24,3 +24,4 @@ public class MemberInfoController {
         return memberInfoUseCase.findConsulter(consulter);
     }
 }
+
