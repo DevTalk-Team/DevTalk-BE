@@ -20,7 +20,7 @@ spring:
         - id: member-service
           uri: lb://MEMBER-SERVICE
           predicates:
-            - Path=/member/signup/**, /member/login, /member/profile/** , /member/consultantInfo, /member/consulterInfo
+            - Path=/member/signup/**, /member/login, /member/profile/consultant, /member/profile/consulter
           filters:
             - RemoveRequestHeader=Cookie
 #            - RewritePath=/member/(?<segment>,*),/$\{segment}
