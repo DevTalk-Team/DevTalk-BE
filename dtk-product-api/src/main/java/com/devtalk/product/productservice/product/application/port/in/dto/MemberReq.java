@@ -10,7 +10,7 @@ public class MemberReq {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @Getter
     public static class ConsultantPriceReq {
-        private Long consultantId;
+        private Long memberId;
         private Integer NF2F_Cost;
         private Integer F2F_Cost;
     }

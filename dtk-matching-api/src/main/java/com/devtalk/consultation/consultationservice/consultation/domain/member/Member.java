@@ -17,9 +17,6 @@ public class Member extends BaseTime {
     @Column(nullable = false, unique = true)
     private Long id;
 
-    @Column(nullable = false, length = 20, unique = true)
-    private String loginId;
-
     @Column(nullable = false, length = 20)
     private String name;
 

@@ -82,10 +82,10 @@ class ProductApiController {
             @ApiResponse(responseCode = "401", description = "상품 등록 실패",
                     content = @Content(mediaType = "application/json"))
     })
-    @PostMapping("/consultants/{consultantId}/register")
+    @PostMapping("/consultants/{memberId}/register")
     public ResponseEntity<?> registProduct(@RequestBody @Validated ProductInput.RegistrationInput registrationInput,
-                                           @PathVariable Long consultantId) {
-        registUseCase.registProduct(registrationInput.toReq(consultantId));
+                                           @PathVariable Long memberId) {
+        registUseCase.registProduct(registrationInput.toReq(memberId));
         return ResponseEntity.ok().build();
     }
 
@@ -97,9 +97,9 @@ class ProductApiController {
             @ApiResponse(responseCode = "401", description = "예약 가능 상품 조회 실패",
                     content = @Content(mediaType = "application/json"))
     })
-    @GetMapping("/search/consultants/{consultantId}")
-    public ResponseEntity<ProductOutput> searchProductList(@PathVariable Long consultantId) {
-        List<ProductRes.ConsultantProductListRes> consultantProductListRes = searchUseCase.searchList(consultantId);
+    @GetMapping("/search/consultants/{memberId}")
+    public ResponseEntity<ProductOutput> searchProductList(@PathVariable Long memberId) {
+        List<ProductRes.ConsultantProductListRes> consultantProductListRes = searchUseCase.searchList(memberId);
         ProductOutput productOutput
                 = new ProductOutput("0502", "조회 성공", consultantProductListRes);
         return ResponseEntity.status(HttpStatus.OK).body(productOutput);
