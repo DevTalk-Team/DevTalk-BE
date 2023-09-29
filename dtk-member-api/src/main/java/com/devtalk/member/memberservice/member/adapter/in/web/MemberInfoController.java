@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping
 @RequiredArgsConstructor
@@ -16,11 +18,16 @@ public class MemberInfoController {
 
     @GetMapping("/member/profile/consultant/{consultant}/info")
     MemberRes.ConsultantRes getConsultantInfo(@PathVariable Long consultant) {
-        return memberInfoUseCase.findConsultant(consultant);
+        return memberInfoUseCase.findConsultantById(consultant);
     }
 
     @GetMapping("/member/profile/consulter/{consulter}/info")
     MemberRes.ConsulterRes getConsulterInfo(@PathVariable Long consulter) {
-        return memberInfoUseCase.findConsulter(consulter);
+        return memberInfoUseCase.findConsulterById(consulter);
+    }
+
+    @GetMapping("/member/profile/email/{email}")
+    MemberRes.ProfileRes getMemberByEmail(@PathVariable String email) {
+        return memberInfoUseCase.findMemberByEmail(email);
     }
 }

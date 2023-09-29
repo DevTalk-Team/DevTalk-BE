@@ -2,6 +2,8 @@ package com.devtalk.member.memberservice.member.application.port.out.dto;
 
 import com.devtalk.member.memberservice.member.domain.member.Member;
 import com.devtalk.member.memberservice.member.domain.member.MemberType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,6 +45,29 @@ public class MemberRes {
                     .consulterId(member.getId())
                     .name(member.getName())
                     .memberType(member.getMemberType())
+                    .build();
+        }
+    }
+
+    @Builder
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @Getter
+    public static class ProfileRes {
+        private Long id;
+        private MemberType memberType;
+        private String name;
+        private String email;
+        private String password;
+        private String phoneNumber;
+
+        public static ProfileRes of(Member member) {
+            return ProfileRes.builder()
+                    .id(member.getId())
+                    .memberType(member.getMemberType())
+                    .name(member.getName())
+                    .email(member.getEmail())
+                    .password(member.getPassword())
+                    .phoneNumber(member.getPhoneNumber())
                     .build();
         }
     }
