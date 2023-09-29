@@ -9,4 +9,5 @@ public interface CommentQueryableRepo {
     Optional<Comment> findByCommentId(Long commentId);
 
     List<Comment> findCommentsByPostId(Long postId);
+
 }

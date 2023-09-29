@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.devtalk.board.consultationboardservice.board.application.port.in.AttachedFileUseCase;
+import com.devtalk.board.consultationboardservice.board.application.port.in.dto.AttachedFileRes;
 import com.devtalk.board.consultationboardservice.board.application.port.out.repository.AttachedFileQueruableRepo;
 import com.devtalk.board.consultationboardservice.board.application.port.out.repository.AttachedFileRepo;
 import com.devtalk.board.consultationboardservice.board.domain.attachedfile.AttachedFile;
@@ -38,6 +39,16 @@ public class AttachedFileService implements AttachedFileUseCase {
 
     @Value("${spring.application.name}")
     private String appName;
+
+    @Override
+    public List<AttachedFileRes> getPostFileList(Long postId) {
+        List<AttachedFile> attachedFileList = attachedFileQueruableRepo.findByPostId(postId);
+        List<AttachedFileRes> attachedFileResList = new ArrayList<>();
+        attachedFileList.forEach(attachedFile -> {
+            attachedFileResList.add(AttachedFileRes.of(attachedFile));
+        });
+        return attachedFileResList;
+    }
 
     @Override
     public List<BaseFile> uploadPostFileList(List<MultipartFile> multipartFiles) {

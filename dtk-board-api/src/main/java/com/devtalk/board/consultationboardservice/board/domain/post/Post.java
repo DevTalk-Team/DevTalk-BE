@@ -35,17 +35,29 @@ public class Post extends BaseEntity {
     @Column(nullable = false)
     private Integer views;
 
+    @Column(nullable = false)
+    private Integer commentCount;
+
     public static Post createPost(String title, String content, Long userId) {
         return Post.builder()
                 .title(title)
                 .content(content)
                 .userId(userId)
                 .views(0)
+                .commentCount(0)
                 .build();
     }
 
     public void increaseViews() {
-        this.views += 1;
+        this.views++;
+    }
+
+    public void increaseCommentCount() {
+        this.commentCount++;
+    }
+
+    public void decreaseCommentCount(){
+        this.commentCount--;
     }
 
     public void modify(String title, String content) {

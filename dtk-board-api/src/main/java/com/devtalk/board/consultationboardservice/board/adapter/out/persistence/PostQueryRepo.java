@@ -34,12 +34,14 @@ public class PostQueryRepo implements PostQueryableRepo {
     public List<Post> findPostsByUserId(Long userId) {
         return queryFactory.selectFrom(post)
                 .where(post.userId.eq(userId))
+                .orderBy(post.createdAt.desc())
                 .fetch();
     }
 
     @Override
     public List<Post> findAllPosts() {
         return queryFactory.selectFrom(post)
+                .orderBy(post.createdAt.desc())
                 .fetch();
     }
 
@@ -47,6 +49,7 @@ public class PostQueryRepo implements PostQueryableRepo {
     public List<Post> findPostsWithSearchOption(PostSearchInput postInput) {
         return queryFactory.selectFrom(post)
                 .where(allSearchOption(postInput))
+                .orderBy(post.createdAt.desc())
                 .fetch();
     }
 

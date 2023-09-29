@@ -5,27 +5,63 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-@Builder
-@Getter
 public class PostRes {
-    private Long postId;
-    private String title;
-    private String content;
-    private Long userId;
-    private Integer views;
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
+    @Builder
+    @Getter
+    public static class PostViewRes{
+        private Long postId;
+        private String title;
+        private String content;
+        private List<AttachedFileRes> attachedFileResList;
+        private List<CommentRes> commentResList;
+        private Long userId;
+        private Integer views;
+        private Integer commentCount;
+        private LocalDateTime createdAt;
+        private LocalDateTime modifiedAt;
 
-    public static PostRes of(Post post) {
-        return PostRes.builder()
-                .postId(post.getId())
-                .title(post.getTitle())
-                .content(post.getContent())
-                .userId(post.getUserId())
-                .views(post.getViews())
-                .createdAt(post.getCreatedAt())
-                .modifiedAt(post.getModifiedAt())
-                .build();
+        public static PostViewRes of(Post post, List<AttachedFileRes> attachedFileRes,
+                                     List<CommentRes> commentResList) {
+            return PostViewRes.builder()
+                    .postId(post.getId())
+                    .title(post.getTitle())
+                    .content(post.getContent())
+                    .attachedFileResList(attachedFileRes)
+                    .commentResList(commentResList)
+                    .userId(post.getUserId())
+                    .views(post.getViews())
+                    .commentCount(post.getCommentCount())
+                    .createdAt(post.getCreatedAt())
+                    .modifiedAt(post.getModifiedAt())
+                    .build();
+        }
+    }
+
+    @Builder
+    @Getter
+    public static class PostSearchRes {
+        private Long postId;
+        private String title;
+        private String content;
+        private Long userId;
+        private Integer views;
+        private Integer commentCount;
+        private LocalDateTime createdAt;
+        private LocalDateTime modifiedAt;
+
+        public static PostSearchRes of(Post post) {
+            return PostSearchRes.builder()
+                    .postId(post.getId())
+                    .title(post.getTitle())
+                    .content(post.getContent())
+                    .userId(post.getUserId())
+                    .views(post.getViews())
+                    .commentCount(post.getCommentCount())
+                    .createdAt(post.getCreatedAt())
+                    .modifiedAt(post.getModifiedAt())
+                    .build();
+        }
     }
 }

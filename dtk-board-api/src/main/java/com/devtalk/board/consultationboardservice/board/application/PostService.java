@@ -1,5 +1,6 @@
 package com.devtalk.board.consultationboardservice.board.application;
 
+import com.devtalk.board.consultationboardservice.board.application.port.in.CommentUseCase;
 import com.devtalk.board.consultationboardservice.board.application.port.in.PostUseCase;
 import com.devtalk.board.consultationboardservice.board.application.port.in.AttachedFileUseCase;
 import com.devtalk.board.consultationboardservice.board.application.port.in.dto.PostRes;
@@ -9,6 +10,7 @@ import com.devtalk.board.consultationboardservice.board.application.port.out.rep
 import com.devtalk.board.consultationboardservice.board.application.port.out.repository.PostRepo;
 import com.devtalk.board.consultationboardservice.board.application.validator.BoardValidator;
 import com.devtalk.board.consultationboardservice.board.domain.attachedfile.AttachedFile;
+import com.devtalk.board.consultationboardservice.board.domain.comment.Comment;
 import com.devtalk.board.consultationboardservice.board.domain.post.Post;
 import com.devtalk.board.consultationboardservice.global.error.ErrorCode;
 import com.devtalk.board.consultationboardservice.global.error.exception.NotFoundException;
@@ -23,6 +25,7 @@ import java.util.List;
 
 import static com.devtalk.board.consultationboardservice.board.adapter.in.web.dto.PostInput.*;
 import static com.devtalk.board.consultationboardservice.board.application.port.in.dto.PostReq.*;
+import static com.devtalk.board.consultationboardservice.board.application.port.in.dto.PostRes.*;
 
 
 @Service
@@ -32,6 +35,7 @@ public class PostService implements PostUseCase {
     private final PostRepo postRepo;
     private final AttachedFileRepo attachedFileRepo;
     private final AttachedFileUseCase attachedFileUseCase;
+    private final CommentUseCase commentUseCase;
     private final BoardValidator boardValidator;
 
     @Override
@@ -64,23 +68,24 @@ public class PostService implements PostUseCase {
 
     @Override
     @Transactional
-    public PostRes viewPost(Long postId) {
+    public PostViewRes viewPost(Long postId) {
         Post post = postQueryableRepo.findPostByPostId(postId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_POST));
         post.increaseViews();
-        return PostRes.of(post);
+        return PostViewRes.of(post, attachedFileUseCase.getPostFileList(postId),
+                commentUseCase.getCommentsFromPost(postId));
     }
 
     @Override
-    public List<PostRes> getPostsByUserId(Long userId) {
+    public List<PostSearchRes> getPostsByUserId(Long userId) {
         List<Post> posts = postQueryableRepo.findPostsByUserId(userId);
-        return posts.stream().map(post -> PostRes.of(post)).toList();
+        return posts.stream().map(PostSearchRes::of).toList();
     }
 
     @Override
-    public List<PostRes> getAllPosts() {
+    public List<PostSearchRes> getAllPosts() {
         List<Post> posts = postQueryableRepo.findAllPosts();
-        return posts.stream().map(post -> PostRes.of(post)).toList();
+        return posts.stream().map(PostSearchRes::of).toList();
     }
 
     @Override
@@ -97,12 +102,13 @@ public class PostService implements PostUseCase {
         Post post = postQueryableRepo.findPostByPostId(postId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_POST));
         attachedFileUseCase.deletePostFileList(postId);
+        commentUseCase.deleteAllByPostId(postId);
         postRepo.delete(post);
     }
 
     @Override
-    public List<PostRes> searchPosts(PostSearchInput postSearchInput) {
+    public List<PostSearchRes> searchPosts(PostSearchInput postSearchInput) {
         List<Post> posts = postQueryableRepo.findPostsWithSearchOption(postSearchInput);
-        return posts.stream().map(post -> PostRes.of(post)).toList();
+        return posts.stream().map(PostSearchRes::of).toList();
     }
 }
