@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(name = "member-service") // Discovery Server에 등록된 서비스 이름
 
 public interface MemberServiceClient {
-    @GetMapping("/member/{consultant}/info")
+    @GetMapping("/member/profile/{consultant}")
     MemberRes.ConsultantRes getConsultantInfo(@PathVariable Long member_id);
 
-    @GetMapping("/member/{consulter}/info")
+    @GetMapping("/member/profile/{consulter}")
     MemberRes.ConsulterRes getConsulterInfo(@PathVariable Long member_id);
 }

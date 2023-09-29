@@ -16,12 +16,12 @@ import java.util.Optional;
 public class MemberInfoController {
     private final MemberInfoUseCase memberInfoUseCase;
 
-    @GetMapping("/member/profile/consultant/{consultant}/info")
+    @GetMapping("/member/profile/consultant/{consultant}")
     MemberRes.ConsultantRes getConsultantInfo(@PathVariable Long consultant) {
         return memberInfoUseCase.findConsultantById(consultant);
     }
 
-    @GetMapping("/member/profile/consulter/{consulter}/info")
+    @GetMapping("/member/profile/consulter/{consulter}")
     MemberRes.ConsulterRes getConsulterInfo(@PathVariable Long consulter) {
         return memberInfoUseCase.findConsulterById(consulter);
     }
