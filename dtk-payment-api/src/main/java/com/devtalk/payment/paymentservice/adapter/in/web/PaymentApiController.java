@@ -47,7 +47,6 @@ class PaymentApiController {
     private final ModelMapper modelMapper;
     private final Environment env;
 
-
     @GetMapping("/health_check")
     public String status() {
         return String.format("It's Working in Payment Service"
