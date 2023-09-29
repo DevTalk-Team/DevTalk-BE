@@ -14,12 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberInfoController {
     private final MemberInfoUseCase memberInfoUseCase;
 
-    @GetMapping("/member/consultantInfo/{consultant}")
+
+    @GetMapping("/member/profile/consultant/{consultant}/info")
     MemberRes.ConsultantRes getConsultantInfo(@PathVariable Long consultant) {
         return memberInfoUseCase.findConsultant(consultant);
     }
 
-    @GetMapping("/member/consulterInfo/{consulter}")
+
+    @GetMapping("/member/profile/consulter/{consulter}/info")
     MemberRes.ConsulterRes getConsulterInfo(@PathVariable Long consulter) {
         return memberInfoUseCase.findConsulter(consulter);
     }
