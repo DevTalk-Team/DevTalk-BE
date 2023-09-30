@@ -48,9 +48,6 @@ public class PostService implements PostUseCase {
     // TODO : 제목, 내용, 작성자에 대한 validation 필요
     public void writePost(PostCreationReq postCreationReq) {
         boardValidator.validatePost(postCreationReq);
-        //
-        MemberRes memberRes = memberServiceClient.findMember(postCreationReq.getUserId());
-        log.info(memberRes.toString());
 
         Post newPost = postCreationReq.toEntity(); // 초기 빈 리스트와 함께 Post 생성
         newPost = postRepo.save(newPost);
