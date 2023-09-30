@@ -2,6 +2,7 @@ package com.devtalk.board.consultationboardservice.board.application.port.out.re
 
 import com.devtalk.board.consultationboardservice.board.adapter.in.web.dto.PostInput;
 import com.devtalk.board.consultationboardservice.board.domain.post.Post;
+import org.springframework.data.domain.Slice;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,4 +17,5 @@ public interface PostQueryableRepo {
     List<Post> findAllPosts();
 
     List<Post> findPostsWithSearchOption(PostSearchInput postSearchInput);
+
 }

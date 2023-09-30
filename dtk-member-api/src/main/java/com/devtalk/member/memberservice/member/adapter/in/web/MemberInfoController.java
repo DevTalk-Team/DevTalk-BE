@@ -31,3 +31,4 @@ public class MemberInfoController {
         return memberInfoUseCase.findMemberByEmail(email);
     }
 }
+

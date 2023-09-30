@@ -23,6 +23,7 @@ public class PaymentProperty {
         this.impKey = impKey;
         this.impSecret = impSecret;
         this.impUid = impUid;
+        this.webhookUrl = webhookUrl;
     }
 
 }

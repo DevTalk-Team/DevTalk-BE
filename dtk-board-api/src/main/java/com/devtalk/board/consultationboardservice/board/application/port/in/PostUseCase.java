@@ -1,26 +1,23 @@
 package com.devtalk.board.consultationboardservice.board.application.port.in;
 
-import com.devtalk.board.consultationboardservice.board.adapter.in.web.dto.PostInput;
-import com.devtalk.board.consultationboardservice.board.application.port.in.dto.PostReq;
-import com.devtalk.board.consultationboardservice.board.application.port.in.dto.PostRes;
-
 import java.util.List;
 
 import static com.devtalk.board.consultationboardservice.board.adapter.in.web.dto.PostInput.*;
 import static com.devtalk.board.consultationboardservice.board.application.port.in.dto.PostReq.*;
+import static com.devtalk.board.consultationboardservice.board.application.port.in.dto.PostRes.*;
 
 public interface PostUseCase {
     void writePost(PostCreationReq postCreationReq);
 
-    PostRes viewPost(Long postId);
+    PostViewRes viewPost(Long postId);
 
-    List<PostRes> getPostsByUserId(Long userId);
+    List<PostSearchRes> getPostsByUserId(Long userId);
 
-    List<PostRes> getAllPosts();
+    List<PostSearchRes> getAllPosts();
 
     void modifyPost(Long postId, PostCreationInput postCreationInput);
 
     void deletePost(Long postId);
 
-    List<PostRes> searchPosts(PostSearchInput postSearchInput);
+    List<PostSearchRes> searchPosts(PostSearchInput postSearchInput);
 }
