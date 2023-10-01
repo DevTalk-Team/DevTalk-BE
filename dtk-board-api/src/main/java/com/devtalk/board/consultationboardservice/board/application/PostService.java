@@ -41,7 +41,7 @@ public class PostService implements PostUseCase {
     private final AttachedFileUseCase attachedFileUseCase;
     private final CommentUseCase commentUseCase;
     private final BoardValidator boardValidator;
-    private final MemberServiceClient memberServiceClient;
+//    private final MemberServiceClient memberServiceClient;
 
     @Override
     @Transactional
