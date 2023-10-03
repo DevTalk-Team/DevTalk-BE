@@ -41,6 +41,26 @@ public class PostInput {
 
     @Getter
     @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class PostModifyInput{
+        @NotBlank @Size(max = 100)
+        private String title;
+
+        @NotBlank @Size(max = 1000)
+        private String content;
+
+        public PostModifyReq toReq(Long userId) {
+            return PostModifyReq.builder()
+                    .userId(userId)
+                    .title(title)
+                    .content(content)
+                    .build();
+        }
+    }
+
+    @Getter
+    @Builder
     public static class PostSearchInput{
         private String title;
         private String content;

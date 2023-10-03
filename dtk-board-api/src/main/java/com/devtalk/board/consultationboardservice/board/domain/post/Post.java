@@ -33,16 +33,20 @@ public class Post extends BaseEntity {
     private Long userId;
 
     @Column(nullable = false)
+    private String userName;
+
+    @Column(nullable = false)
     private Integer views;
 
     @Column(nullable = false)
     private Integer commentCount;
 
-    public static Post createPost(String title, String content, Long userId) {
+    public static Post createPost(String title, String content, Long userId, String userName) {
         return Post.builder()
                 .title(title)
                 .content(content)
                 .userId(userId)
+                .userName(userName)
                 .views(0)
                 .commentCount(0)
                 .build();
