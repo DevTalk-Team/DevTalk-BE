@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static com.devtalk.board.consultationboardservice.board.adapter.in.web.dto.CommentInput.*;
+
 @Tag(name = "게시판 댓글", description = "게시판 댓글 API")
 @RestController
 @RequestMapping("/board/comment")
@@ -24,9 +26,10 @@ public class CommentApiController {
     @Operation(summary = "게시판 댓글 - 댓글 작성 API", responses = {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
     })
-    @PostMapping("/{postId}")
-    public ResponseEntity<?> createComment(@PathVariable Long postId, @RequestBody CommentInput commentInput) {
-        commentUseCase.createComment(postId, commentInput);
+    @PostMapping
+    public ResponseEntity<?> createComment(@RequestParam Long userId,
+                                           @RequestBody CommentCreationInput commentCreationInput) {
+        commentUseCase.createComment(commentCreationInput.toReq(userId));
         return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.CREATE_COMMENT_SUCCESS);
     }
 
@@ -49,9 +52,10 @@ public class CommentApiController {
     @Operation(summary = "게시판 댓글 - 게시글 댓글 수정 API", responses = {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
     })
-    @PutMapping("/{commentId}")
-    public ResponseEntity<?> modifyComment(@PathVariable Long commentId, @RequestBody CommentInput commentInput) {
-        commentUseCase.modifyComment(commentId, commentInput);
+    @PutMapping
+    public ResponseEntity<?> modifyComment(@RequestParam Long userId,
+                                           @RequestBody CommentModifyInput commentModifyInput) {
+        commentUseCase.modifyComment(commentModifyInput.toReq(userId));
         return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.MODIFY_COMMENT_SUCCESS);
     }
 
@@ -59,8 +63,9 @@ public class CommentApiController {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
     })
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<?> deleteComment(@PathVariable Long commentId) {
-        commentUseCase.deleteComment(commentId);
+    public ResponseEntity<?> deleteComment(@RequestParam Long userId,
+                                           @PathVariable Long commentId) {
+        commentUseCase.deleteComment(userId, commentId);
         return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.DELETE_COMMENT_SUCCESS);
     }
 }

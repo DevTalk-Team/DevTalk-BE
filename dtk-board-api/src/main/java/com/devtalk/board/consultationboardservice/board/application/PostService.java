@@ -3,33 +3,24 @@ package com.devtalk.board.consultationboardservice.board.application;
 import com.devtalk.board.consultationboardservice.board.application.port.in.CommentUseCase;
 import com.devtalk.board.consultationboardservice.board.application.port.in.PostUseCase;
 import com.devtalk.board.consultationboardservice.board.application.port.in.AttachedFileUseCase;
-import com.devtalk.board.consultationboardservice.board.application.port.in.dto.MemberRes;
-import com.devtalk.board.consultationboardservice.board.application.port.in.dto.PostRes;
-import com.devtalk.board.consultationboardservice.board.application.port.out.client.MemberServiceClient;
-import com.devtalk.board.consultationboardservice.board.application.port.out.repository.AttachedFileQueruableRepo;
 import com.devtalk.board.consultationboardservice.board.application.port.out.repository.AttachedFileRepo;
 import com.devtalk.board.consultationboardservice.board.application.port.out.repository.PostQueryableRepo;
 import com.devtalk.board.consultationboardservice.board.application.port.out.repository.PostRepo;
 import com.devtalk.board.consultationboardservice.board.application.validator.BoardValidator;
 import com.devtalk.board.consultationboardservice.board.domain.attachedfile.AttachedFile;
-import com.devtalk.board.consultationboardservice.board.domain.comment.Comment;
 import com.devtalk.board.consultationboardservice.board.domain.post.Post;
 import com.devtalk.board.consultationboardservice.global.error.ErrorCode;
 import com.devtalk.board.consultationboardservice.global.error.exception.NotFoundException;
 import com.devtalk.board.consultationboardservice.global.vo.BaseFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.bouncycastle.cert.ocsp.Req;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static com.devtalk.board.consultationboardservice.board.adapter.in.web.dto.PostInput.*;
-import static com.devtalk.board.consultationboardservice.board.application.port.in.dto.MemberRes.*;
 import static com.devtalk.board.consultationboardservice.board.application.port.in.dto.PostReq.*;
 import static com.devtalk.board.consultationboardservice.board.application.port.in.dto.PostRes.*;
 
@@ -44,7 +35,7 @@ public class PostService implements PostUseCase {
     private final AttachedFileUseCase attachedFileUseCase;
     private final CommentUseCase commentUseCase;
     private final BoardValidator boardValidator;
-//    private final MemberServiceClient memberServiceClient;
+    private final MemberService memberService;
 
     @Override
     @Transactional
@@ -52,19 +43,13 @@ public class PostService implements PostUseCase {
     public void writePost(PostCreationReq postCreationReq) {
         boardValidator.validatePost(postCreationReq);
 
-        String userName = findUser(postCreationReq.getUserId()).getName();
+        String userName = memberService.findUser(postCreationReq.getUserId()).getName();
         Post newPost = postCreationReq.toEntity(userName); // 초기 빈 리스트와 함께 Post 생성
         newPost = postRepo.save(newPost);
 
         if (postCreationReq.getAttachedFileList() != null) {
             uploadAttachedFileList(newPost, postCreationReq.getAttachedFileList());
         }
-    }
-
-    public MemberInfoRes findUser(Long userId) {
-        MemberRes memberRes = Optional.ofNullable(memberServiceClient.findUser(userId))
-                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_USER));
-        return memberRes.getResult();
     }
 
     private void uploadAttachedFileList(Post post, List<MultipartFile> attachedFileList) {
@@ -109,7 +94,7 @@ public class PostService implements PostUseCase {
         Post post = postQueryableRepo.findPostByPostId(postId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_POST));
 
-        boardValidator.validateUser(post, postModifyReq.getUserId());
+        boardValidator.validateUserPost(post, postModifyReq.getUserId());
 
         post.modify(postModifyReq.getTitle(), postModifyReq.getContent());
     }
@@ -120,7 +105,7 @@ public class PostService implements PostUseCase {
         Post post = postQueryableRepo.findPostByPostId(postId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_POST));
 
-        boardValidator.validateUser(post, userId);
+        boardValidator.validateUserPost(post, userId);
 
         attachedFileUseCase.deletePostFileList(postId);
         commentUseCase.deleteAllByPostId(postId);

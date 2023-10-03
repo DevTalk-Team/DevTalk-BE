@@ -27,9 +27,20 @@ public class Comment extends BaseEntity {
     @Column(nullable = false)
     private Long userId;
 
+    @Column(nullable = false)
+    private String userName;
+
     @Column(nullable = false, length = 500)
     private String content;
 
+    public static Comment createComment(Post post, Long userId, String userName, String content) {
+        return Comment.builder()
+                .postId(post)
+                .userId(userId)
+                .userName(userName)
+                .content(content)
+                .build();
+    }
     public void modify(String content) {
         this.content = content;
     }
