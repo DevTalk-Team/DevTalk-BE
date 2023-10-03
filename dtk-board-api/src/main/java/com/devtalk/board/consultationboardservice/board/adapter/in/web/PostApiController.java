@@ -71,8 +71,16 @@ public class PostApiController {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
     })
     @PutMapping("/{postId}")
-    public ResponseEntity<?> modifyPost(@PathVariable Long postId, @RequestBody PostCreationInput postCreationInput) {
-        postUseCase.modifyPost(postId, postCreationInput);
+    public ResponseEntity<?> modifyPost(@PathVariable Long postId,
+                                        @RequestParam Long userId,
+                                        @RequestParam String title,
+                                        @RequestParam String content) {
+        PostModifyInput postModifyInput = PostModifyInput.builder()
+                .title(title)
+                .content(content)
+                .build();
+
+        postUseCase.modifyPost(postId, postModifyInput.toReq(userId));
         return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.MODIFY_POST_SUCCESS);
     }
 
@@ -80,8 +88,8 @@ public class PostApiController {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
     })
     @DeleteMapping("/{postId}")
-    public ResponseEntity<?> deletePost(@PathVariable Long postId) {
-        postUseCase.deletePost(postId);
+    public ResponseEntity<?> deletePost(@RequestParam Long userId, @PathVariable Long postId) {
+        postUseCase.deletePost(postId, userId);
         return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.DELETE_POST_SUCCESS);
     }
 

@@ -19,14 +19,17 @@ import com.devtalk.board.consultationboardservice.global.error.exception.NotFoun
 import com.devtalk.board.consultationboardservice.global.vo.BaseFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bouncycastle.cert.ocsp.Req;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.devtalk.board.consultationboardservice.board.adapter.in.web.dto.PostInput.*;
+import static com.devtalk.board.consultationboardservice.board.application.port.in.dto.MemberRes.*;
 import static com.devtalk.board.consultationboardservice.board.application.port.in.dto.PostReq.*;
 import static com.devtalk.board.consultationboardservice.board.application.port.in.dto.PostRes.*;
 
@@ -49,12 +52,19 @@ public class PostService implements PostUseCase {
     public void writePost(PostCreationReq postCreationReq) {
         boardValidator.validatePost(postCreationReq);
 
-        Post newPost = postCreationReq.toEntity(); // 초기 빈 리스트와 함께 Post 생성
+        String userName = findUser(postCreationReq.getUserId()).getName();
+        Post newPost = postCreationReq.toEntity(userName); // 초기 빈 리스트와 함께 Post 생성
         newPost = postRepo.save(newPost);
 
         if (postCreationReq.getAttachedFileList() != null) {
             uploadAttachedFileList(newPost, postCreationReq.getAttachedFileList());
         }
+    }
+
+    public MemberInfoRes findUser(Long userId) {
+        MemberRes memberRes = Optional.ofNullable(memberServiceClient.findUser(userId))
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_USER));
+        return memberRes.getResult();
     }
 
     private void uploadAttachedFileList(Post post, List<MultipartFile> attachedFileList) {
@@ -95,17 +105,23 @@ public class PostService implements PostUseCase {
 
     @Override
     @Transactional
-    public void modifyPost(Long postId, PostCreationInput postCreationInput) {
+    public void modifyPost(Long postId, PostModifyReq postModifyReq) {
         Post post = postQueryableRepo.findPostByPostId(postId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_POST));
-        post.modify(postCreationInput.getTitle(), postCreationInput.getContent());
+
+        boardValidator.validateUser(post, postModifyReq.getUserId());
+
+        post.modify(postModifyReq.getTitle(), postModifyReq.getContent());
     }
 
     @Override
     @Transactional
-    public void deletePost(Long postId) {
+    public void deletePost(Long postId, Long userId) {
         Post post = postQueryableRepo.findPostByPostId(postId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_POST));
+
+        boardValidator.validateUser(post, userId);
+
         attachedFileUseCase.deletePostFileList(postId);
         commentUseCase.deleteAllByPostId(postId);
         postRepo.delete(post);
