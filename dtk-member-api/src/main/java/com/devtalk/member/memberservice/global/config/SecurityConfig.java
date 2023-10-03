@@ -37,7 +37,7 @@ public class SecurityConfig {
         // ACL(Access Control List, 접근 제어 목록)의 예외 URL 설정
         return (web -> web
                 .ignoring()
-                .requestMatchers("/api/members/**", "/api/signup", "/api/login",
+                .requestMatchers("/members/**", "/signup", "/login",
                         /* swagger v3 */
                         "/v3/api-docs/**",
                         "/swagger-ui/**"));
