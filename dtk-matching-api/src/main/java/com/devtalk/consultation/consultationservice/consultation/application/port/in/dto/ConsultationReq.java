@@ -35,15 +35,8 @@ public class ConsultationReq {
         private List<MultipartFile> attachedFileList = new ArrayList<>();
         private Integer cost;
 
-        public Consultation toEntity(List<AttachedFile> attachedFileList) {
-            ConsultationDetails consultationDetails = ConsultationDetails.builder()
-                    .productProceedType(productProceedType)
-                    .region(region)
-                    .reservationAT(reservationAT)
-                    .attachedFileList(attachedFileList)
-                    .content(content)
-                    .build();
-
+        public Consultation toEntity() {
+            ConsultationDetails consultationDetails = new ConsultationDetails(productProceedType, region, reservationAT, content, new ArrayList<>());
             return Consultation.createConsultation(consulterId, consulterName, consultantId, consultantName, productId, consultationDetails, cost);
         }
     }
@@ -73,7 +66,6 @@ public class ConsultationReq {
         private Long consulterId;
         private Long consultationId;
         private String content;
-        private List<MultipartFile> attachedFileList = new ArrayList<>();
     }
 
     @AllArgsConstructor

@@ -67,8 +67,8 @@ public class FileUploadService {
             multipartFile.transferTo(destinationFile);
 
             return BaseFile.builder()
-                    .storedName(destinationFileName)
-                    .originName(fileOriName)
+                    .storedFileName(destinationFileName)
+                    .originFileName(fileOriName)
                     .fileUrl(inbound + fileUrl)
                     .build();
 

@@ -19,7 +19,7 @@ public class ConsultationInput {
     @Getter
     public static class ReservationInput {
 
-        @NotBlank(message = "상담자 ID는 null이 될 수 없습니다.")
+        @NotNull(message = "상담자 ID는 null이 될 수 없습니다.")
         private Long consultantId;
 
         @NotBlank(message = "상담자 이름은 null이 될 수 없습니다.")
@@ -28,26 +28,26 @@ public class ConsultationInput {
         @NotBlank(message = "내담자 이름은 null이 될 수 없습니다.")
         private String consulterName;
 
-        @NotBlank(message = "상품 ID는 null이 될 수 없습니다.")
+        @NotNull(message = "상품 ID는 null이 될 수 없습니다.")
         private Long productId;
 
-        @NotBlank @Size(max = 10)
+        @NotBlank
         private ProductProceedType productProceedType;
 
 
         @NotBlank @Size(max = 20)
         private String region;
 
-        @NotBlank
+        @NotNull
         @Future
         private LocalDateTime reservationAT;
 
         @NotBlank @Size(max = 500)
         private String content;
 
-        // TODO: 특정 확장자만 가능하도록 필터링 해야함
-        @Builder.Default
-        private List<MultipartFile> attachedFileList = new ArrayList<>();
+//        // TODO: 특정 확장자만 가능하도록 필터링 해야함
+//        @Builder.Default
+//        private List<MultipartFile> attachedFileList = new ArrayList<>();
 
         private Integer cost;
 
@@ -62,7 +62,6 @@ public class ConsultationInput {
                     .region(region)
                     .reservationAT(reservationAT)
                     .content(content)
-                    .attachedFileList(attachedFileList)
                     .cost(cost)
                     .build();
         }
@@ -104,11 +103,9 @@ public class ConsultationInput {
         @Size(max = 500)
         private String content;
 
-        @Builder.Default
-        private List<MultipartFile> attachedFileList = new ArrayList<>();
-
         public ConsultationModificationReq toReq(Long consulterId, Long consultationId) {
-            return new ConsultationModificationReq(consulterId, consultationId, content, attachedFileList);
+            return new ConsultationModificationReq(consulterId, consultationId, content);
+            // removed attachedFileList from here as well.
         }
     }
 

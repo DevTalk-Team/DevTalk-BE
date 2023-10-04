@@ -33,7 +33,7 @@ public class ReviewConsultationService implements ReviewConsultationUseCase {
         BaseFile photoFile = fileUploadService.uploadReviewPhoto(reviewReq.getPhoto());
         fidnConsultation.writeReview(
                 reviewReq.getScore(), reviewReq.getContent(),
-                photoFile.getFileUrl(), photoFile.getOriginName(), photoFile.getStoredName(), LocalDateTime.now()
+                photoFile.getFileUrl(), photoFile.getOriginFileName(), photoFile.getStoredFileName(), LocalDateTime.now()
         );
     }
 }

@@ -32,8 +32,12 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
+
 	//OpenFeign
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+	//api
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
 	// config
 	implementation 'org.springframework.cloud:spring-cloud-starter-config'

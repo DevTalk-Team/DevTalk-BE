@@ -5,6 +5,7 @@ import com.devtalk.consultation.consultationservice.consultation.application.por
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.client.dto.MemberRes;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.ConsultationQueryableRepo;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.MemberQueryableRepo;
+import com.devtalk.consultation.consultationservice.consultation.domain.consultation.ProductProceedType;
 import com.devtalk.consultation.consultationservice.global.error.execption.DuplicationException;
 import com.devtalk.consultation.consultationservice.global.error.execption.InvalidInputException;
 import com.devtalk.consultation.consultationservice.global.error.execption.NotFoundException;
@@ -32,8 +33,8 @@ public class ConsultationReservationValidator {
     // 파일 확장자가 png, jpg, jpeg, pdf, ppt, xlsx. xls, doc, docx, txt 인지 검증
     public void validateReservation(ReservationReq reservationReq) {
         validateAttachedFileList(reservationReq.getAttachedFileList());
-        validateConsulter(reservationReq.getConsulterId());
-        validateConsultant(reservationReq.getConsultantId());
+        //validateConsulter(reservationReq.getConsulterId());
+        //validateConsultant(reservationReq.getConsultantId());
         validateProduct(reservationReq);
         validateDuplicatedMatching(reservationReq.getProductId());
     }
@@ -63,11 +64,12 @@ public class ConsultationReservationValidator {
 
         if (reservationReq.getConsultantId() != realProduct.getConsultantId() ||
                 reservationReq.getReservationAT() != realProduct.getReservationAT() ||
-                reservationReq.getProductProceedType() != realProduct.getProductProceedType() ||
+                (!realProduct.getProductProceedType().equals(ProductProceedType.ALL) &&
+                        reservationReq.getProductProceedType() != realProduct.getProductProceedType()) ||
                 !realProduct.getReservationStatus().equals(ProductStatus.AVAILABLE.getStatus())) {
-
             throw new InvalidInputException(INVALID_RESERVATION_REQUEST);
         }
+
     }
 
     private void validateDuplicatedMatching(Long productId) {
