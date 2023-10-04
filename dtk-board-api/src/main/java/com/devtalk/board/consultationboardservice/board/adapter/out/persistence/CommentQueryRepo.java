@@ -29,6 +29,7 @@ public class CommentQueryRepo implements CommentQueryableRepo {
     public List<Comment> findCommentsByPostId(Long postId) {
         return queryFactory.selectFrom(comment)
                 .where(comment.postId.id.eq(postId))
+                .orderBy(comment.createdAt.asc())
                 .fetch();
     }
 }

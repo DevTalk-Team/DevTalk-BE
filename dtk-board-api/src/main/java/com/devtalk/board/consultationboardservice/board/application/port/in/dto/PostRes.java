@@ -17,6 +17,7 @@ public class PostRes {
         private List<AttachedFileRes> attachedFileResList;
         private List<CommentRes> commentResList;
         private Long userId;
+        private String userName;
         private Integer views;
         private Integer commentCount;
         private LocalDateTime createdAt;
@@ -31,6 +32,7 @@ public class PostRes {
                     .attachedFileResList(attachedFileRes)
                     .commentResList(commentResList)
                     .userId(post.getUserId())
+                    .userName(post.getUserName())
                     .views(post.getViews())
                     .commentCount(post.getCommentCount())
                     .createdAt(post.getCreatedAt())
@@ -46,6 +48,7 @@ public class PostRes {
         private String title;
         private String content;
         private Long userId;
+        private String userName;
         private Integer views;
         private Integer commentCount;
         private LocalDateTime createdAt;
@@ -57,6 +60,7 @@ public class PostRes {
                     .title(post.getTitle())
                     .content(post.getContent())
                     .userId(post.getUserId())
+                    .userName(post.getUserName())
                     .views(post.getViews())
                     .commentCount(post.getCommentCount())
                     .createdAt(post.getCreatedAt())

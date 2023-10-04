@@ -15,9 +15,9 @@ public interface PostUseCase {
 
     List<PostSearchRes> getAllPosts();
 
-    void modifyPost(Long postId, PostCreationInput postCreationInput);
+    void modifyPost(Long postId, PostModifyReq postModifyReq);
 
-    void deletePost(Long postId);
+    void deletePost(Long postId, Long userId);
 
     List<PostSearchRes> searchPosts(PostSearchInput postSearchInput);
 }

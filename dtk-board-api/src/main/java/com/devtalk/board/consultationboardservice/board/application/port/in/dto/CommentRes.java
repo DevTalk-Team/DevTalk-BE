@@ -12,6 +12,7 @@ public class CommentRes {
     private Long commentId;
     private Long postId;
     private Long userId;
+    private String userName;
     private String content;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
@@ -21,6 +22,7 @@ public class CommentRes {
                 .commentId(comment.getId())
                 .postId(comment.getPostId().getId())
                 .userId(comment.getUserId())
+                .userName(comment.getUserName())
                 .content(comment.getContent())
                 .createdAt(comment.getCreatedAt())
                 .modifiedAt(comment.getModifiedAt())
