@@ -49,6 +49,7 @@ class RefundService implements RefundUseCase {
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_CONSULTATION));
 
         paymentValidator.validateIsItPaid(payment);
+
         payment.changePaymentByCanceled();
         consultation.changeConsultationByCanceled();
         saveRefundInfo(payment, consultation);

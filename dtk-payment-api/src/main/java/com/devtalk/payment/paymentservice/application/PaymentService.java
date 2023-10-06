@@ -1,7 +1,6 @@
 package com.devtalk.payment.paymentservice.application;
 
 import com.devtalk.payment.global.code.ErrorCode;
-import com.devtalk.payment.global.config.property.PaymentProperty;
 import com.devtalk.payment.global.error.exception.NotFoundException;
 import com.devtalk.payment.paymentservice.adapter.in.web.dto.ConsultationInput;
 import com.devtalk.payment.paymentservice.adapter.out.producer.KafkaProducer;
@@ -19,17 +18,17 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static com.devtalk.payment.paymentservice.application.port.in.dto.PaymentReq.*;
 import static com.devtalk.payment.paymentservice.application.port.in.dto.PaymentRes.*;
+import static com.devtalk.payment.paymentservice.application.port.in.dto.PortOneReq.*;
 
 @Service
 @Transactional
@@ -41,14 +40,15 @@ public class PaymentService implements PaymentUseCase {
     private final ConsultationUseCase consultationUseCase;
     private final EmailUseCase emailUseCase;
     private final KafkaProducer kafkaProducer;
-    private final PaymentProperty paymentProperty;
+
+    @Value("${portone.imp_key}") private String impKey;
+    @Value("${portone.imp_secret}") private String impSecret;
+    @Value("${portone.imp_uid}") private String impUid;
+    @Value("${portone.webhook_url}") private String webhookUrl;
 
     // 결제 토큰 생성 (포트원 API사용을 위해 필요함)
     @Override
     public String getToken() {
-        String impKey = paymentProperty.getImpKey();
-        String impSecret = paymentProperty.getImpSecret();
-
         Map<String, Object> params = new HashMap<>();
         params.put("imp_key", impKey);
         params.put("imp_secret", impSecret);
@@ -64,8 +64,7 @@ public class PaymentService implements PaymentUseCase {
             // ObjectMapper를 사용하여 JSON 파싱
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode node = objectMapper.readTree(response);
-            String accessToken = node.get("response").get("access_token").asText();
-            return accessToken;
+            return node.get("response").get("access_token").asText();
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             return null;
@@ -74,60 +73,22 @@ public class PaymentService implements PaymentUseCase {
 
     @Override
     @Transactional
-    public String getPaymentLink(Long consultationId) {
-        String impUid = paymentProperty.getImpUid();
-        String webhookUrl = paymentProperty.getWebhookUrl();
+    public String getPaymentLink(Long consultationId, Long userId) {
         Consultation consultation = consultationUseCase.searchConsultationInfo(consultationId);
-        String paymentInfo = String.format(
-                "{" +
-                        "\"title\":\"데브톡 - %s\"," +
-                        "\"user_code\":\"%s\"," +
-                        "\"amount\":%d," +
-                        "\"merchant_uid\":\"%s\"," +
-                        "\"name\":\"%s\"," +
-                        "\"currency\":\"KRW\"," +
-                        "\"buyer_name\":\"%s\"," +
-                        "\"buyer_tel\":\"010-1234-1234\"," +
-                        "\"buyer_email\":\"%s\"," +
-                        "\"custom_data\":\"json_object\"," +
-                        "\"notice_url\":\"%s\"," +
-                        "\"pay_methods\":[" +
-                        "{\"pg\":\"html5_inicis.INIpayTest\",\"pay_method\":\"card\",\"label\":\"신용/체크카드\"}," +
-                        "{\"pg\":\"html5_inicis.INIpayTest\",\"pay_method\":\"naverpay\",\"label\":\"네이버페이\"}," +
-                        "{\"pg\":\"html5_inicis.INIpayTest\",\"pay_method\":\"kakaopay\",\"label\":\"카카오페이\"}," +
-                        "{\"pg\":\"iamporttest_3\",\"pay_method\":\"tosspay.tosstest\",\"label\":\"토스페이\"}" +
-                        "]" +
-                        "}",
-                            consultation.getConsultationType(),
-                            impUid,
-                            consultation.getCost(),
-                            consultation.getMerchantId(),
-                            consultation.getConsultationType(),
-                            consultation.getConsulter(),
-                            consultation.getConsulterEmail(),
-                            webhookUrl);
-
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("payment_info", paymentInfo);
-        requestBody.put("expired_at", (System.currentTimeMillis()/1000 + 1800));
-
         WebClient wc = WebClient.create("https://api.iamport.co/api/supplements/v1/link/payment");
 
         String response = wc.post()
                 .header("Authorization", "Bearer " + getToken())
-                .bodyValue(requestBody)
+                .bodyValue(toPortOneStringReq(consultation))
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
 
         try {
-            // ObjectMapper를 사용하여 JSON 파싱
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode node = objectMapper.readTree(response);
-            String paymentLink = node.get("shortenedUrl").asText();
-            return paymentLink;
+            return node.get("shortenedUrl").asText();
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -185,5 +146,67 @@ public class PaymentService implements PaymentUseCase {
                 .paidAt(null)
                 .status(PaymentStatus.READY)
                 .build());
+    }
+
+    private PortOneLinkReq toPortOneReq(Consultation consultation) {
+        List<PayMethod> payMethods = Arrays.asList(
+                new PayMethod("html5_inicis.INIpayTest", "card", "신용/체크카드"),
+                new PayMethod("html5_inicis.INIpayTest", "naverpay", "네이버페이"),
+                new PayMethod("html5_inicis.INIpayTest", "kakaopay", "카카오페이"),
+                new PayMethod("iamporttest_3", "tosspay.tosstest", "토스페이"));
+
+        PaymentInfo paymentInfo = PaymentInfo.builder()
+                .consultationType(consultation.getConsultationType())
+                .impUid(impUid)
+                .amount(consultation.getCost())
+                .merchantId(consultation.getMerchantId())
+                .consultantName("전문가 이름")
+                .currency("KRW")
+                .consulterName("상담자 이름")
+                .consulterTel("상담자 전화번호")
+                .consulterEmail("상담자 이메일")
+                .customData("json_object")
+                .webhookUrl(webhookUrl)
+                .payMethods(payMethods)
+                .build();
+
+        return PortOneLinkReq.builder()
+                .payment_info(paymentInfo)
+                .expired_at(System.currentTimeMillis() / 1000 + 1800)
+                .build();
+    }
+
+    private PortOneStringReq toPortOneStringReq(Consultation consultation){
+        return PortOneStringReq.builder()
+                .paymentInfo(String.format(
+                "{" +
+                        "\"title\":\"데브톡 - %s\"," +
+                        "\"user_code\":\"%s\"," +
+                        "\"amount\":%d," +
+                        "\"merchant_uid\":\"%s\"," +
+                        "\"name\":\"%s\"," +
+                        "\"currency\":\"KRW\"," +
+                        "\"buyer_name\":\"%s\"," +
+                        "\"buyer_tel\":\"-\"," +
+                        "\"buyer_email\":\"%s\"," +
+                        "\"custom_data\":\"json_object\"," +
+                        "\"notice_url\":\"%s\"," +
+                        "\"pay_methods\":[" +
+                            "{\"pg\":\"html5_inicis.INIpayTest\",\"pay_method\":\"card\",\"label\":\"신용/체크카드\"}," +
+                            "{\"pg\":\"html5_inicis.INIpayTest\",\"pay_method\":\"naverpay\",\"label\":\"네이버페이\"}," +
+                            "{\"pg\":\"html5_inicis.INIpayTest\",\"pay_method\":\"kakaopay\",\"label\":\"카카오페이\"}," +
+                            "{\"pg\":\"iamporttest_3\",\"pay_method\":\"tosspay.tosstest\",\"label\":\"토스페이\"}" +
+                        "]" +
+                        "}",
+                            consultation.getConsultationType(),
+                            impUid,
+                            consultation.getCost(),
+                            consultation.getMerchantId(),
+                            consultation.getConsultationType(),
+                            consultation.getConsulter(),
+                            consultation.getConsulterEmail(),
+                            webhookUrl))
+                .expiredAt(System.currentTimeMillis() / 1000 + 1800)
+                .build();
     }
 }
