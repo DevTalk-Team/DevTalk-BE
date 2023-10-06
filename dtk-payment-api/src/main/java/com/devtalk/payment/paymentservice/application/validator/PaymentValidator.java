@@ -20,9 +20,6 @@ import static com.devtalk.payment.paymentservice.application.port.in.dto.Payment
 @Service
 @RequiredArgsConstructor
 public class PaymentValidator {
-//    private final IamportClient iamportClient;
-    private final ConsultationRepo consultationRepo;
-    private final PaymentRepo paymentRepo;
 
     public void validateIsItPaid(Payment payment) {
         if (payment.getStatus() != PaymentStatus.PAID) {
