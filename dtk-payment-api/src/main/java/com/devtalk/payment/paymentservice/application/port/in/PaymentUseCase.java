@@ -15,7 +15,7 @@ import static com.devtalk.payment.paymentservice.application.port.in.dto.Payment
 public interface PaymentUseCase {
     String getToken();
 
-    String getPaymentLink(Long consultationId);
+    String getPaymentLink(Long consultationId, Long userId);
 
     void updatePaymentStatus(WebhookReq webhookReq);
 
