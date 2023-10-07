@@ -32,7 +32,7 @@ env:
   AWS_REGION: ap-northeast-2
   ECS_CLUSTER: devtalk-cluster
   ECR_REPOSITORY: devtalk
-  ECS_TASK_DEFINITION: task-definition.json # set this to the path to your Amazon ECS task definition
+  ECS_TASK_DEFINITION: dtk-board-api/task-definition.json # set this to the path to your Amazon ECS task definition
   FOLDER_NAME: dtk-board-api
   ECS_SERVICE: devtalk-board-api-service
   ECS_TASK_DEFINITION_NAME: devtalk-board-task
