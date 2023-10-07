@@ -46,6 +46,8 @@ permissions:
 jobs:
   changes:
     runs-on: ubuntu-latest
+    outputs:
+      service-name: ${{ steps.filter.outputs.service-name }}
     steps:
       - uses: dorny/paths-filter@v2
         with:
