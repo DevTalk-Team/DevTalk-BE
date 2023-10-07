@@ -64,6 +64,9 @@ jobs:
     runs-on: ubuntu-latest
     if: needs.changes.outputs.service-name == 'true'
     steps:
+      - name: Checkout code again for the build job 
+        uses: actions/checkout@v3
+    
       - name: Build and Deploy Service
         run: |
           cd ${{ env.FOLDER_NAME }}
