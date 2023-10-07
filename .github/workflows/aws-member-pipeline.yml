@@ -32,12 +32,12 @@ env:
   AWS_REGION: ap-northeast-2
   ECS_CLUSTER: devtalk-cluster
   ECR_REPOSITORY: devtalk
-  ECS_TASK_DEFINITION: dtk-board-api/task-definition.json # set this to the path to your Amazon ECS task definition
-  FOLDER_NAME: dtk-board-api
-  ECS_SERVICE: devtalk-board-api-service
-  ECS_TASK_DEFINITION_NAME: devtalk-board-task
+  ECS_TASK_DEFINITION: dtk-member-api/task-definition.json # set this to the path to your Amazon ECS task definition
+  FOLDER_NAME: dtk-member-api
+  ECS_SERVICE: devtalk-member-api-service
+  ECS_TASK_DEFINITION_NAME: devtalk-member-task
   # file, e.g. .aws/task-definition.json
-  CONTAINER_NAME: devtalk-board           # set this to the name of the container in the
+  CONTAINER_NAME: dtk-member           # set this to the name of the container in the
   # containerDefinitions section of your task definition
 
 permissions:
@@ -57,7 +57,7 @@ jobs:
         with:
           filters: |
             service-name:
-              - 'dtk-board-api/**'
+              - 'dtk-member-api/**'
 
   build:
     needs: changes
