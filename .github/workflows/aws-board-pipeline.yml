@@ -58,7 +58,7 @@ jobs:
   build:
     needs: changes
     runs-on: ubuntu-latest
-    if: steps.changes.outputs.service-name == 'true'
+    if: needs.changes.outputs.service-name == 'true'
     steps:
       - name: Build and Deploy Service
         run: |
