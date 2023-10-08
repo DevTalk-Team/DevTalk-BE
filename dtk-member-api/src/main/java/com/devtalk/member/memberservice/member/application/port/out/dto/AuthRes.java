@@ -8,10 +8,10 @@ public class AuthRes {
     @Getter
     @Builder
     public static class LogInRes {
-//        private TokenDto tokenDto;
         private String accessToken;
         private String tokenType;
         private String email; // refreshToken 키 값 (redis)
+        private String refreshToken;
     }
 
     public class LogOutRes {

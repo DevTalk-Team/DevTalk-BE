@@ -26,7 +26,7 @@ public class FindProfileApiController {
         return SuccessResponse.toResponseEntity(FIND_EMAIL_SUCCESS, output);
     }
 
-    @GetMapping("/send-password")
+    @PostMapping("/send-password")
     public ResponseEntity<?> sendPassword(@RequestBody FindProfileInput.SendPasswordInput input) {
         findProfileUseCase.sendTempPassword(input.getName(), input.getEmail());
         return SuccessResponseNoResult.toResponseEntity(TEMP_PASSWORD_SUCCESS);
