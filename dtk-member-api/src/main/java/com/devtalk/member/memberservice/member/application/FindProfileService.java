@@ -43,7 +43,7 @@ public class FindProfileService implements FindProfileUseCase {
         Member member = validator.sendTempPasswordValidate(name, email);
         javaMailSender.send(createMessage(email));
 //        member.updatePassword(bCryptPasswordEncoder.encode(tempPassword));
-        redisUtil.setDataExpire(tempPassword, email, 300000);
+        redisUtil.setDataExpire(tempPassword, email, 500000);
     }
 
     MimeMessage createMessage(String email) {
@@ -55,7 +55,7 @@ public class FindProfileService implements FindProfileUseCase {
             mimeMessage.setFrom(new InternetAddress("devtalk@gamil.com", "Devtalk"));
             mimeMessage.setRecipients(MimeMessage.RecipientType.TO, email);
             mimeMessage.setSubject("Devtalk 임시 비밀번호 발급");
-            mimeMessage.setText(tempPassword + "\n임시 비밀번호로 로그인해주세요.");
+            mimeMessage.setText(tempPassword + "\n5분 내로 재설정해주세요.");
         } catch (MessagingException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }

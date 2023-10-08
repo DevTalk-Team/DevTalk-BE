@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -49,16 +50,18 @@ public class ConsultantInfoService implements ConsultantInfoUseCase {
     }
 
     @Override
-    public ConsultantRes.InfoRes getInfo(String token) {
-        Member member = getMember(token);
+    public ConsultantRes.InfoRes getInfo(String email) {
+        Member member = memberRepo.findByEmail(email)
+                .orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
         ConsultantInfo info = consultantInfoRepo.findByMember(member);
         return ConsultantRes.InfoRes.of(info);
     }
 
     @Transactional
     @Override
-    public ConsultantRes.InfoRes updateInfo(String token, ConsultantInput.InfoInput input) {
-        Member member = getMember(token);
+    public ConsultantRes.InfoRes updateInfo(String email, ConsultantInput.InfoInput input) {
+        Member member = memberRepo.findByEmail(email)
+                .orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
         ConsultantInfo info = consultantInfoRepo.findByMember(member);
         ConsultantInfo newInfo = info.update(input.toReq());
         return ConsultantRes.InfoRes.of(consultantInfoRepo.save(newInfo));
