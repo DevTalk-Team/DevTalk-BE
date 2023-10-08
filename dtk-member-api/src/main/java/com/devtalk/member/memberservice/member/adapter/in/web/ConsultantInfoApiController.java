@@ -30,17 +30,14 @@ public class ConsultantInfoApiController {
     // TODO @AuthenticationPrincipal MemberDetails memberDetails 리팩토링
     @GetMapping("/info")
     public ResponseEntity<?> getInfo(@AuthenticationPrincipal MemberDetails memberDetails) {
-        String email = memberDetails.getUsername();
-        log.info("로그인한 email -> {}", email);
-        String token = "";
-        ConsultantRes.InfoRes res = consultantInfoUseCase.getInfo(token);
+        ConsultantRes.InfoRes res = consultantInfoUseCase.getInfo(memberDetails.getUsername());
         return SuccessResponse.toResponseEntity(CONSULTANT_INFO_SUCCESS, res);
     }
 
     @PutMapping("/info")
-    public ResponseEntity<?> updateInfo(@RequestBody ConsultantInput.InfoInput input, HttpServletRequest request) {
-        String token = jwtTokenProvider.resolveToken(request);
-        ConsultantRes.InfoRes res = consultantInfoUseCase.updateInfo(token, input);
+    public ResponseEntity<?> updateInfo(@RequestBody ConsultantInput.InfoInput input,
+                                        @AuthenticationPrincipal MemberDetails memberDetails) {
+        ConsultantRes.InfoRes res = consultantInfoUseCase.updateInfo(memberDetails.getUsername(), input);
         kafkaProducer.sendConsultantInfo(res.toEntity());
         return SuccessResponse.toResponseEntity(CONSULTANT_INFO_UPDATE_SUCCESS, res);
     }
