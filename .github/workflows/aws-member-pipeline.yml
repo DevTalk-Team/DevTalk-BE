@@ -26,8 +26,10 @@
 
 name: Member Service - Deploy to Amazon ECS
 
-on: [pull_request]
-
+on:
+  pull_request:
+    branches:
+    - master
 env:
   AWS_REGION: ap-northeast-2
   ECS_CLUSTER: devtalk-cluster
