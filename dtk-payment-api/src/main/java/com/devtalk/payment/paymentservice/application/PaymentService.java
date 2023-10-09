@@ -7,6 +7,7 @@ import com.devtalk.payment.paymentservice.adapter.out.producer.KafkaProducer;
 import com.devtalk.payment.paymentservice.application.port.in.ConsultationUseCase;
 import com.devtalk.payment.paymentservice.application.port.in.EmailUseCase;
 import com.devtalk.payment.paymentservice.application.port.in.PaymentUseCase;
+import com.devtalk.payment.paymentservice.application.port.in.dto.PortOneRes;
 import com.devtalk.payment.paymentservice.application.port.out.repository.ConsultationRepo;
 import com.devtalk.payment.paymentservice.application.port.out.repository.PaymentRepo;
 import com.devtalk.payment.paymentservice.domain.consultation.Consultation;
@@ -29,6 +30,7 @@ import java.util.*;
 import static com.devtalk.payment.paymentservice.application.port.in.dto.PaymentReq.*;
 import static com.devtalk.payment.paymentservice.application.port.in.dto.PaymentRes.*;
 import static com.devtalk.payment.paymentservice.application.port.in.dto.PortOneReq.*;
+import static com.devtalk.payment.paymentservice.application.port.in.dto.PortOneRes.*;
 
 @Service
 @Transactional
@@ -54,21 +56,13 @@ public class PaymentService implements PaymentUseCase {
         params.put("imp_secret", impSecret);
 
         WebClient wc = WebClient.create("https://api.iamport.kr/users/getToken");
-        String response = wc.post()
+        PortOneTokenRes response = wc.post()
                 .bodyValue(params)
                 .retrieve()
-                .bodyToMono(String.class)
+                .bodyToMono(PortOneTokenRes.class)
                 .block();
 
-        try {
-            // ObjectMapper를 사용하여 JSON 파싱
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode node = objectMapper.readTree(response);
-            return node.get("response").get("access_token").asText();
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return response.getResponse().getAccessToken();
     }
 
     @Override
@@ -77,33 +71,25 @@ public class PaymentService implements PaymentUseCase {
         Consultation consultation = consultationUseCase.searchConsultationInfo(consultationId);
         WebClient wc = WebClient.create("https://api.iamport.co/api/supplements/v1/link/payment");
 
-        String response = wc.post()
+        PortOneLinkRes response = wc.post()
                 .header("Authorization", "Bearer " + getToken())
                 .bodyValue(toPortOneStringReq(consultation))
                 .retrieve()
-                .bodyToMono(String.class)
+                .bodyToMono(PortOneLinkRes.class)
                 .block();
 
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode node = objectMapper.readTree(response);
-            return node.get("shortenedUrl").asText();
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        return response.getShortenedUrl();
     }
 
     @Override
     public void updatePaymentStatus(WebhookReq webhookReq) {
-        String paymentUid = webhookReq.getImp_uid();
-        String merchantId = webhookReq.getMerchant_uid();
         String status = webhookReq.getStatus();
 
         if (status.equals("paid")) {
-            Payment payment = paymentRepo.findByMerchantId(merchantId)
+            Payment payment = paymentRepo.findByMerchantId(webhookReq.getMerchant_uid())
                     .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_CONSULTATION));
             Consultation consultation = payment.getConsultation();
-            payment.changePaymentBySuccess(paymentUid);
+            payment.changePaymentBySuccess(webhookReq.getImp_uid());
             consultation.changeConsultationByWaitingConsultation();
             kafkaProducer.sendPaymentStatus("payment-status", payment);
             emailUseCase.sendPaymentSuccessEmail(consultation);
@@ -115,15 +101,10 @@ public class PaymentService implements PaymentUseCase {
         Payment payment = paymentRepo.findByConsultationId(consultationId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_CONSULTATION));
 
-        return PaymentSearchRes.builder()
-                .paymentUid(payment.getPaymentUid())
-                .status(payment.getStatus())
-                .consultationId(payment.getConsultation())
-                .paidAt(payment.getPaidAt())
-                .cost(payment.getCost())
-                .build();
+        return PaymentSearchRes.of(payment);
     }
 
+    // 테스트용
     @Override
     public void createPaymentInfo(ConsultationInput consultationInput) {
         Consultation consultation = Consultation.builder()
@@ -153,7 +134,7 @@ public class PaymentService implements PaymentUseCase {
                 new PayMethod("html5_inicis.INIpayTest", "card", "신용/체크카드"),
                 new PayMethod("html5_inicis.INIpayTest", "naverpay", "네이버페이"),
                 new PayMethod("html5_inicis.INIpayTest", "kakaopay", "카카오페이"),
-                new PayMethod("iamporttest_3", "tosspay.tosstest", "토스페이"));
+                new PayMethod("tosspayments.iamporttest_3", "tosspay.tosstest", "토스페이"));
 
         PaymentInfo paymentInfo = PaymentInfo.builder()
                 .consultationType(consultation.getConsultationType())
@@ -195,8 +176,8 @@ public class PaymentService implements PaymentUseCase {
                             "{\"pg\":\"html5_inicis.INIpayTest\",\"pay_method\":\"card\",\"label\":\"신용/체크카드\"}," +
                             "{\"pg\":\"html5_inicis.INIpayTest\",\"pay_method\":\"naverpay\",\"label\":\"네이버페이\"}," +
                             "{\"pg\":\"html5_inicis.INIpayTest\",\"pay_method\":\"kakaopay\",\"label\":\"카카오페이\"}," +
-                            "{\"pg\":\"iamporttest_3\",\"pay_method\":\"tosspay.tosstest\",\"label\":\"토스페이\"}" +
-                        "]" +
+                            "{\"pg\":\"tosspayments.iamporttest_3\",\"pay_method\":\"tosspay.tosstest\",\"label\":\"토스페이\"}" +
+                            "]" +
                         "}",
                             consultation.getConsultationType(),
                             impUid,
