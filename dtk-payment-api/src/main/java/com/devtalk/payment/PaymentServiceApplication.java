@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-//@EnableFeignClients
+@EnableFeignClients
 @EnableJpaAuditing
 public class PaymentServiceApplication {
     public static void main(String[] args) {

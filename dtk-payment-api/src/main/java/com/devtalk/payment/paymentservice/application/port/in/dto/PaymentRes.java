@@ -1,6 +1,7 @@
 package com.devtalk.payment.paymentservice.application.port.in.dto;
 
 import com.devtalk.payment.paymentservice.domain.consultation.Consultation;
+import com.devtalk.payment.paymentservice.domain.payment.Payment;
 import com.devtalk.payment.paymentservice.domain.payment.PaymentStatus;
 import lombok.*;
 
@@ -18,5 +19,15 @@ public class PaymentRes {
         private Integer cost;
         private LocalDateTime paidAt;
         private PaymentStatus status;
+
+        public static PaymentSearchRes of(Payment payment) {
+            return PaymentSearchRes.builder()
+                    .paymentUid(payment.getPaymentUid())
+                    .status(payment.getStatus())
+                    .consultationId(payment.getConsultation())
+                    .paidAt(payment.getPaidAt())
+                    .cost(payment.getCost())
+                    .build();
+        }
     }
 }

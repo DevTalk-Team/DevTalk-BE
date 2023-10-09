@@ -5,6 +5,7 @@ import com.devtalk.payment.global.error.exception.IncorrectException;
 import com.devtalk.payment.global.error.exception.NotFoundException;
 import com.devtalk.payment.paymentservice.application.port.in.PaymentUseCase;
 import com.devtalk.payment.paymentservice.application.port.in.RefundUseCase;
+import com.devtalk.payment.paymentservice.application.port.in.dto.PortOneRes;
 import com.devtalk.payment.paymentservice.application.port.out.repository.ConsultationRepo;
 import com.devtalk.payment.paymentservice.application.port.out.repository.PaymentRepo;
 import com.devtalk.payment.paymentservice.application.port.out.repository.RefundRepo;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import static com.devtalk.payment.paymentservice.application.port.in.dto.PortOneRes.*;
 import static com.devtalk.payment.paymentservice.application.port.in.dto.RefundReq.*;
 
 @Service
@@ -41,42 +43,27 @@ class RefundService implements RefundUseCase {
 
     @Override
     @Transactional
-    public void cancelPayment(Long consultationId) {
-        // TODO : 예약 상태 변경
+    public void cancelPayment(Long consultationId, Long userId) {
         Consultation consultation = consultationRepo.findById(consultationId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_CONSULTATION));
         Payment payment = paymentRepo.findByConsultationId(consultationId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_CONSULTATION));
 
-        paymentValidator.validateIsItPaid(payment);
+        paymentValidator.validateItIsPaid(payment);
 
         payment.changePaymentByCanceled();
         consultation.changeConsultationByCanceled();
         saveRefundInfo(payment, consultation);
 
-        RefundPortOneReq refundPortOneReq = RefundPortOneReq.builder()
-                .imp_uid(payment.getPaymentUid())
-                .merchant_uid(payment.getMerchantId())
-                .amount(payment.getCost())
-                .extra(RefundPortOneReq.Extra.builder().requester("customer").build())
-                .build();
-
         WebClient wc = WebClient.create("https://api.iamport.kr/payments/cancel");
-        String response = wc.post()
+        PortOneRefundRes response = wc.post()
                 .header("Authorization", "Bearer " + paymentUseCase.getToken())
-                .body(BodyInserters.fromValue(refundPortOneReq))
+                .body(BodyInserters.fromValue(RefundPortOneReq.of(payment)))
                 .retrieve()
-                .bodyToMono(String.class)
+                .bodyToMono(PortOneRefundRes.class)
                 .block();
 
-        JsonNode node = null;
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            node = objectMapper.readTree(response);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        if (node.get("code").asInt() != 0) {
+        if (response.getCode() != 0) {
             throw new IncorrectException(ErrorCode.INVALID_REFUND_REQUEST);
         }
     }

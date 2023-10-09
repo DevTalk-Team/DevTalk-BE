@@ -1,19 +1,25 @@
 package com.devtalk.payment.paymentservice.application.port.out.client.dto;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-public class MemberRes<T> {
-    String code;
-    String message;
-    T result;
+public class MemberRes {
 
     @Builder
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @Getter
-    public static class MemberInfoRes{
-
+    public static class ProfileRes {
+        private Long id;
+        private MemberType memberType;
         private String name;
         private String email;
-//        private String phoneNumber;
+        private String password;
+        private String phoneNumber;
+
+        private enum MemberType {
+            CONSULTER, CONSULTANT
+        }
     }
 }
