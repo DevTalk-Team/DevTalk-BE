@@ -16,6 +16,7 @@ public enum ErrorCode {
     NOT_FOUND_REFUNDABLE_CONSULTATION(NOT_FOUND, "03004", "결제 취소에 실패했습니다. 취소할 결제건이 존재하지 않습니다."),
     INVALID_REFUND_REQUEST(CONFLICT, "03005", "잘못된 결제 취소 요청입니다"),
     NOT_PAID_CONSULTATION(CONFLICT, "03006", "결제된 예약건이 아닙니다."),
+    NOT_FOUND_MEMBER(NOT_FOUND, "03007", "존재하지 않는 회원입니다."),
 
     ;
 
