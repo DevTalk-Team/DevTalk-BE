@@ -11,7 +11,7 @@ public class ProductReq {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @Getter
     public static class RegistProdReq {
-        private Long consultantId;
+        private Long memberId;
         private LocalDateTime reservationAt;
         private ProductProceedType productProceedType;
     }

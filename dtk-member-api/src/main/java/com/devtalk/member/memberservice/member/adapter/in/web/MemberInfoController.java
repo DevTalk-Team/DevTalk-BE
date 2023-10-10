@@ -16,6 +16,10 @@ import java.util.Optional;
 public class MemberInfoController {
     private final MemberInfoUseCase memberInfoUseCase;
 
+    @GetMapping("/member/profile/email/{email}")
+    MemberRes.ProfileRes getMemberByEmail(@PathVariable String email) {
+        return memberInfoUseCase.findMemberByEmail(email);
+    }
     @GetMapping("/member/profile/consultant/{consultant}")
     MemberRes.ConsultantRes getConsultantInfo(@PathVariable Long consultant) {
         return memberInfoUseCase.findConsultantById(consultant);
@@ -26,9 +30,6 @@ public class MemberInfoController {
         return memberInfoUseCase.findConsulterById(consulter);
     }
 
-    @GetMapping("/member/profile/email/{email}")
-    MemberRes.ProfileRes getMemberByEmail(@PathVariable String email) {
-        return memberInfoUseCase.findMemberByEmail(email);
-    }
+
 }
 

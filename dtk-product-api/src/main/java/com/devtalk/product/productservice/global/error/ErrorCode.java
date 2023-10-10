@@ -23,6 +23,7 @@ public enum ErrorCode {
     NOT_FOUND_CONSULTATION(NOT_FOUND, "05021", "상품조회에 실패하였습니다.."),
     NOT_FOUND_CONSULTANT(NOT_FOUND, "05031", "상담사 조회를 실패하였습니다."),
     NOT_FOUND_CONSULTER(NOT_FOUND, "05032", "내담자 조회를 실패하였습니다."),
+    NOT_FOUND_USER(NOT_FOUND, "05033", "회원 조회를 실패하였습니다."),
 
 
     UPDATE_RESERVATION(CONFLICT, "05041", "상품수정에 실패하였습니다."),

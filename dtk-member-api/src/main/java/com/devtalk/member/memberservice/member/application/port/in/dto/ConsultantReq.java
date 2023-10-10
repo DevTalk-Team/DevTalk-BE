@@ -25,4 +25,6 @@ public class ConsultantReq {
     public static class CategoryReq {
         private List<String> categories;
     }
+
+
 }

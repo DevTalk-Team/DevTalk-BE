@@ -1,8 +1,7 @@
 package com.devtalk.member.memberservice.member.adapter.in.web.dto;
 
 import com.devtalk.member.memberservice.member.application.port.in.dto.ConsultantReq;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.*;
 
 import java.util.List;
 
@@ -40,3 +39,4 @@ public class ConsultantInput {
         private List<String> list;
     }
 }
+

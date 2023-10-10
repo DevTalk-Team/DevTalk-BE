@@ -2,6 +2,7 @@ package com.devtalk.consultation.consultationservice.consultation.application;
 
 import com.devtalk.consultation.consultationservice.consultation.application.port.in.ModifyConsultationUseCase;
 import com.devtalk.consultation.consultationservice.consultation.application.port.in.dto.ConsultationReq;
+import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.AttachedFileRepo;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.ConsultationQueryableRepo;
 import com.devtalk.consultation.consultationservice.consultation.application.validator.FileValidator;
 import com.devtalk.consultation.consultationservice.consultation.domain.consultation.AttachedFile;
@@ -29,35 +30,36 @@ public class ModifyConsultationService implements ModifyConsultationUseCase {
     private final FileValidator fileValidator;
     private final FileUploadService fileUploadService;
     private final ConsultationQueryableRepo consultationQueryableRepo;
+    private final AttachedFileRepo attachedFileRepo;
+
 
     @Transactional
     @Override
     public Long modifyConsultation(ConsultationModificationReq modificationReq) {
-        List<MultipartFile> newMultipartFileList = modificationReq.getAttachedFileList();
-        fileValidator.checkFileCountAndSizeAndExtension(newMultipartFileList);
-        List<AttachedFile> newAttachedFileList = uploadAttachedFileList(newMultipartFileList);
+        //List<MultipartFile> newMultipartFileList = modificationReq.getAttachedFileList();
+        //fileValidator.checkFileCountAndSizeAndExtension(newMultipartFileList);
 
         Consultation findConsultation = consultationQueryableRepo.findByIdWithConsulterId(modificationReq.getConsultationId(), modificationReq.getConsulterId())
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_CONSULTATION));
+        //List<AttachedFile> newAttachedFileList = uploadAttachedFileList(findConsultation,newMultipartFileList);
 
-        findConsultation.modifyDetails(modificationReq.getContent(), newAttachedFileList);
+
+        //findConsultation.modifyDetails(modificationReq.getContent(), newAttachedFileList);
 
         return findConsultation.getId();
     }
 
-    private List<AttachedFile> uploadAttachedFileList(List<MultipartFile> attachedFileList) {
+    private void uploadAttachedFileList(Consultation newConsultation, List<MultipartFile> attachedFileList) {
         List<BaseFile> baseFileList = fileUploadService.uploadConsultationFileList(attachedFileList);
-        List<AttachedFile> uploadedAttachedFileList = new ArrayList<>();
 
-        baseFileList.stream().forEach(baseFile -> {
-            uploadedAttachedFileList.add(AttachedFile.builder()
-                    .fileUrl(baseFile.getFileUrl())
-                    .originName(baseFile.getOriginName())
-                    .storedName(baseFile.getStoredName())
-                    .build());
-        });
-
-        return uploadedAttachedFileList;
+        baseFileList.forEach(baseFile ->
+                attachedFileRepo.save(
+                        AttachedFile.createAttachedFile(
+                                newConsultation,
+                                baseFile.getFileUrl(),
+                                baseFile.getOriginFileName(),
+                                baseFile.getOriginFileName()
+                        ))
+        );
     }
-
 }

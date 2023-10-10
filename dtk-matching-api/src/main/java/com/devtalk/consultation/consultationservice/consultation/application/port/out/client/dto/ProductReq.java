@@ -8,17 +8,18 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-public class ProductRes {
+public class ProductReq {
 
     @Builder
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @Getter
-    public static class ProductSearchRes {
+    public static class ProductSearchReq {
         private Long consultantId;
         private LocalDateTime reservationAT;
         private ProductProceedType productProceedType;
         private String reservationStatus;
-        private Integer cost;
+        private Integer F2F_Cost;
+        private Integer NF2F_Cost;
     }
 
 

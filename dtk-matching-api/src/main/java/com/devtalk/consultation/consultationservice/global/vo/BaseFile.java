@@ -9,7 +9,7 @@ import lombok.*;
 public class BaseFile {
     private String fileUrl;
 
-    private String originName;
+    private String originFileName;
 
-    private String storedName;
+    private String storedFileName;
 }

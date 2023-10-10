@@ -1,10 +1,14 @@
 package com.devtalk.consultation.consultationservice.consultation.adapter.in.web;
 
 import com.devtalk.consultation.consultationservice.consultation.application.port.in.*;
+import com.devtalk.consultation.consultationservice.consultation.application.port.in.dto.ConsultationReq;
 import com.devtalk.consultation.consultationservice.consultation.application.port.in.dto.ConsultationRes;
 import com.devtalk.consultation.consultationservice.global.vo.SuccessCode;
 import com.devtalk.consultation.consultationservice.global.vo.SuccessResponse;
 import com.devtalk.consultation.consultationservice.global.vo.SuccessResponseWithoutResult;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -14,9 +18,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.core.env.Environment;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 import static com.devtalk.consultation.consultationservice.consultation.adapter.in.web.dto.ConsultationInput.*;
 import static com.devtalk.consultation.consultationservice.consultation.application.port.in.dto.ConsultationRes.*;
@@ -34,19 +42,30 @@ public class ConsulterApiController {
     private final ModifyConsultationUseCase modifyUseCase;
     private final SearchConsultationUseCase searchUseCase;
     private final ReviewConsultationUseCase reviewUseCase;
+    private final AuthUseCase authUseCase;
     private final Environment env;
-
 
 
     @Operation(summary = "내담자 - 상담 예약", responses = {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
     })
-    @PostMapping("/consulters/{consulterId}/consultations")
-    public ResponseEntity<?> reserveConsultation(@RequestBody @Validated ReservationInput reservationInput,
-                                                 @PathVariable Long consulterId) {
-        reserveUseCase.reserve(reservationInput.toReq(consulterId));
+    @PostMapping(path = "/consulters/creation/consultations", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> reserveConsultation(@RequestParam("reservationJson") String reservationJson,
+                                                 @RequestPart("attachedFiles") List<MultipartFile> attachedFiles,
+                                                 @RequestHeader(value = "User-Email") String userEmail) throws JsonProcessingException {
+        log.info("User-Eamil : {}", userEmail);
+        Long consulterId = authUseCase.auth(userEmail);
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        ReservationInput reservationInput = mapper.readValue(reservationJson, ReservationInput.class);
+
+        ConsultationReq.ReservationReq reservationReq = reservationInput.toReq(consulterId);
+        reserveUseCase.reserve(reservationReq, attachedFiles);
         return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.CONSULTATION_RESERVATION_SUCCESS);
     }
+
+
+
 
     @Operation(summary = "내담자 - 상담 취소", responses = {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
