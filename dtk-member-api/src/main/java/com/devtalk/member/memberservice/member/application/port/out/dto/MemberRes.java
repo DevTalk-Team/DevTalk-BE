@@ -2,8 +2,6 @@ package com.devtalk.member.memberservice.member.application.port.out.dto;
 
 import com.devtalk.member.memberservice.member.domain.member.Member;
 import com.devtalk.member.memberservice.member.domain.member.MemberType;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
