@@ -42,16 +42,19 @@ public class ConsulterApiController {
     private final ModifyConsultationUseCase modifyUseCase;
     private final SearchConsultationUseCase searchUseCase;
     private final ReviewConsultationUseCase reviewUseCase;
+    private final AuthUseCase authUseCase;
     private final Environment env;
 
 
     @Operation(summary = "내담자 - 상담 예약", responses = {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
     })
-    @PostMapping(path = "/consulters/{consulterId}/consultations", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(path = "/consulters/creation/consultations", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> reserveConsultation(@RequestParam("reservationJson") String reservationJson,
                                                  @RequestPart("attachedFiles") List<MultipartFile> attachedFiles,
-                                                 @PathVariable Long consulterId) throws JsonProcessingException {
+                                                 @RequestHeader(value = "User-Email") String userEmail) throws JsonProcessingException {
+        log.info("User-Eamil : {}", userEmail);
+        Long consulterId = authUseCase.auth(userEmail);
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         ReservationInput reservationInput = mapper.readValue(reservationJson, ReservationInput.class);

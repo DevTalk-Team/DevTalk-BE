@@ -1,5 +1,7 @@
 package com.devtalk.product.productservice.product.application.service.product;
 
+import com.devtalk.product.productservice.global.error.ErrorCode;
+import com.devtalk.product.productservice.global.error.exception.NotFoundException;
 import com.devtalk.product.productservice.product.adapter.in.client.MemberServiceClient;
 import com.devtalk.product.productservice.product.application.port.in.dto.MemberReq;
 import com.devtalk.product.productservice.product.application.port.in.product.RegistUseCase;
@@ -10,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 
 @Service
 @Transactional(readOnly = true)
@@ -19,16 +23,21 @@ public class RegistService implements RegistUseCase {
     private final MemberServiceClient memberServiceClient;
 
     @Transactional
-    public void registProduct(ProductReq.RegistProdReq registProdReq) {
+    public void registProduct(Long consultantId, ProductReq.RegistProdReq registProdReq) {
         //todo 검증절차 필요한지 확인하기
         //foreign으로 member-service로 부터 member 정보 받아오기
-        MemberReq.ConsultantPriceReq consultantPriceReq = memberServiceClient.getPrice(registProdReq.getConsultantId());
-        Product product = Product.registProduct(registProdReq.getConsultantId(),
+        MemberReq.ConsultantReq consultantReq = findConsultantInfo(consultantId);
+        Product product = Product.registProduct(consultantReq.getConsultantId(),
                 registProdReq.getReservationAt(),
                 registProdReq.getProductProceedType(),
-                consultantPriceReq.getF2F_Cost(),
-                consultantPriceReq.getNF2F_Cost());
+                consultantReq.getF2F_Cost(),
+                consultantReq.getNF2F_Cost());
         productRepo.save(product);
+    }
+
+    public MemberReq.ConsultantReq findConsultantInfo(Long consultantId){
+        return Optional.ofNullable(memberServiceClient.getConsultantInfo(consultantId))
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_CONSULTANT));
     }
 }
 

@@ -9,5 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @FeignClient(name = "member-service")
 public interface MemberServiceClient {
     @GetMapping("/member/profile/consultant/{consultant}")
-    MemberReq.ConsultantPriceReq getPrice(@PathVariable("consultant") Long consultant);
+    MemberReq.ConsultantReq getConsultantInfo(@PathVariable Long consultant);
+    @GetMapping("/member/profile/email/{email}")
+    MemberReq.ProfileReq getMemberByEmail(@PathVariable String email);
 }

@@ -1,6 +1,7 @@
 package com.devtalk.member.memberservice.member.application.port.in;
 
 import com.devtalk.member.memberservice.member.adapter.in.web.dto.ConsultantInput;
+import com.devtalk.member.memberservice.member.application.port.in.dto.ConsultantReq;
 import com.devtalk.member.memberservice.member.application.port.out.dto.ConsultantRes;
 
 import java.util.List;

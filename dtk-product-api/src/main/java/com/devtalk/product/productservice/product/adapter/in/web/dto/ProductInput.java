@@ -19,9 +19,9 @@ public class ProductInput {
         private  LocalDateTime reservationAt;
         private ProductProceedType productProceedType;
 
-        public ProductReq.RegistProdReq toReq(Long consultantId){
+        public ProductReq.RegistProdReq toReq( ){
             return ProductReq.RegistProdReq.builder()
-                    .consultantId(consultantId)
+                    .memberId(consultantId)
                     .reservationAt(reservationAt)
                     .productProceedType(productProceedType)
                     .build();

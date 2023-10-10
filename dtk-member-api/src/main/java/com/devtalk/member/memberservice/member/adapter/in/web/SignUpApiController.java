@@ -2,11 +2,15 @@ package com.devtalk.member.memberservice.member.adapter.in.web;
 
 import com.devtalk.member.memberservice.global.error.ErrorResponse;
 import com.devtalk.member.memberservice.global.success.SuccessResponseNoResult;
+import com.devtalk.member.memberservice.member.adapter.in.web.dto.ConsultantInput;
 import com.devtalk.member.memberservice.member.adapter.in.web.dto.MemberInput;
 import com.devtalk.member.memberservice.member.adapter.out.producer.KafkaProducer;
+import com.devtalk.member.memberservice.member.application.port.in.ConsultantInfoUseCase;
 import com.devtalk.member.memberservice.member.application.port.in.SignUpUseCase;
 import com.devtalk.member.memberservice.member.application.port.in.VerifyEmailUseCase;
+import com.devtalk.member.memberservice.member.application.port.in.dto.ConsultantReq;
 import com.devtalk.member.memberservice.member.application.port.in.dto.MemberReq;
+import com.devtalk.member.memberservice.member.domain.consultation.ConsultantInfo;
 import com.devtalk.member.memberservice.member.domain.member.Member;
 import com.devtalk.member.memberservice.member.domain.member.MemberType;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,6 +34,7 @@ import static com.devtalk.member.memberservice.global.success.SuccessCode.*;
 @RequiredArgsConstructor
 public class SignUpApiController {
     private final SignUpUseCase signUpUseCase;
+    private final ConsultantInfoUseCase consultantInfoUseCase;
     private final VerifyEmailUseCase verifyEmailUseCase;
     private final KafkaProducer kafkaProducer;
     private final Environment env;
@@ -90,6 +95,7 @@ public class SignUpApiController {
         kafkaProducer.sendMember(member);
         return SuccessResponseNoResult.toResponseEntity(CONSULTANT_SIGNUP_SUCCESS);
     }
+
 
     /* 이메일 중복 확인 */
     @Operation(summary = "회원가입 - 이메일 중복 확인", responses = {

@@ -47,6 +47,7 @@ class ProductApiController {
     private final RegistUseCase registUseCase;
     private final SearchUseCase searchUseCase;
     private final UpdateUseCase updateUseCase;
+    private final AuthUseCase authUseCase;
     //private final ReserveUseCase reserveUseCase;
 
 
@@ -82,10 +83,12 @@ class ProductApiController {
             @ApiResponse(responseCode = "401", description = "상품 등록 실패",
                     content = @Content(mediaType = "application/json"))
     })
-    @PostMapping("/consultants/{memberId}/register")
+    @PostMapping("/consultants/registration")
     public ResponseEntity<?> registProduct(@RequestBody @Validated ProductInput.RegistrationInput registrationInput,
-                                           @PathVariable Long memberId) {
-        registUseCase.registProduct(registrationInput.toReq(memberId));
+                                           @RequestHeader(value = "User-Email") String userEmail) {
+        log.info("User-Eamil : {}", userEmail);
+        Long consultantId = authUseCase.auth(userEmail);
+        registUseCase.registProduct(consultantId,registrationInput.toReq());
         return ResponseEntity.ok().build();
     }
 

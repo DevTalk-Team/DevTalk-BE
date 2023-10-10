@@ -4,5 +4,5 @@ import com.devtalk.product.productservice.product.application.port.in.dto.Produc
 
 public interface RegistUseCase {
     //상품 등록
-    void registProduct(ProductReq.RegistProdReq registProdReq);
+    void registProduct(Long consultantId, ProductReq.RegistProdReq registProdReq);
 }

@@ -22,6 +22,10 @@ public class MemberInfoService implements MemberInfoUseCase {
         Member member = memberRepo.findById(consultant)
                 .orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
         ConsultantInfo info = consultantInfoRepo.findByMember(member);
+        if (info == null) {
+            // 적절한 예외 또는 대체값을 반환합니다.
+            throw new MemberNotFoundException(ErrorCode.CONSULTANT_INFO_NOT_FOUND);
+        }
         return MemberRes.ConsultantRes.of(member, info.getF2f1h(), info.getNf2f1h());
     }
 

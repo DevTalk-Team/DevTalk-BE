@@ -1,11 +1,8 @@
 package com.devtalk.consultation.consultationservice.consultation.application;
 
-import com.devtalk.consultation.consultationservice.consultation.adapter.out.producer.PaymentKafkaProducer;
-import com.devtalk.consultation.consultationservice.consultation.adapter.out.producer.ProductKafkaProducer;
 import com.devtalk.consultation.consultationservice.consultation.application.port.in.*;
-import com.devtalk.consultation.consultationservice.consultation.application.port.in.dto.ConsultationReq;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.client.MemberServiceClient;
-import com.devtalk.consultation.consultationservice.consultation.application.port.out.client.dto.MemberRes;
+import com.devtalk.consultation.consultationservice.consultation.application.port.out.client.dto.MemberReq;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.AttachedFileRepo;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.ConsultationRepo;
 //import com.devtalk.consultation.consultationservice.consultation.application.validator.ConsultationReservationValidator;
@@ -17,7 +14,6 @@ import com.devtalk.consultation.consultationservice.consultation.domain.consulta
 import com.devtalk.consultation.consultationservice.consultation.domain.member.Consultant;
 import com.devtalk.consultation.consultationservice.consultation.domain.member.Consulter;
 import com.devtalk.consultation.consultationservice.consultation.domain.member.MemberType;
-import com.devtalk.consultation.consultationservice.global.error.execption.NotFoundException;
 import com.devtalk.consultation.consultationservice.global.util.FileUploadService;
 import com.devtalk.consultation.consultationservice.global.vo.BaseFile;
 import lombok.RequiredArgsConstructor;
@@ -25,11 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.devtalk.consultation.consultationservice.consultation.application.port.in.dto.ConsultationReq.*;
-import static com.devtalk.consultation.consultationservice.global.error.ErrorCode.NOT_FOUND_CONSULTER;
 
 @Service
 @Transactional(readOnly = true)
@@ -48,7 +42,7 @@ public class ReserveConsultationService implements ReserveConsultationUseCase {
     public void reserve(ReservationReq reservationReq, List<MultipartFile> attachedFiles) {
         //consultationValidator.validateReservation(reservationReq); //파일 정책 체크 + 회원 존재여부 체크 + 상품 매칭 가능여부 체크 + 매칭 중복 체크
         if (!memberQueryableRepo.existsByConsultantId(reservationReq.getConsultantId())){
-            MemberRes.ConsultantRes consultantInfo = memberServiceClient.getConsultantInfo(reservationReq.getConsultantId());
+            MemberReq.ConsultantReq consultantInfo = memberServiceClient.getConsultantInfo(reservationReq.getConsultantId());
             if(consultantInfo.getMemberType() == MemberType.CONSULTANT) {
                 Consultant newConsultant = Consultant.createConsultant(consultantInfo.getConsultantId(), consultantInfo.getName());
                 memberRepo.save(newConsultant);
@@ -56,7 +50,7 @@ public class ReserveConsultationService implements ReserveConsultationUseCase {
 
         }
         if (!memberQueryableRepo.existsByConsulterId(reservationReq.getConsulterId())){
-            MemberRes.ConsulterRes consulterInfo = memberServiceClient.getConsulterInfo(reservationReq.getConsultantId());
+            MemberReq.ConsulterReq consulterInfo = memberServiceClient.getConsulterInfo(reservationReq.getConsultantId());
             if(consulterInfo.getMemberType() == MemberType.CONSULTER) {
                 Consulter newConsulter = Consulter.createConsulter(consulterInfo.getConsulterId(), consulterInfo.getName());
                 memberRepo.save(newConsulter);

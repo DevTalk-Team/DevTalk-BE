@@ -1,5 +1,6 @@
 package com.devtalk.member.memberservice.member.domain.consultation;
 
+import com.devtalk.member.memberservice.member.adapter.in.web.dto.ConsultantInput;
 import com.devtalk.member.memberservice.member.application.port.in.dto.ConsultantReq;
 import com.devtalk.member.memberservice.member.domain.member.Member;
 import jakarta.persistence.*;
