@@ -10,7 +10,6 @@ import java.time.Duration;
 @Component
 @RequiredArgsConstructor
 public class RedisUtil {
-
     private final StringRedisTemplate stringRedisTemplate;
 
     public String getData(String key) {
@@ -31,5 +30,6 @@ public class RedisUtil {
     public void deleteData(String key) {
         stringRedisTemplate.delete(key);
     }
+
 
 }

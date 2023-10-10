@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -49,24 +50,27 @@ public class ConsultantInfoService implements ConsultantInfoUseCase {
     }
 
     @Override
-    public ConsultantRes.InfoRes getInfo(String token) {
-        Member member = getMember(token);
+    public ConsultantRes.InfoRes getInfo(String email) {
+        Member member = memberRepo.findByEmail(email)
+                .orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
         ConsultantInfo info = consultantInfoRepo.findByMember(member);
         return ConsultantRes.InfoRes.of(info);
     }
 
     @Transactional
     @Override
-    public ConsultantRes.InfoRes updateInfo(String token, ConsultantInput.InfoInput input) {
-        Member member = getMember(token);
+    public ConsultantRes.InfoRes updateInfo(String email, ConsultantInput.InfoInput input) {
+        Member member = memberRepo.findByEmail(email)
+                .orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
         ConsultantInfo info = consultantInfoRepo.findByMember(member);
         ConsultantInfo newInfo = info.update(input.toReq());
         return ConsultantRes.InfoRes.of(consultantInfoRepo.save(newInfo));
     }
 
     @Override
-    public List<String> getType(String token) {
-        Member member = getMember(token);
+    public List<String> getType(String email) {
+        Member member = memberRepo.findByEmail(email)
+                .orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
         List<ConsultantConsultationType> types = consultantConsultationTypeRepo.findAllByMemberId(member.getId());
         List<String> result = new ArrayList<>();
         types.forEach((type) -> result.add(type.getConsultationType().getConsultationType()));
@@ -75,8 +79,9 @@ public class ConsultantInfoService implements ConsultantInfoUseCase {
 
     @Transactional
     @Override
-    public void updateType(String token, ConsultantInput.ListInput input) {
-        Member member = getMember(token);
+    public void updateType(String email, ConsultantInput.ListInput input) {
+        Member member = memberRepo.findByEmail(email)
+                .orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
         if (consultantConsultationTypeRepo.existsByMemberId(member.getId())) {
             consultantConsultationTypeRepo.deleteAllByMemberId(member.getId());
         }
@@ -88,8 +93,9 @@ public class ConsultantInfoService implements ConsultantInfoUseCase {
     }
 
     @Override
-    public List<String> getCategory(String token) {
-        Member member = getMember(token);
+    public List<String> getCategory(String email) {
+        Member member = memberRepo.findByEmail(email)
+                .orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
         List<MemberCategory> categories = memberCategoryRepo.findAllByMemberId(member.getId());
         List<String> result = new ArrayList<>();
         categories.forEach((category) -> result.add(category.getCategory().getCategory()));
@@ -98,8 +104,9 @@ public class ConsultantInfoService implements ConsultantInfoUseCase {
 
     @Transactional
     @Override
-    public void updateCategory(String token, ConsultantInput.ListInput input) {
-        Member member = getMember(token);
+    public void updateCategory(String email, ConsultantInput.ListInput input) {
+        Member member = memberRepo.findByEmail(email)
+                .orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
         if (memberCategoryRepo.existsByMemberId(member.getId())) {
             memberCategoryRepo.deleteAllByMemberId(member.getId()); // 기존 분야 삭제
         }
@@ -111,8 +118,9 @@ public class ConsultantInfoService implements ConsultantInfoUseCase {
     }
 
     @Override
-    public List<String> getRegion(String token) {
-        Member member = getMember(token);
+    public List<String> getRegion(String email) {
+        Member member = memberRepo.findByEmail(email)
+                .orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
         List<MemberRegion> regions = memberRegionRepo.findAllByMemberId(member.getId());
         List<String> result = new ArrayList<>();
         regions.forEach((region) -> result.add(region.getRegion().getRegion()));
@@ -121,8 +129,9 @@ public class ConsultantInfoService implements ConsultantInfoUseCase {
 
     @Transactional
     @Override
-    public void updateRegion(String token, ConsultantInput.ListInput input) {
-        Member member = getMember(token);
+    public void updateRegion(String email, ConsultantInput.ListInput input) {
+        Member member = memberRepo.findByEmail(email)
+                .orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
         if (memberRegionRepo.existsByMemberId(member.getId())) {
             memberRegionRepo.deleteAllByMemberId(member.getId());
         }

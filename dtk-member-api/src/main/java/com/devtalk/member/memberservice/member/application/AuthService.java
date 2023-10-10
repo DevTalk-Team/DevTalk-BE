@@ -47,13 +47,12 @@ public class AuthService implements AuthUseCase {
         redisUtil.setDataExpire(member.getUsername(), refreshToken, 1209600);
 
         log.info("[login] LogInRes 객체 생성");
-//        AuthRes.LogInRes logInRes = AuthRes.LogInRes.builder()
-//                .tokenDto(jwtTokenProvider.createToken(findMember.getEmail(), String.valueOf(findMember.getRoleType())))
-//                .build();
+
         AuthRes.LogInRes logInRes = AuthRes.LogInRes.builder()
                 .accessToken(accessToken)
                 .tokenType("Bearer ")
                 .email(member.getUsername())
+                .refreshToken(refreshToken)
                 .build();
 
         return logInRes;

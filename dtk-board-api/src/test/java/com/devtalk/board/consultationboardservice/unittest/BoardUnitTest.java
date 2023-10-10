@@ -15,17 +15,16 @@ public class BoardUnitTest {
         this.postRepo = postRepo;
     }
 
-    @Test
-    void bulkData() {
-        for (long i = 1; i < 100; i++) {
-            Post newPost = Post.builder()
-                    .userId(i)
-                    .title(i + "번째 게시물")
-                    .content(i + "번째 게시물 내용")
-                    .views(0)
-                    .build();
-
-            postRepo.save(newPost);
-        }
-    }
+    // @Test
+    // void bulkData() {
+    //     for (long i = 1; i < 100; i++) {
+    //         Post newPost = Post.builder()
+    //                 .userId(i)
+    //                 .title(i + "번째 게시물")
+    //                 .content(i + "번째 게시물 내용")
+    //                 .views(0)
+    //                 .build();
+    //         postRepo.save(newPost);
+    //     }
+    // }
 }
