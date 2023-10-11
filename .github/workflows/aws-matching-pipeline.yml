@@ -27,7 +27,7 @@
 name: Matching Service - Deploy to Amazon ECS
 
 on:
-  pull_request:
+  push:
     branches:
       - master
 
@@ -45,7 +45,7 @@ env:
 
 permissions:
   contents: read
-  id-token: write
+#  id-token: write
 
 jobs:
   changes:
