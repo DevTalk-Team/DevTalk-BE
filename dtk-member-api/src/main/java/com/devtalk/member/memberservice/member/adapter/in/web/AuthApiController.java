@@ -29,8 +29,7 @@ public class AuthApiController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LogInInput input) {
-        LogInReq req = toReq(input);
-        AuthRes.LogInRes res = authUseCase.login(req);
+        AuthRes.LogInRes res = authUseCase.login(toReq(input));
         return SuccessResponse.toResponseEntity(LOGIN_SUCCESS, res);
     }
 
