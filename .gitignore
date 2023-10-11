@@ -19,7 +19,6 @@ bin/
 
 ### IntelliJ IDEA ###
 .idea
-.github
 *.iws
 *.iml
 *.ipr
@@ -36,6 +35,7 @@ out/
 
 ### VS Code ###
 .vscode/
-
 DevTalk-BE
 .DS_Store
+
+.github
