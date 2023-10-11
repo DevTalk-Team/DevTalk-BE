@@ -1,6 +1,7 @@
 package com.devtalk.payment.paymentservice.adapter.in.consumer;
 
 import com.devtalk.payment.global.config.CustomLocalDateTimeDeserializer;
+import com.devtalk.payment.paymentservice.adapter.in.consumer.dto.ConsumerInput;
 import com.devtalk.payment.paymentservice.application.port.out.repository.ConsultationRepo;
 import com.devtalk.payment.paymentservice.application.port.out.repository.PaymentRepo;
 import com.devtalk.payment.paymentservice.domain.consultation.Consultation;
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+import static com.devtalk.payment.paymentservice.adapter.in.consumer.dto.ConsumerInput.*;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -30,14 +33,16 @@ public class KafkaConsumer {
         log.info("Kafka Message: " + kafkaMessage);
 //        Map<Object, Object> map = new HashMap<>();
 
-        Consultation consultation = null;
+        ConsultationInput consultation = null;
+
         try{
             // 카프카로 받은 메시지를 JSON 형태로 변환하기 위한 과정
-            consultation = deserializeMapper().readValue(kafkaMessage, Consultation.class);
+            consultation = deserializeMapper().readValue(kafkaMessage, ConsultationInput.class);
 //            map = mapper.readValue(kafkaMessage, new TypeReference<Map<Object, Object>>() {});
         } catch (JsonProcessingException ex){
             ex.printStackTrace();
         }
+
         dataSynchronization(consultation);
     }
 

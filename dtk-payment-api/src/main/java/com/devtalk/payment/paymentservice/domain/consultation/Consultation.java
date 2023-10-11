@@ -47,8 +47,7 @@ public class Consultation extends BaseEntity {
     private Integer cost;
 
     // 상담 일시
-    @Column(updatable = false, insertable = false) // TODO : nullable = false
-    @ColumnDefault(value = "CURRENT_TIMESTAMP") // 받아와야 할 값임 ! 수정 필요(지금은 현재 시간으로 임의로 저장)
+    @Column(updatable = false, insertable = false, nullable = false)
     private LocalDateTime consultationAt;
 
     // 상담 진행 상태
