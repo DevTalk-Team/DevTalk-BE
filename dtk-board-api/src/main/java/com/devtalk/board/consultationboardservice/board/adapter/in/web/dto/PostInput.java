@@ -29,7 +29,9 @@ public class PostInput {
         @Builder.Default
         private List<MultipartFile> attachedFileList = new ArrayList<>();
 
-        public PostCreationInput of(List<MultipartFile> attachedFileList){
+        public static PostCreationInput of(String title,
+                                           String content,
+                                           List<MultipartFile> attachedFileList){
             return PostCreationInput.builder()
                     .title(title)
                     .content(content)

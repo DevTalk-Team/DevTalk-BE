@@ -33,10 +33,11 @@ public class PostApiController {
     })
     @PostMapping
     public ResponseEntity<?> post(@RequestHeader(value = "User-Email") String email,
-                                  @RequestBody PostCreationInput postCreationInput,
+                                  @RequestParam String title,
+                                  @RequestParam String content,
                                   @RequestPart(value = "files", required = false) List<MultipartFile> files) {
         MemberRes.ProfileRes user = memberUseCase.findUser(email);
-        postCreationInput.of(files);
+        PostCreationInput postCreationInput = PostCreationInput.of(title, content, files);
 
         postUseCase.writePost(postCreationInput.toReq(user.getId(), user.getName()));
         return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.CREATE_POST_SUCCESS);
