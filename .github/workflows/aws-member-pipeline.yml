@@ -27,7 +27,7 @@
 name: Member Service - Deploy to Amazon ECS
 
 on:
-  pull-request:
+  pull_request:
     branches:
       - master
 
