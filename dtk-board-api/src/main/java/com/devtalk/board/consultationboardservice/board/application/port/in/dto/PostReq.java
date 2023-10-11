@@ -16,15 +16,16 @@ public class PostReq {
     @Builder
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static class PostCreationReq{
+        private Long userId;
+        private String name;
         private String title;
         private String content;
-        private Long userId;
 
         @Builder.Default
         private List<MultipartFile> attachedFileList = new ArrayList<>();
 
-        public Post toEntity(String userName) {
-            return Post.createPost(title, content, userId, userName);
+        public Post toEntity() {
+            return Post.createPost(title, content, userId, name);
         }
     }
 

@@ -35,7 +35,6 @@ public class PostService implements PostUseCase {
     private final AttachedFileUseCase attachedFileUseCase;
     private final CommentUseCase commentUseCase;
     private final BoardValidator boardValidator;
-    private final MemberService memberService;
 
     @Override
     @Transactional
@@ -43,12 +42,10 @@ public class PostService implements PostUseCase {
     public void writePost(PostCreationReq postCreationReq) {
         boardValidator.validatePost(postCreationReq);
 
-        String userName = memberService.findUser(postCreationReq.getUserId()).getName();
-        Post newPost = postCreationReq.toEntity(userName); // 초기 빈 리스트와 함께 Post 생성
-        newPost = postRepo.save(newPost);
+        Post post = postRepo.save(postCreationReq.toEntity());
 
         if (postCreationReq.getAttachedFileList() != null) {
-            uploadAttachedFileList(newPost, postCreationReq.getAttachedFileList());
+            uploadAttachedFileList(post, postCreationReq.getAttachedFileList());
         }
     }
 

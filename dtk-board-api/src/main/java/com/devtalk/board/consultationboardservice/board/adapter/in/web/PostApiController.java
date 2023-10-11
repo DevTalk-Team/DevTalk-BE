@@ -1,6 +1,8 @@
 package com.devtalk.board.consultationboardservice.board.adapter.in.web;
 
 import com.devtalk.board.consultationboardservice.board.application.port.in.PostUseCase;
+import com.devtalk.board.consultationboardservice.board.application.port.in.dto.MemberRes;
+import com.devtalk.board.consultationboardservice.board.application.port.out.MemberUseCase;
 import com.devtalk.board.consultationboardservice.global.success.SuccessCode;
 import com.devtalk.board.consultationboardservice.global.success.SuccessResponse;
 import com.devtalk.board.consultationboardservice.global.success.SuccessResponseWithoutResult;
@@ -24,22 +26,20 @@ import static com.devtalk.board.consultationboardservice.board.adapter.in.web.dt
 @RequiredArgsConstructor
 public class PostApiController {
     private final PostUseCase postUseCase;
+    private final MemberUseCase memberUseCase;
 
     @Operation(summary = "게시판 - 게시글 작성 API", responses = {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
     })
     @PostMapping
-    public ResponseEntity<?> post(@RequestParam Long userId,
+    public ResponseEntity<?> post(@RequestHeader(value = "User-Email") String email,
                                   @RequestParam String title,
                                   @RequestParam String content,
                                   @RequestPart(value = "files", required = false) List<MultipartFile> files) {
-        PostCreationInput postCreationInput = PostCreationInput.builder()
-                .title(title)
-                .content(content)
-                .attachedFileList(files)
-                .build();
+        MemberRes.ProfileRes user = memberUseCase.findUser(email);
+        PostCreationInput postCreationInput = PostCreationInput.of(title, content, files);
 
-        postUseCase.writePost(postCreationInput.toReq(userId));
+        postUseCase.writePost(postCreationInput.toReq(user.getId(), user.getName()));
         return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.CREATE_POST_SUCCESS);
     }
 
@@ -72,15 +72,10 @@ public class PostApiController {
     })
     @PutMapping("/{postId}")
     public ResponseEntity<?> modifyPost(@PathVariable Long postId,
-                                        @RequestParam Long userId,
-                                        @RequestParam String title,
-                                        @RequestParam String content) {
-        PostModifyInput postModifyInput = PostModifyInput.builder()
-                .title(title)
-                .content(content)
-                .build();
-
-        postUseCase.modifyPost(postId, postModifyInput.toReq(userId));
+                                        @RequestHeader(value = "User-Email") String email,
+                                        @RequestBody PostModifyInput postModifyInput) {
+        MemberRes.ProfileRes user = memberUseCase.findUser(email);
+        postUseCase.modifyPost(postId, postModifyInput.toReq(user.getId()));
         return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.MODIFY_POST_SUCCESS);
     }
 
@@ -88,8 +83,10 @@ public class PostApiController {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
     })
     @DeleteMapping("/{postId}")
-    public ResponseEntity<?> deletePost(@RequestParam Long userId, @PathVariable Long postId) {
-        postUseCase.deletePost(postId, userId);
+    public ResponseEntity<?> deletePost(@RequestHeader(value = "User-Email") String email,
+                                        @PathVariable Long postId) {
+        MemberRes.ProfileRes user = memberUseCase.findUser(email);
+        postUseCase.deletePost(postId, user.getId());
         return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.DELETE_POST_SUCCESS);
     }
 

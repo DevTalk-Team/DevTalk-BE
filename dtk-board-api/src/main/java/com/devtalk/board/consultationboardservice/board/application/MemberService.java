@@ -1,6 +1,7 @@
 package com.devtalk.board.consultationboardservice.board.application;
 
 import com.devtalk.board.consultationboardservice.board.application.port.in.dto.MemberRes;
+import com.devtalk.board.consultationboardservice.board.application.port.out.MemberUseCase;
 import com.devtalk.board.consultationboardservice.board.application.port.out.client.MemberServiceClient;
 import com.devtalk.board.consultationboardservice.global.error.ErrorCode;
 import com.devtalk.board.consultationboardservice.global.error.exception.NotFoundException;
@@ -13,12 +14,16 @@ import static com.devtalk.board.consultationboardservice.board.application.port.
 
 @Service
 @RequiredArgsConstructor
-public class MemberService {
+public class MemberService implements MemberUseCase {
     private final MemberServiceClient memberServiceClient;
 
-    public MemberInfoRes findUser(Long userId) {
-        MemberRes memberRes = Optional.ofNullable(memberServiceClient.findUser(userId))
+    public MemberRes.ProfileRes findUser(String email) {
+        return Optional.ofNullable(memberServiceClient.getMemberByEmail(email))
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_USER));
-        return memberRes.getResult();
+    }
+
+    public Long findUserId(String email) {
+        MemberRes.ProfileRes memberInfo = findUser(email);
+        return memberInfo.getId();
     }
 }

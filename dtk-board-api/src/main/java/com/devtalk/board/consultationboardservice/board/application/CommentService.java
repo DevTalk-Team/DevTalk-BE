@@ -1,6 +1,5 @@
 package com.devtalk.board.consultationboardservice.board.application;
 
-import com.devtalk.board.consultationboardservice.board.adapter.in.web.dto.CommentInput;
 import com.devtalk.board.consultationboardservice.board.application.port.in.CommentUseCase;
 import com.devtalk.board.consultationboardservice.board.application.port.in.dto.CommentRes;
 import com.devtalk.board.consultationboardservice.board.application.port.out.repository.CommentQueryableRepo;
@@ -25,7 +24,6 @@ public class CommentService implements CommentUseCase {
     private final CommentRepo commentRepo;
     private final CommentQueryableRepo commentQueryableRepo;
     private final PostQueryableRepo postQueryableRepo;
-    private final MemberService memberService;
     private final BoardValidator boardValidator;
 
     @Override
@@ -33,10 +31,8 @@ public class CommentService implements CommentUseCase {
     public void createComment(CommentCreationReq commentCreationReq) {
         Post post = postQueryableRepo.findPostByPostId(commentCreationReq.getPostId())
                 .orElseThrow(()->new NotFoundException(ErrorCode.NOT_FOUND_POST));
-        String userName = memberService.findUser(commentCreationReq.getUserId()).getName();
 
-        Comment newComment = commentCreationReq.toEntity(post, userName);
-        commentRepo.save(newComment);
+        commentRepo.save(commentCreationReq.toEntity(post));
         post.increaseCommentCount();
     }
 

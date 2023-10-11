@@ -16,9 +16,10 @@ public class CommentInput{
         private Long postId;
         private String content;
 
-        public CommentCreationReq toReq(Long userId) {
+        public CommentCreationReq toReq(Long userId, String userName) {
             return CommentCreationReq.builder()
                     .userId(userId)
+                    .userName(userName)
                     .postId(postId)
                     .content(content)
                     .build();

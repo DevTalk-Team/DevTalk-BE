@@ -29,9 +29,20 @@ public class PostInput {
         @Builder.Default
         private List<MultipartFile> attachedFileList = new ArrayList<>();
 
-        public PostCreationReq toReq(Long userId) {
+        public static PostCreationInput of(String title,
+                                           String content,
+                                           List<MultipartFile> attachedFileList){
+            return PostCreationInput.builder()
+                    .title(title)
+                    .content(content)
+                    .attachedFileList(attachedFileList)
+                    .build();
+        }
+
+        public PostCreationReq toReq(Long userId, String name) {
             return PostCreationReq.builder()
                     .userId(userId)
+                    .name(name)
                     .title(title)
                     .content(content)
                     .attachedFileList(attachedFileList)
