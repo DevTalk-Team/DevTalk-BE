@@ -2,6 +2,7 @@ package com.devtalk.consultation.consultationservice.consultation.domain.consult
 
 import com.devtalk.consultation.consultationservice.consultation.domain.BaseEntity;
 import com.devtalk.consultation.consultationservice.global.vo.BaseTime;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,6 +20,7 @@ public class AttachedFile extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "consultation_id")
+    @JsonIgnore
     private Consultation consultation;
 
     private String fileUrl;

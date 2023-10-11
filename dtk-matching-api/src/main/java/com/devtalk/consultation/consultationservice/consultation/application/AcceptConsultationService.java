@@ -26,6 +26,6 @@ public class AcceptConsultationService implements AcceptConsultationUseCase {
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_CONSULTATION));
 
         findConsultation.accept();
-        productKafkaProducer.sendConsultationInfoPayment("product-update-consultation", findConsultation);
+        productKafkaProducer.sendConsultationInfoPayment("approved-consultation-topic", findConsultation);
     }
 }
