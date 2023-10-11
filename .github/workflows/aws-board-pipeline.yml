@@ -27,10 +27,9 @@
 name: Board Service - Deploy to Amazon ECS
 
 on:
-  pull_request:
+  push:
     branches:
       - master
-
 
 env:
   AWS_REGION: ap-northeast-2

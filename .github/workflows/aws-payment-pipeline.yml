@@ -27,7 +27,7 @@
 name: Payment Service - Deploy to Amazon ECS
 
 on:
-  pull_request:
+  push:
     branches:
       - master
 
