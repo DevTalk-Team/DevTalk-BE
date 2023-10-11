@@ -10,10 +10,11 @@ public class CommentReq {
     @Builder
     public static class CommentCreationReq{
         private Long userId;
+        private String userName;
         private Long postId;
         private String content;
 
-        public Comment toEntity(Post post, String userName) {
+        public Comment toEntity(Post post) {
             return Comment.createComment(post, userId, userName, content);
         }
     }

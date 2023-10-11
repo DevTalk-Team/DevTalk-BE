@@ -14,7 +14,7 @@ public enum ErrorCode {
     UNSUPPORTED_FILE_EXTENSION(CONFLICT, "04005", "허용되지 않는 확장자를 가진 파일이 입력되었습니다."),
     NOT_FOUND_FILE(NOT_FOUND, "04006", "파일을 찾을 수 없습니다."),
     INCORRECT_USER_TRY_TO_MODIFY_OR_DELETE(CONFLICT, "04007", "수정 또는 삭제 하려는 객체에 대한 소유자가 아닙니다."),
-    NOT_FOUND_USER(NOT_FOUND, "04008", "잘못된 사용자 ID입니다."),
+    NOT_FOUND_USER(NOT_FOUND, "04008", "사용자를 찾을 수 없습니다."),
 
     ;
 

@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 
 public class MemberRes {
-
     @Builder
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @Getter

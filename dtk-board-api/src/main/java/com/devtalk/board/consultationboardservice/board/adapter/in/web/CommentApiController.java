@@ -2,6 +2,8 @@ package com.devtalk.board.consultationboardservice.board.adapter.in.web;
 
 import com.devtalk.board.consultationboardservice.board.adapter.in.web.dto.CommentInput;
 import com.devtalk.board.consultationboardservice.board.application.port.in.CommentUseCase;
+import com.devtalk.board.consultationboardservice.board.application.port.in.dto.MemberRes;
+import com.devtalk.board.consultationboardservice.board.application.port.out.MemberUseCase;
 import com.devtalk.board.consultationboardservice.global.success.SuccessCode;
 import com.devtalk.board.consultationboardservice.global.success.SuccessResponse;
 import com.devtalk.board.consultationboardservice.global.success.SuccessResponseWithoutResult;
@@ -22,14 +24,16 @@ import static com.devtalk.board.consultationboardservice.board.adapter.in.web.dt
 @RequiredArgsConstructor
 public class CommentApiController {
     private final CommentUseCase commentUseCase;
+    private final MemberUseCase memberUseCase;
 
     @Operation(summary = "게시판 댓글 - 댓글 작성 API", responses = {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
     })
     @PostMapping
-    public ResponseEntity<?> createComment(@RequestParam Long userId,
+    public ResponseEntity<?> createComment(@RequestHeader("User-Email") String email,
                                            @RequestBody CommentCreationInput commentCreationInput) {
-        commentUseCase.createComment(commentCreationInput.toReq(userId));
+        MemberRes.ProfileRes user = memberUseCase.findUser(email);
+        commentUseCase.createComment(commentCreationInput.toReq(user.getId(), user.getName()));
         return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.CREATE_COMMENT_SUCCESS);
     }
 
@@ -53,9 +57,10 @@ public class CommentApiController {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
     })
     @PutMapping
-    public ResponseEntity<?> modifyComment(@RequestParam Long userId,
+    public ResponseEntity<?> modifyComment(@RequestHeader("User-Email") String email,
                                            @RequestBody CommentModifyInput commentModifyInput) {
-        commentUseCase.modifyComment(commentModifyInput.toReq(userId));
+        MemberRes.ProfileRes user = memberUseCase.findUser(email);
+        commentUseCase.modifyComment(commentModifyInput.toReq(user.getId()));
         return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.MODIFY_COMMENT_SUCCESS);
     }
 
@@ -63,9 +68,10 @@ public class CommentApiController {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
     })
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<?> deleteComment(@RequestParam Long userId,
+    public ResponseEntity<?> deleteComment(@RequestHeader("User-Email") String email,
                                            @PathVariable Long commentId) {
-        commentUseCase.deleteComment(userId, commentId);
+        MemberRes.ProfileRes user = memberUseCase.findUser(email);
+        commentUseCase.deleteComment(user.getId(), commentId);
         return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.DELETE_COMMENT_SUCCESS);
     }
 }
