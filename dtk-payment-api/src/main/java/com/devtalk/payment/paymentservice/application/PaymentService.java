@@ -7,16 +7,12 @@ import com.devtalk.payment.paymentservice.adapter.out.producer.KafkaProducer;
 import com.devtalk.payment.paymentservice.application.port.in.ConsultationUseCase;
 import com.devtalk.payment.paymentservice.application.port.in.EmailUseCase;
 import com.devtalk.payment.paymentservice.application.port.in.PaymentUseCase;
-import com.devtalk.payment.paymentservice.application.port.in.dto.PortOneRes;
 import com.devtalk.payment.paymentservice.application.port.out.repository.ConsultationRepo;
 import com.devtalk.payment.paymentservice.application.port.out.repository.PaymentRepo;
 import com.devtalk.payment.paymentservice.domain.consultation.Consultation;
 import com.devtalk.payment.paymentservice.domain.consultation.ProcessStatus;
 import com.devtalk.payment.paymentservice.domain.payment.Payment;
 import com.devtalk.payment.paymentservice.domain.payment.PaymentStatus;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -109,8 +105,8 @@ public class PaymentService implements PaymentUseCase {
     public void createPaymentInfo(ConsultationInput consultationInput) {
         Consultation consultation = Consultation.builder()
                 .cost(consultationInput.getCost())
-                .consultant(consultationInput.getConsultant())
-                .consulter(consultationInput.getConsultant())
+                .consultantName(consultationInput.getConsultant())
+                .consulterName(consultationInput.getConsultant())
                 .consultationType(consultationInput.getConsultationType())
                 .consulterEmail(consultationInput.getConsulterEmail())
                 .merchantId(UUID.randomUUID().toString())
@@ -184,7 +180,7 @@ public class PaymentService implements PaymentUseCase {
                             consultation.getCost(),
                             consultation.getMerchantId(),
                             consultation.getConsultationType(),
-                            consultation.getConsulter(),
+                            consultation.getConsulterName(),
                             consultation.getConsulterEmail(),
                             webhookUrl))
                 .expiredAt(System.currentTimeMillis() / 1000 + 1800)

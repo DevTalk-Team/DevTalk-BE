@@ -1,6 +1,7 @@
 package com.devtalk.payment.paymentservice.adapter.in.consumer.dto;
 
 import com.devtalk.payment.paymentservice.domain.consultation.Consultation;
+import com.devtalk.payment.paymentservice.domain.consultation.ProcessStatus;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
@@ -18,13 +19,26 @@ public class ConsumerInput {
         private Long consultationId;
         private Long productId;
         private Long consulterId;
+        private String consulterName;
         private Long consultantId;
+        private String consultantName;
         private ConsultationDetails consultationDetails;
         private ProcessStatus status;
         private Cost cost;
 
-        public static Consultation toEntity(String consultantName, String consulterName, String consulterEmail) {
-
+        public Consultation toEntity(String consulterEmail) {
+            return Consultation.builder()
+                    .merchantId(null)
+                    .consulterId(consulterId)
+                    .consulterName(consulterName)
+                    .consulterEmail(consulterEmail)
+                    .consultantId(consultantId)
+                    .consultantName(consultantName)
+                    .consultationType(consultationDetails.getProductProceedType())
+                    .cost(cost.getAmount())
+                    .consultationAt(consultationDetails.getReservationAt())
+                    .processStatus(com.devtalk.payment.paymentservice.domain.consultation.ProcessStatus.APPROVED)
+                    .build();
         }
 
         @Getter

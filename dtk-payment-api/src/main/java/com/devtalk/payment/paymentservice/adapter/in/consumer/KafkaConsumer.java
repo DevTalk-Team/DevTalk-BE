@@ -39,7 +39,7 @@ public class KafkaConsumer {
             // 카프카로 받은 메시지를 JSON 형태로 변환하기 위한 과정
             consultation = deserializeMapper().readValue(kafkaMessage, ConsultationInput.class);
 //            map = mapper.readValue(kafkaMessage, new TypeReference<Map<Object, Object>>() {});
-        } catch (JsonProcessingException ex){
+        } catch (JsonProcessingException ex) {
             ex.printStackTrace();
         }
 

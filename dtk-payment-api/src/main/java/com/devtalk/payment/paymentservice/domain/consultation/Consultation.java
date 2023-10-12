@@ -1,11 +1,8 @@
 package com.devtalk.payment.paymentservice.domain.consultation;
 
 import com.devtalk.payment.paymentservice.domain.BaseEntity;
-import com.devtalk.payment.paymentservice.domain.payment.Payment;
-import com.devtalk.payment.paymentservice.domain.payment.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
@@ -26,17 +23,25 @@ public class Consultation extends BaseEntity {
     @Column(nullable = false)
     private String merchantId;
 
+    // 의뢰자ID
+    @Column(nullable = false)
+    private Long consulterId;
+
     // 의뢰자 이름
     @Column(nullable = false)
-    private String consulter;
+    private String consulterName;
 
     // 의뢰자 이메일
     @Column(nullable = false)
     private String consulterEmail;
 
+    // 전문가ID
+    @Column(nullable = false)
+    private Long consultantId;
+
     // 전문가 이름
     @Column(nullable = false)
-    private String consultant;
+    private String consultantName;
 
     // 상담 유형
     @Column(nullable = false)
