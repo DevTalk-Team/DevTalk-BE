@@ -37,10 +37,4 @@ public class FindProfileApiController {
         findProfileUseCase.changePassword(input.getPassword(), input.getNewPassword());
         return SuccessResponseNoResult.toResponseEntity(CHANGE_PASSWORD_SUCCESS);
     }
-
-    @GetMapping("/{memberId}")
-    public ResponseEntity<?> findMember(@PathVariable Long memberId) {
-        FindProfileOutput.MemberOutput output = findProfileUseCase.findMember(memberId);
-        return SuccessResponse.toResponseEntity(FIND_MEMBER_SUCCESS, output);
-    }
 }

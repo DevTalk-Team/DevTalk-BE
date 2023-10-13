@@ -8,24 +8,27 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
-
 @RestController
-@RequestMapping
+@RequestMapping("/member/profile")
 @RequiredArgsConstructor
 public class MemberInfoController {
     private final MemberInfoUseCase memberInfoUseCase;
 
-    @GetMapping("/member/profile/email/{email}")
+    @GetMapping("/{memberId}")
+    MemberRes.InfoRes findMember(@PathVariable Long memberId) {
+        return memberInfoUseCase.findMemberById(memberId);
+    }
+
+    @GetMapping("/email/{email}")
     MemberRes.ProfileRes getMemberByEmail(@PathVariable String email) {
         return memberInfoUseCase.findMemberByEmail(email);
     }
-    @GetMapping("/member/profile/consultant/{consultant}")
+    @GetMapping("/consultant/{consultant}")
     MemberRes.ConsultantRes getConsultantInfo(@PathVariable Long consultant) {
         return memberInfoUseCase.findConsultantById(consultant);
     }
 
-    @GetMapping("/member/profile/consulter/{consulter}")
+    @GetMapping("/consulter/{consulter}")
     MemberRes.ConsulterRes getConsulterInfo(@PathVariable Long consulter) {
         return memberInfoUseCase.findConsulterById(consulter);
     }

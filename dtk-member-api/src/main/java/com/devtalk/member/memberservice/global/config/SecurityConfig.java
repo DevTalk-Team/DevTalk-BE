@@ -1,9 +1,6 @@
 package com.devtalk.member.memberservice.global.config;
 
-import com.devtalk.member.memberservice.global.jwt.JwtAccessDeniedHandler;
-import com.devtalk.member.memberservice.global.jwt.JwtAuthenticationEntryPoint;
-import com.devtalk.member.memberservice.global.jwt.JwtAuthenticationFilter;
-import com.devtalk.member.memberservice.global.jwt.JwtTokenProvider;
+import com.devtalk.member.memberservice.global.jwt.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +18,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
@@ -37,7 +33,7 @@ public class SecurityConfig {
         // ACL(Access Control List, 접근 제어 목록)의 예외 URL 설정
         return (web -> web
                 .ignoring()
-                .requestMatchers("/members/**", "/signup", "/login",
+                .requestMatchers("/members/signup", "/members/login",
                         /* swagger v3 */
                         "/v3/api-docs/**",
                         "/swagger-ui/**"));
@@ -51,13 +47,12 @@ public class SecurityConfig {
                 .csrf((csrf) -> csrf.disable())
                 .sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .formLogin((formLogin) -> formLogin.disable())
-
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
-
                 .authorizeHttpRequests((req) -> req.requestMatchers("/member/mypage/**", "/member/logout",
                                 "/member/consultant/**").authenticated()
                 .anyRequest().permitAll())
-                .exceptionHandling((e) -> e.authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .exceptionHandling((e) ->
+                        e.authenticationEntryPoint(jwtAuthenticationEntryPoint)
                         .accessDeniedHandler(jwtAccessDeniedHandler))
                 .build();
 

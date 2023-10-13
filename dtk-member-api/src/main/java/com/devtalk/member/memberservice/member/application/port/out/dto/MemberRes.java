@@ -11,6 +11,23 @@ public class MemberRes {
     @Builder
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @Getter
+    public static class InfoRes {
+        private String name;
+        private String email;
+        private String phoneNumber;
+
+        public static InfoRes of(Member member) {
+            return InfoRes.builder()
+                    .name(member.getName())
+                    .email(member.getEmail())
+                    .phoneNumber(member.getPhoneNumber())
+                    .build();
+        }
+    }
+
+    @Builder
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @Getter
     public static class ConsultantRes {
         private Long consultantId;
         private String name;

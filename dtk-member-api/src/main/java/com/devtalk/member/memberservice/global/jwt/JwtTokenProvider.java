@@ -1,7 +1,7 @@
 package com.devtalk.member.memberservice.global.jwt;
 
 import com.devtalk.member.memberservice.global.error.ErrorCode;
-import com.devtalk.member.memberservice.global.error.exception.TokenException;
+import com.devtalk.member.memberservice.global.error.exception.JwtException;
 import com.devtalk.member.memberservice.global.util.RedisUtil;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -52,35 +52,6 @@ public class JwtTokenProvider implements InitializingBean {
         key = Keys.hmacShaKeyFor(encodedKey.getBytes());
         log.info("[afterPropertiesSet] key 초기화 완료");
     }
-
-    /* 토큰 생성 */
-    /*@Transactional
-    public TokenDto createToken(String email, String authorities) {
-        log.info("[createToken] 토큰 생성 시작");
-        Claims claims = Jwts.claims();
-        claims.put("email", email);
-        claims.put("authorities", authorities);
-        Date now = new Date();
-
-        String accessToken = Jwts.builder()
-                .setSubject("access-token")
-                .setClaims(claims)
-                .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + accessTokenValidity))
-                .signWith(SignatureAlgorithm.HS512, key)
-                .compact();
-
-        String refreshToken = Jwts.builder()
-                .setSubject("refresh-token")
-                .setClaims(claims)
-                .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + refreshTokenValidity))
-                .signWith(SignatureAlgorithm.HS512, key)
-                .compact();
-
-        log.info("[createToken] 토큰 생성 완료");
-        return new TokenDto(accessToken, refreshToken);
-    }*/
 
     @Transactional
     public String generateToken(Authentication authentication, Long tokenValidity) {
@@ -148,11 +119,11 @@ public class JwtTokenProvider implements InitializingBean {
                     .parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (SignatureException e) {
-            throw new TokenException(ErrorCode.INCORRECT_SIGNATURE);
+            throw new JwtException(ErrorCode.INCORRECT_SIGNATURE);
         } catch (ExpiredJwtException e) {
-            throw new TokenException(ErrorCode.EXPIRED_TOKEN);
+            throw new JwtException(ErrorCode.EXPIRED_TOKEN);
         } catch (MalformedJwtException | UnsupportedJwtException e) {
-            throw new TokenException(ErrorCode.UNSUPPORTED_TOKEN);
+            throw new JwtException(ErrorCode.UNSUPPORTED_TOKEN);
         } catch (IllegalArgumentException e) {
             throw e;
         }
@@ -169,7 +140,7 @@ public class JwtTokenProvider implements InitializingBean {
     public String getRefreshToken(String email) {
         String refreshToken = redisUtil.getData(email);
         if (refreshToken == null) {
-            throw new TokenException(ErrorCode.UNSUPPORTED_TOKEN);
+            throw new JwtException(ErrorCode.UNSUPPORTED_TOKEN);
         }
         return refreshToken;
     }

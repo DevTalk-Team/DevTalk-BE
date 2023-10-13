@@ -32,18 +32,18 @@ public class AuthService implements AuthUseCase {
 
     @Override
     public AuthRes.LogInRes login(AuthReq.LogInReq req) {
-        // Member 인증 객체 생성
+        // 1. Member 인증 객체 생성
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(req.getEmail(), req.getPassword());
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         MemberDetails member = (MemberDetails) authentication.getPrincipal(); // member 정보
 
-        // token 생성
+        // 2. token 생성
         String accessToken = jwtTokenProvider.generateAccessToken(authentication);
         String refreshToken = jwtTokenProvider.generateRefreshToken(authentication);
 
-        // refresh Token 저장
+        // 3. refresh Token 저장
         redisUtil.setDataExpire(member.getUsername(), refreshToken, 1209600);
 
         log.info("[login] LogInRes 객체 생성");

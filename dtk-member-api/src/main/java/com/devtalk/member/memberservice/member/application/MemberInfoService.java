@@ -18,6 +18,13 @@ public class MemberInfoService implements MemberInfoUseCase {
     private final ConsultantInfoRepo consultantInfoRepo;
 
     @Override
+    public MemberRes.InfoRes findMemberById(Long memberId) {
+        Member member = memberRepo.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+        return MemberRes.InfoRes.of(member);
+    }
+
+    @Override
     public MemberRes.ConsultantRes findConsultantById(Long consultant) {
         Member member = memberRepo.findById(consultant)
                 .orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
