@@ -84,9 +84,4 @@ public class FindProfileService implements FindProfileUseCase {
         Member member = validator.changePasswordValidate(password, newPassword);
         member.updatePassword(bCryptPasswordEncoder.encode(newPassword));
     }
-
-    @Override
-    public FindProfileOutput.MemberOutput findMember(Long memberId) {
-        return memberQueryableRepo.findNameAndEmailById(memberId);
-    }
 }

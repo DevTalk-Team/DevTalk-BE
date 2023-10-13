@@ -6,5 +6,4 @@ public interface FindProfileUseCase {
     String findEmail(String name, String phoneNumber);
     void sendTempPassword(String name, String email);
     void changePassword(String password, String newPassword);
-    FindProfileOutput.MemberOutput findMember(Long memberId);
 }
