@@ -36,7 +36,6 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
     }
 
     public static class Config {
-        // Put configuration properties here
     }
 
     @Override
@@ -80,7 +79,6 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
 
     private String isJwtValid(String jwt) {
         key = Keys.hmacShaKeyFor(Base64.getEncoder().encodeToString(secretKey.getBytes()).getBytes());
-
         try {
             return Jwts.parser()
                     .setSigningKey(key)
@@ -89,8 +87,9 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
                     .get("email")
                     .toString();
         } catch (Exception ex) {
-            log.info("ex = {}", ex.getMessage());
-            return null;
+            log.info("isJwtValid ex.getClass() = {}", ex.getClass());
+            log.info("isJwtValid ex.getMessage() = {}", ex.getMessage());
+            throw ex;
         }
     }
 
