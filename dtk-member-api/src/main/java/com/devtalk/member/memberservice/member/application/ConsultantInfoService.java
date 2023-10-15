@@ -2,12 +2,8 @@ package com.devtalk.member.memberservice.member.application;
 
 import com.devtalk.member.memberservice.global.error.ErrorCode;
 import com.devtalk.member.memberservice.global.error.exception.MemberNotFoundException;
-import com.devtalk.member.memberservice.global.jwt.JwtTokenProvider;
-import com.devtalk.member.memberservice.global.vo.BaseFile;
 import com.devtalk.member.memberservice.member.adapter.in.web.dto.ConsultantInput;
 import com.devtalk.member.memberservice.member.application.port.in.ConsultantInfoUseCase;
-import com.devtalk.member.memberservice.member.application.port.in.ProfileImageUseCase;
-import com.devtalk.member.memberservice.member.application.port.in.dto.ConsultantReq;
 import com.devtalk.member.memberservice.member.application.port.out.dto.ConsultantRes;
 import com.devtalk.member.memberservice.member.application.port.out.repository.*;
 import com.devtalk.member.memberservice.member.domain.category.Category;
@@ -15,7 +11,6 @@ import com.devtalk.member.memberservice.member.domain.category.MemberCategory;
 import com.devtalk.member.memberservice.member.domain.consultation.ConsultantConsultationType;
 import com.devtalk.member.memberservice.member.domain.consultation.ConsultantInfo;
 import com.devtalk.member.memberservice.member.domain.consultation.ConsultationType;
-import com.devtalk.member.memberservice.member.domain.consultation.ProfileImage;
 import com.devtalk.member.memberservice.member.domain.member.Member;
 import com.devtalk.member.memberservice.member.domain.region.MemberRegion;
 import com.devtalk.member.memberservice.member.domain.region.Region;
@@ -27,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -44,7 +38,7 @@ public class ConsultantInfoService implements ConsultantInfoUseCase {
     private final MemberRegionRepo memberRegionRepo;
 
 //    private final ProfileImageUseCase profileImageUseCase;
-    private final ProfileImageRepo profileImageRepo;
+//    private final ProfileImageRepo profileImageRepo;
 
     @Override
     public ConsultantRes.InfoRes getInfo(String email) {
@@ -62,9 +56,9 @@ public class ConsultantInfoService implements ConsultantInfoUseCase {
         ConsultantInfo info = consultantInfoRepo.findByMember(member);
 
         ConsultantInfo newInfo = info.update(input.toReq());
-        if (input.getProfileImage() != null) {
-            uploadProfileImage(newInfo, input.getProfileImage());
-        }
+//        if (input.getProfileImage() != null) {
+//            uploadProfileImage(newInfo, input.getProfileImage());
+//        }
 
         return ConsultantRes.InfoRes.of(consultantInfoRepo.save(newInfo));
     }
