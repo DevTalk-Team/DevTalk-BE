@@ -1,6 +1,6 @@
 package com.devtalk.member.memberservice.member.adapter.in.web;
 
-import com.devtalk.member.memberservice.global.jwt.MemberDetails;
+import com.devtalk.member.memberservice.global.security.MemberDetails;
 import com.devtalk.member.memberservice.global.success.SuccessResponse;
 import com.devtalk.member.memberservice.global.success.SuccessResponseNoResult;
 import com.devtalk.member.memberservice.member.adapter.in.web.dto.ConsultantInput;
@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -33,6 +34,7 @@ public class ConsultantInfoApiController {
 
     @PutMapping("/info")
     public ResponseEntity<?> updateInfo(@RequestBody ConsultantInput.InfoInput input,
+                                        @RequestPart(value = "file", required = false) MultipartFile file,
                                         @AuthenticationPrincipal MemberDetails memberDetails) {
         ConsultantRes.InfoRes res = consultantInfoUseCase.updateInfo(memberDetails.getUsername(), input);
         kafkaProducer.sendConsultantInfo(res.toEntity());

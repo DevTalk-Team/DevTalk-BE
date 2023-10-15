@@ -1,4 +1,4 @@
-package com.devtalk.member.memberservice.global.jwt;
+package com.devtalk.member.memberservice.global.security;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 import static com.devtalk.member.memberservice.global.error.ErrorCode.AUTH_FAIL;
-import static com.devtalk.member.memberservice.global.error.ErrorCode.MEMBER_NOT_FOUND;
 
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {

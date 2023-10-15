@@ -27,6 +27,13 @@ public class MyPageService implements MyPageUseCase {
     private final MemberCategoryRepo memberCategoryRepo;
     private final PasswordEncoder passwordEncoder;
 
+    @Override
+    public void checkPassword(String email, String password, String checkPassword) {
+        if (!passwordEncoder.matches(checkPassword, password)) {
+            throw new PasswordMismatchingException(ErrorCode.PASSWORD_MISMATCHING);
+        }
+    }
+
     private Member getMember(String email) {
         return memberRepo.findByEmail(email)
                 .orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
@@ -42,9 +49,9 @@ public class MyPageService implements MyPageUseCase {
     }
 
     @Override
-    public void checkPassword(String email, String password, String checkPassword) {
-        if (!passwordEncoder.matches(checkPassword, password)) {
-            throw new PasswordMismatchingException(ErrorCode.PASSWORD_MISMATCHING);
-        }
+    public MyPageRes.InfoRes updateMyPage(String email) {
+        Member member = getMember(email);
+
+        return null;
     }
 }

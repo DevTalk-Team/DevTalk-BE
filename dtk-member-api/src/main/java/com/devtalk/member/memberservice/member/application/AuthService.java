@@ -1,12 +1,11 @@
 package com.devtalk.member.memberservice.member.application;
 
-import com.devtalk.member.memberservice.global.jwt.JwtTokenProvider;
-import com.devtalk.member.memberservice.global.jwt.MemberDetails;
+import com.devtalk.member.memberservice.global.security.JwtTokenProvider;
+import com.devtalk.member.memberservice.global.security.MemberDetails;
 import com.devtalk.member.memberservice.global.util.RedisUtil;
 import com.devtalk.member.memberservice.member.application.port.in.AuthUseCase;
 import com.devtalk.member.memberservice.member.application.port.in.dto.AuthReq;
 import com.devtalk.member.memberservice.member.application.port.out.dto.AuthRes;
-import com.devtalk.member.memberservice.member.application.port.out.repository.MemberRepo;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +13,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -22,9 +20,6 @@ import org.springframework.stereotype.Service;
 @Transactional
 @RequiredArgsConstructor
 public class AuthService implements AuthUseCase {
-
-    private final MemberRepo memberRepo;
-    private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -32,18 +27,18 @@ public class AuthService implements AuthUseCase {
 
     @Override
     public AuthRes.LogInRes login(AuthReq.LogInReq req) {
-        // Member 인증 객체 생성
+        // 1. Member 인증 객체 생성
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(req.getEmail(), req.getPassword());
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         MemberDetails member = (MemberDetails) authentication.getPrincipal(); // member 정보
 
-        // token 생성
+        // 2. token 생성
         String accessToken = jwtTokenProvider.generateAccessToken(authentication);
         String refreshToken = jwtTokenProvider.generateRefreshToken(authentication);
 
-        // refresh Token 저장
+        // 3. refresh Token 저장
         redisUtil.setDataExpire(member.getUsername(), refreshToken, 1209600);
 
         log.info("[login] LogInRes 객체 생성");

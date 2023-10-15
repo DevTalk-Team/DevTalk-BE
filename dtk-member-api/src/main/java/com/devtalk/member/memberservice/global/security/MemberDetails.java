@@ -1,4 +1,4 @@
-package com.devtalk.member.memberservice.global.jwt;
+package com.devtalk.member.memberservice.global.security;
 
 import com.devtalk.member.memberservice.member.domain.member.Member;
 import lombok.RequiredArgsConstructor;

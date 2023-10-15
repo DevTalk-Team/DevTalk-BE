@@ -2,10 +2,8 @@ package com.devtalk.member.memberservice.member.application;
 
 import com.devtalk.member.memberservice.global.error.ErrorCode;
 import com.devtalk.member.memberservice.global.error.exception.MemberNotFoundException;
-import com.devtalk.member.memberservice.global.jwt.JwtTokenProvider;
 import com.devtalk.member.memberservice.member.adapter.in.web.dto.ConsultantInput;
 import com.devtalk.member.memberservice.member.application.port.in.ConsultantInfoUseCase;
-import com.devtalk.member.memberservice.member.application.port.in.dto.ConsultantReq;
 import com.devtalk.member.memberservice.member.application.port.out.dto.ConsultantRes;
 import com.devtalk.member.memberservice.member.application.port.out.repository.*;
 import com.devtalk.member.memberservice.member.domain.category.Category;
@@ -20,35 +18,27 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ConsultantInfoService implements ConsultantInfoUseCase {
-    private final JwtTokenProvider jwtTokenProvider;
     private final MemberRepo memberRepo;
-
     private final ConsultantInfoRepo consultantInfoRepo;
-
     private final ConsultationTypeRepo consultationTypeRepo;
     private final ConsultantConsultationTypeRepo consultantConsultationTypeRepo;
-
     private final CategoryRepo categoryRepo;
     private final MemberCategoryRepo memberCategoryRepo;
-
     private final RegionRepo regionRepo;
     private final MemberRegionRepo memberRegionRepo;
 
-    private Member getMember(String token) {
-        String email = jwtTokenProvider.getEmail(token);
-        return memberRepo.findByEmail(email)
-                .orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
-    }
+//    private final ProfileImageUseCase profileImageUseCase;
+//    private final ProfileImageRepo profileImageRepo;
 
     @Override
     public ConsultantRes.InfoRes getInfo(String email) {
@@ -64,8 +54,21 @@ public class ConsultantInfoService implements ConsultantInfoUseCase {
         Member member = memberRepo.findByEmail(email)
                 .orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
         ConsultantInfo info = consultantInfoRepo.findByMember(member);
+
         ConsultantInfo newInfo = info.update(input.toReq());
+//        if (input.getProfileImage() != null) {
+//            uploadProfileImage(newInfo, input.getProfileImage());
+//        }
+
         return ConsultantRes.InfoRes.of(consultantInfoRepo.save(newInfo));
+    }
+
+    private void uploadProfileImage(ConsultantInfo info, MultipartFile profileImage) {
+//        BaseFile baseFile = profileImageUseCase.uploadImage(profileImage);
+//
+//        profileImageRepo.save(ProfileImage.createProfileImage(
+//                info, baseFile.getFileUrl(), baseFile.getOriginFileName(), baseFile.getStoredFileName()
+//        ));
     }
 
     @Override

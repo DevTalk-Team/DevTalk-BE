@@ -1,6 +1,6 @@
 package com.devtalk.member.memberservice.member.adapter.in.web;
 
-import com.devtalk.member.memberservice.global.jwt.MemberDetails;
+import com.devtalk.member.memberservice.global.security.MemberDetails;
 import com.devtalk.member.memberservice.global.success.SuccessCode;
 import com.devtalk.member.memberservice.global.success.SuccessResponse;
 import com.devtalk.member.memberservice.global.success.SuccessResponseNoResult;
@@ -33,8 +33,8 @@ public class MyPageApiController {
     }
 
     @PutMapping("/mypage")
-    public ResponseEntity<?> editProfile(@AuthenticationPrincipal MemberDetails memberDetails) {
+    public ResponseEntity<?> updateMyPage(@AuthenticationPrincipal MemberDetails memberDetails) {
 
-        return SuccessResponse.toResponseEntity(SuccessCode.MYPAGE_SUCCESS, "");
+        return SuccessResponse.toResponseEntity(SuccessCode.MYPAGE_UPDATE_SUCCESS, "");
     }
 }
