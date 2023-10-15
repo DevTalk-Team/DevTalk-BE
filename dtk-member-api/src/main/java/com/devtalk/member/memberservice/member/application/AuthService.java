@@ -22,9 +22,6 @@ import org.springframework.stereotype.Service;
 @Transactional
 @RequiredArgsConstructor
 public class AuthService implements AuthUseCase {
-
-    private final MemberRepo memberRepo;
-    private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
