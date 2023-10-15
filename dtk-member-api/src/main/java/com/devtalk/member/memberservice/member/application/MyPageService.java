@@ -51,6 +51,7 @@ public class MyPageService implements MyPageUseCase {
     @Override
     public MyPageRes.InfoRes updateMyPage(String email) {
         Member member = getMember(email);
+
         return null;
     }
 }
