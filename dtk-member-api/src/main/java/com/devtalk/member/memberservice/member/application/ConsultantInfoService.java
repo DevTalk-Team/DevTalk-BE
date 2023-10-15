@@ -43,7 +43,7 @@ public class ConsultantInfoService implements ConsultantInfoUseCase {
     private final RegionRepo regionRepo;
     private final MemberRegionRepo memberRegionRepo;
 
-    private final ProfileImageUseCase profileImageUseCase;
+//    private final ProfileImageUseCase profileImageUseCase;
     private final ProfileImageRepo profileImageRepo;
 
     @Override
@@ -70,11 +70,11 @@ public class ConsultantInfoService implements ConsultantInfoUseCase {
     }
 
     private void uploadProfileImage(ConsultantInfo info, MultipartFile profileImage) {
-        BaseFile baseFile = profileImageUseCase.uploadImage(profileImage);
-
-        profileImageRepo.save(ProfileImage.createProfileImage(
-                info, baseFile.getFileUrl(), baseFile.getOriginFileName(), baseFile.getStoredFileName()
-        ));
+//        BaseFile baseFile = profileImageUseCase.uploadImage(profileImage);
+//
+//        profileImageRepo.save(ProfileImage.createProfileImage(
+//                info, baseFile.getFileUrl(), baseFile.getOriginFileName(), baseFile.getStoredFileName()
+//        ));
     }
 
     @Override

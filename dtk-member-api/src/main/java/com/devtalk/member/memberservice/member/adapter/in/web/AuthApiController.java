@@ -24,7 +24,6 @@ import static com.devtalk.member.memberservice.member.application.port.in.dto.Au
 @RequestMapping("/member")
 @RequiredArgsConstructor
 public class AuthApiController {
-
     private final AuthUseCase authUseCase;
     private final JwtTokenProvider jwtTokenProvider;
 

@@ -33,8 +33,8 @@ public class MyPageApiController {
     }
 
     @PutMapping("/mypage")
-    public ResponseEntity<?> editProfile(@AuthenticationPrincipal MemberDetails memberDetails) {
+    public ResponseEntity<?> updateMyPage(@AuthenticationPrincipal MemberDetails memberDetails) {
 
-        return SuccessResponse.toResponseEntity(SuccessCode.MYPAGE_SUCCESS, "");
+        return SuccessResponse.toResponseEntity(SuccessCode.MYPAGE_UPDATE_SUCCESS, "");
     }
 }
