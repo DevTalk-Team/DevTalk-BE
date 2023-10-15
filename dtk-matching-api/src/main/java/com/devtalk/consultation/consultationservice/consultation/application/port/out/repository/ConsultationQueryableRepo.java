@@ -11,7 +11,7 @@ public interface ConsultationQueryableRepo {
     boolean existsByProductIdInReservedItem(Long productId);
 
     Optional<Consultation> findByIdWithConsulterId(Long consultationId, Long consulterId);
-    Optional<Consultation> findByIdWithConsultantId(Long consultationId, Long consulterId);
+    Optional<Consultation> findByIdWithConsultantId(Long consultationId, Long consultantId);
 
     List<Consultation> findAllByConsulterId(Long consulterId);
     List<Consultation> findAllByConsultantId(Long consultantId);

@@ -25,7 +25,7 @@ public class MatchingKafkaConsumer {
     private final ReserveUseCase reserveUseCase;
 
     // *** Topic은 변경할 수 있습니다. "test" 토픽으로 메시지를 확인해보세요 ***//
-    @KafkaListener(topics = "product-update-consultation")
+    @KafkaListener(topics = "approved-consultation-topic")
     public void receiveConsultationInfo(String kafkaMessage) {
         log.info("Kafka Message: " + kafkaMessage); // 로그 확인
 

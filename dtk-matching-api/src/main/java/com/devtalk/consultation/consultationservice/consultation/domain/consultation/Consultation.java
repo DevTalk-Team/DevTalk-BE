@@ -1,9 +1,12 @@
 package com.devtalk.consultation.consultationservice.consultation.domain.consultation;
 
+import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.ConsultationCancellationRepo;
 import com.devtalk.consultation.consultationservice.global.error.ErrorCode;
 import com.devtalk.consultation.consultationservice.global.error.execption.BusinessRuleException;
 import com.devtalk.consultation.consultationservice.global.vo.BaseTime;
 import com.devtalk.consultation.consultationservice.global.vo.Money;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,6 +21,9 @@ import static com.devtalk.consultation.consultationservice.global.error.ErrorCod
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Consultation extends BaseTime {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -122,17 +128,17 @@ public class Consultation extends BaseTime {
         this.consultationDetails.setContent(newContent);
     }
 
-    public void cancelByConsulter(String canceledReason) {
+    public ConsultationCancellation cancelByConsulter(String canceledReason) {
         if (!(this.status.equals(ACCEPT_WAIT) || this.status.equals(ACCEPTED) || this.status.equals(PAID))) {
             throw new BusinessRuleException(IRREVOCABLE_STATUS);
         }
-        cancel(CONSULTER_CANCELED, canceledReason);
+        return cancel(CONSULTER_CANCELED, canceledReason);
     }
 
-    public void cancelByConsultant(String canceledReason) {
         //TODO: 상담사가 상담취소를 하는데 케이스가 2가지가 있음
         // 1. 그냥 처음부터 요청들어오면 거절하는것
         // 2. 승인 후에 취소하는 것 (결제전, 결제후)
+    public ConsultationCancellation cancelByConsultant(String canceledReason) {
         ProcessStatus newStatus = null;
         if (this.status.equals(ACCEPT_WAIT)) {
             newStatus = CONSULTANT_REFUSED;
@@ -141,7 +147,7 @@ public class Consultation extends BaseTime {
         } else {
             throw new BusinessRuleException(IRREVOCABLE_STATUS);
         }
-        cancel(newStatus, canceledReason);
+        return cancel(newStatus, canceledReason);
     }
 
     public void writeReview(Integer score, String content,
@@ -155,12 +161,15 @@ public class Consultation extends BaseTime {
         this.review = Review.createReview(this.consultantId, this.consulterName, this.consultantId, this.consultantName, score, photoUrl, photoOriginName, photoStoredName, content);
     }
 
-    private void cancel(ProcessStatus status, String canceledReason) {
+    private ConsultationCancellation cancel(ProcessStatus status, String canceledReason) {
         this.status = status;
         this.canceled = true;
 
         ConsultationCancellation consultationCancellation = createConsultationCancellation(this.productId, canceledReason);
-        changeConsultationCancellation(consultationCancellation);
-    }
 
+        changeConsultationCancellation(consultationCancellation);
+
+        // 변경된 상담 취소 객체를 반환합니다.
+        return consultationCancellation;
+    }
 }

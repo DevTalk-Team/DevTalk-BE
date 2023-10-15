@@ -50,7 +50,7 @@ public class ReserveConsultationService implements ReserveConsultationUseCase {
 
         }
         if (!memberQueryableRepo.existsByConsulterId(reservationReq.getConsulterId())){
-            MemberReq.ConsulterReq consulterInfo = memberServiceClient.getConsulterInfo(reservationReq.getConsultantId());
+            MemberReq.ConsulterReq consulterInfo = memberServiceClient.getConsulterInfo(reservationReq.getConsulterId());
             if(consulterInfo.getMemberType() == MemberType.CONSULTER) {
                 Consulter newConsulter = Consulter.createConsulter(consulterInfo.getConsulterId(), consulterInfo.getName());
                 memberRepo.save(newConsulter);

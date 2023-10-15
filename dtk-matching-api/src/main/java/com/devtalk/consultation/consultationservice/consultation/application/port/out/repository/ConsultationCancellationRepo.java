@@ -1,9 +1,9 @@
 package com.devtalk.consultation.consultationservice.consultation.application.port.out.repository;
 
-import com.devtalk.consultation.consultationservice.consultation.domain.consultation.AttachedFile;
+import com.devtalk.consultation.consultationservice.consultation.domain.consultation.Consultation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AttachedFileRepo extends JpaRepository<AttachedFile, Long> {
+public interface ConsultationCancellationRepo extends JpaRepository<Consultation, Long> {
 }

@@ -30,6 +30,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 
@@ -88,8 +89,14 @@ class ProductApiController {
                                            @RequestHeader(value = "User-Email") String userEmail) {
         log.info("User-Eamil : {}", userEmail);
         Long consultantId = authUseCase.auth(userEmail);
-        registUseCase.registProduct(consultantId,registrationInput.toReq());
-        return ResponseEntity.ok().build();
+        try {
+            registUseCase.registProduct(consultantId,registrationInput.toReq());
+
+            return ResponseEntity.ok().build();
+
+        } catch (DateTimeParseException e) {
+            return ResponseEntity.badRequest().body("Invalid date or time format");
+        }
     }
 
     @Operation(summary = "상담사 예약 가능 상품 조회 API", description = "내담자가 상담을 원하는 상담자의 예약 가능 시간을 확인한다.")
