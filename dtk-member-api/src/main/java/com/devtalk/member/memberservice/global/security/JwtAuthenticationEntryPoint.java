@@ -1,4 +1,4 @@
-package com.devtalk.member.memberservice.global.jwt;
+package com.devtalk.member.memberservice.global.security;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
