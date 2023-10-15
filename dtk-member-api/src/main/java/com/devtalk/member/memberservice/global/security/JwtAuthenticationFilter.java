@@ -1,4 +1,4 @@
-package com.devtalk.member.memberservice.global.jwt;
+package com.devtalk.member.memberservice.global.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -12,7 +12,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-import static com.devtalk.member.memberservice.global.jwt.JwtTokenProvider.AUTHORIZATION_HEADER;
+import static com.devtalk.member.memberservice.global.security.JwtTokenProvider.AUTHORIZATION_HEADER;
 
 // OncePerRequestFilter: 매 요청마다 체크 해주는 필터
 // Jwt 토큰을 인증

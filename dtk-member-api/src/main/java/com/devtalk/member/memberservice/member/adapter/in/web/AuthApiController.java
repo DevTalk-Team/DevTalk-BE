@@ -1,7 +1,7 @@
 package com.devtalk.member.memberservice.member.adapter.in.web;
 
-import com.devtalk.member.memberservice.global.jwt.JwtTokenProvider;
-import com.devtalk.member.memberservice.global.jwt.MemberDetails;
+import com.devtalk.member.memberservice.global.security.JwtTokenProvider;
+import com.devtalk.member.memberservice.global.security.MemberDetails;
 import com.devtalk.member.memberservice.global.success.SuccessResponse;
 import com.devtalk.member.memberservice.global.success.SuccessResponseNoResult;
 import com.devtalk.member.memberservice.member.adapter.in.web.dto.LogInInput;
