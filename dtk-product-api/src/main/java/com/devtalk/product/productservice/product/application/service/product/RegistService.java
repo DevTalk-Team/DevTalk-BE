@@ -27,11 +27,12 @@ public class RegistService implements RegistUseCase {
         //todo 검증절차 필요한지 확인하기
         //foreign으로 member-service로 부터 member 정보 받아오기
         MemberReq.ConsultantReq consultantReq = findConsultantInfo(consultantId);
+        MemberReq.ConsultantReq consultantReq2 = consultantReq;
         Product product = Product.registProduct(consultantReq.getConsultantId(),
                 registProdReq.getReservationAt(),
                 registProdReq.getProductProceedType(),
-                consultantReq.getF2F_Cost(),
-                consultantReq.getNF2F_Cost());
+                consultantReq.getF2fCost(),
+                consultantReq.getNf2fCost());
         productRepo.save(product);
     }
 

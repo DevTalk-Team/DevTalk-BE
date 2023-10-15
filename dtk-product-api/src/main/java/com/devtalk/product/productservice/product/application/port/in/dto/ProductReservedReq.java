@@ -11,8 +11,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 public class ProductReservedReq {
+    private Long id; // id 필드 추가
     private Long productId;
     private ProcessStatus status;
-    //    private LocalDateTime reservationAt;
+
 }
 

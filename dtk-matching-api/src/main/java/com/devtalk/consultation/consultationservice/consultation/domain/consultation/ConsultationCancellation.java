@@ -1,6 +1,8 @@
 package com.devtalk.consultation.consultationservice.consultation.domain.consultation;
 
 import com.devtalk.consultation.consultationservice.global.vo.BaseTime;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,6 +11,9 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class ConsultationCancellation extends BaseTime {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
