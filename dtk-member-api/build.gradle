@@ -67,6 +67,10 @@ dependencies {
 	implementation 'org.springframework.kafka:spring-kafka'
 	// feign client
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+	// aws s3
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+	// File 관련
+	implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
 }
 
 dependencyManagement {

@@ -33,18 +33,18 @@ public class MyPageService implements MyPageUseCase {
     }
 
     @Override
+    public void checkPassword(String email, String password, String checkPassword) {
+        if (!passwordEncoder.matches(checkPassword, password)) {
+            throw new PasswordMismatchingException(ErrorCode.PASSWORD_MISMATCHING);
+        }
+    }
+
+    @Override
     public MyPageRes.InfoRes getMyPage(String email) {
         Member member = getMember(email);
         List<MemberCategory> categories = memberCategoryRepo.findAllByMemberId(member.getId());
         List<String> result = new ArrayList<>();
         categories.forEach((category) -> result.add(category.getCategory().getCategory()));
         return MyPageRes.InfoRes.of(member, result);
-    }
-
-    @Override
-    public void checkPassword(String email, String password, String checkPassword) {
-        if (!passwordEncoder.matches(checkPassword, password)) {
-            throw new PasswordMismatchingException(ErrorCode.PASSWORD_MISMATCHING);
-        }
     }
 }
