@@ -18,6 +18,7 @@ public enum SuccessCode {
     /* auth service */
     LOGIN_SUCCESS(OK, "0115", "로그인 성공"),
     LOGOUT_SUCCESS(OK, "0116", "로그아웃 성공"),
+    REISSUE_SUCCESS(OK, "0131", "AT 재발급 성공"),
     /* profile 찾기 */
     FIND_EMAIL_SUCCESS(OK, "0117", "이메일 찾기 성공"),
     TEMP_PASSWORD_SUCCESS(OK, "0118", "임시 비밀번호 발급 성공"),
