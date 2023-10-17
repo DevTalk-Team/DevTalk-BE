@@ -137,10 +137,10 @@ public class JwtTokenProvider implements InitializingBean {
         return null;
     }
 
-    public String getRefreshToken(String email) {
+    public String getRedisRefreshToken(String email) {
         String refreshToken = redisUtil.getData(email);
         if (refreshToken == null) {
-            throw new JwtException(ErrorCode.UNSUPPORTED_TOKEN);
+            throw new JwtException(ErrorCode.INVALID_REFRESH_TOKEN);
         }
         return refreshToken;
     }

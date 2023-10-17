@@ -5,5 +5,5 @@ import com.devtalk.member.memberservice.member.domain.member.Member;
 
 public interface SignUpUseCase {
     Member signUp(MemberReq.SignUpReq req);
-    boolean checkDuplicatedEmail(String email);
+    void checkDuplicatedEmail(String email);
 }

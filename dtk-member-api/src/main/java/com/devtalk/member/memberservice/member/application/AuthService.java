@@ -1,11 +1,14 @@
 package com.devtalk.member.memberservice.member.application;
 
+import com.devtalk.member.memberservice.global.error.ErrorCode;
+import com.devtalk.member.memberservice.global.error.exception.JwtException;
 import com.devtalk.member.memberservice.global.security.JwtTokenProvider;
 import com.devtalk.member.memberservice.global.security.MemberDetails;
 import com.devtalk.member.memberservice.global.util.RedisUtil;
 import com.devtalk.member.memberservice.member.application.port.in.AuthUseCase;
 import com.devtalk.member.memberservice.member.application.port.in.dto.AuthReq;
 import com.devtalk.member.memberservice.member.application.port.out.dto.AuthRes;
+import com.devtalk.member.memberservice.member.application.validator.AuthValidator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,9 +24,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthService implements AuthUseCase {
     private final JwtTokenProvider jwtTokenProvider;
-
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final RedisUtil redisUtil;
+    private final AuthValidator validator;
 
     @Override
     public AuthRes.LogInRes login(AuthReq.LogInReq req) {
@@ -61,6 +64,23 @@ public class AuthService implements AuthUseCase {
         // refresh token 삭제
         String email = jwtTokenProvider.getEmail(token);
         redisUtil.deleteData(email);
+    }
+
+    @Override
+    public AuthRes.TokenRes reissueAccessToken(String refreshToken, String email) {
+        log.info("[reissue 시작");
+        validator.reissueValidate(refreshToken, email);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            throw new JwtException(ErrorCode.INVALID_REFRESH_TOKEN);
+        }
+        String newAccessToken = jwtTokenProvider.generateAccessToken(authentication);
+        log.info("[newAccessToken = {}", newAccessToken);
+        return AuthRes.TokenRes
+                .builder()
+                .accessToken(newAccessToken)
+                .tokenType("Bearer ")
+                .build();
     }
 
 }

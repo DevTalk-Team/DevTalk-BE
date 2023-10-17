@@ -6,5 +6,5 @@ import com.devtalk.member.memberservice.member.application.port.out.dto.AuthRes;
 public interface AuthUseCase {
     AuthRes.LogInRes login(AuthReq.LogInReq req);
     void logout(String token);
-//    String reissueAccessToken(String refreshToken);
+    AuthRes.TokenRes reissueAccessToken(String refreshToken, String email);
 }

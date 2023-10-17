@@ -14,6 +14,10 @@ public class AuthRes {
         private String refreshToken;
     }
 
-    public class LogOutRes {
+    @Getter
+    @Builder
+    public static class TokenRes {
+        private String accessToken;
+        private String tokenType;
     }
 }
