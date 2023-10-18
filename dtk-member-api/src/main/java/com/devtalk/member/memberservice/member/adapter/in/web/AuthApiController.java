@@ -4,7 +4,6 @@ import com.devtalk.member.memberservice.global.security.JwtTokenProvider;
 import com.devtalk.member.memberservice.global.security.MemberDetails;
 import com.devtalk.member.memberservice.global.success.SuccessCode;
 import com.devtalk.member.memberservice.global.success.SuccessResponse;
-import com.devtalk.member.memberservice.global.success.SuccessResponseNoResult;
 import com.devtalk.member.memberservice.member.adapter.in.web.dto.LogInInput;
 import com.devtalk.member.memberservice.member.application.port.in.AuthUseCase;
 import com.devtalk.member.memberservice.member.application.port.out.dto.AuthRes;
@@ -28,18 +27,18 @@ public class AuthApiController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LogInInput input) {
-        AuthRes.LogInRes res = authUseCase.login(toReq(input));
+        AuthRes.LoginRes res = authUseCase.login(toReq(input));
         return SuccessResponse.toResponseEntity(SuccessCode.LOGIN_SUCCESS, res);
     }
 
     @DeleteMapping("/logout")
-    public SuccessResponseNoResult logout(HttpServletRequest request, @AuthenticationPrincipal MemberDetails memberDetails) {
+    public ResponseEntity<?> logout(HttpServletRequest request, @AuthenticationPrincipal MemberDetails memberDetails) {
         String accessToken = jwtTokenProvider.resolveToken(request);
-        authUseCase.logout(accessToken);
-        return new SuccessResponseNoResult(SuccessCode.LOGOUT_SUCCESS);
+        authUseCase.logout(accessToken, memberDetails.getUsername());
+        return SuccessResponse.toResponseEntity(SuccessCode.LOGOUT_SUCCESS, "");
     }
 
-    @PatchMapping("/reissue")
+    @PostMapping("/reissue")
     public ResponseEntity<?> reissue(HttpServletRequest request,
                                      @AuthenticationPrincipal MemberDetails memberDetails) {
         String refreshToken = jwtTokenProvider.resolveToken(request);

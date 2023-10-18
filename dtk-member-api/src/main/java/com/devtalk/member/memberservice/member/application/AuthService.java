@@ -29,7 +29,7 @@ public class AuthService implements AuthUseCase {
     private final AuthValidator validator;
 
     @Override
-    public AuthRes.LogInRes login(AuthReq.LogInReq req) {
+    public AuthRes.LoginRes login(AuthReq.LogInReq req) {
         // 1. Member 인증 객체 생성
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(req.getEmail(), req.getPassword());
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
@@ -44,9 +44,9 @@ public class AuthService implements AuthUseCase {
         // 3. refresh Token 저장
         redisUtil.setDataExpire(member.getUsername(), refreshToken, 1209600);
 
-        log.info("[login] LogInRes 객체 생성");
+        log.info("[login] LoginRes 객체 생성");
 
-        AuthRes.LogInRes logInRes = AuthRes.LogInRes.builder()
+        AuthRes.LoginRes logInRes = AuthRes.LoginRes.builder()
                 .accessToken(accessToken)
                 .tokenType("Bearer ")
                 .email(member.getUsername())
@@ -57,13 +57,22 @@ public class AuthService implements AuthUseCase {
     }
 
     @Override
-    public void logout(String token) {
-        // access token black list에 저장
-        Long expiration = jwtTokenProvider.getExpiration(token);
-        redisUtil.setDataExpire(token, "logout", expiration);
-        // refresh token 삭제
-        String email = jwtTokenProvider.getEmail(token);
+    public AuthRes.LogoutRes logout(String accessToken, String userEmail) {
+        // access token 유효성 확인
+        jwtTokenProvider.validateToken(accessToken);
+
+        // 로그인한 유저의 email와 access token의 email와 일치하는지 확인 후,
+        // redis에 저장된 유저의 refresh token 삭제
+        String email = jwtTokenProvider.getEmail(accessToken);
         redisUtil.deleteData(email);
+        // access token을 black list에 현재 남은 유효 기간만큼 저장,
+        // (accessToken, "logout")
+        Long expiration = jwtTokenProvider.getExpiration(accessToken);
+        redisUtil.setDataExpire(accessToken, "logout", expiration);
+        return AuthRes.LogoutRes
+                .builder()
+                .email(userEmail)
+                .build();
     }
 
     @Override
