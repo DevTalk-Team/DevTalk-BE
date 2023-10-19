@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import java.util.List;
 import static com.devtalk.consultation.consultationservice.consultation.adapter.in.web.dto.ConsultationInput.*;
 import static com.devtalk.consultation.consultationservice.consultation.application.port.in.dto.ConsultationRes.*;
 
+@Tag(name = "매칭서비스-상담사", description = "상담 승인, 거절, 취소 내역 조회, 전체 조회, 리뷰 조회")
 @RestController
 @RequestMapping("/matching")
 @RequiredArgsConstructor

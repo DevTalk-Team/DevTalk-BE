@@ -11,21 +11,37 @@ public class MemberRes {
     @Builder
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @Getter
+    public static class InfoRes {
+        private String name;
+        private String email;
+        private String phoneNumber;
+
+        public static InfoRes of(Member member) {
+            return InfoRes.builder()
+                    .name(member.getName())
+                    .email(member.getEmail())
+                    .phoneNumber(member.getPhoneNumber())
+                    .build();
+        }
+    }
+
+    @Builder
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @Getter
     public static class ConsultantRes {
         private Long consultantId;
         private String name;
         private MemberType memberType;
-        //가격은 상품에서도 쓰기 위함
-        private Integer F2F_Cost;
-        private Integer NF2F_Cost;
+        private Integer f2fCost;
+        private Integer nf2fCost;
 
         public static ConsultantRes of(Member member, Integer f2f1h, Integer nf2f1h) {
             return ConsultantRes.builder()
                     .consultantId(member.getId())
                     .name(member.getName())
                     .memberType(member.getMemberType())
-                    .F2F_Cost(f2f1h)
-                    .NF2F_Cost(nf2f1h)
+                    .f2fCost(f2f1h)
+                    .nf2fCost(nf2f1h)
                     .build();
         }
     }

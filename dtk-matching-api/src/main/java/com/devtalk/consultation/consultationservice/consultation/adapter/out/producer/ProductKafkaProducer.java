@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 public class ProductKafkaProducer {
     private final KafkaTemplate<String, String> kafkaTemplate;
 
-    public void sendConsultationInfoPayment(String topic, Consultation consultation) {
+    public void sendConsultationInfoProduct(String topic, Consultation consultation) {
         String jsonInString = "";
         try{
             jsonInString = serializeMapper().writeValueAsString(consultation);

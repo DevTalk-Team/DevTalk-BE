@@ -5,6 +5,7 @@ import com.devtalk.consultation.consultationservice.consultation.adapter.out.pro
 import com.devtalk.consultation.consultationservice.consultation.application.port.in.CancelConsultationUseCase;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.client.PaymentServiceClient;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.client.ProductServiceClient;
+import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.ConsultationCancellationRepo;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.ConsultationQueryableRepo;
 import com.devtalk.consultation.consultationservice.consultation.domain.consultation.Consultation;
 import com.devtalk.consultation.consultationservice.consultation.domain.consultation.ProcessStatus;
@@ -24,6 +25,7 @@ public class CancelConsultationService implements CancelConsultationUseCase {
     private final ConsultationQueryableRepo consultationQueryableRepo;
     private final ProductServiceClient productServiceClient;
     private final PaymentServiceClient paymentServiceClient;
+    private final ConsultationCancellationRepo consultationCancellationRepo;
     private final PaymentKafkaProducer paymentKafkaProducer;
     private final ProductKafkaProducer productKafkaProducer;
 
@@ -39,11 +41,14 @@ public class CancelConsultationService implements CancelConsultationUseCase {
 
         ProcessStatus originProcessStatus = consultation.getStatus();
 
+
         consultation.cancelByConsulter(cancellationReq.getReason());
-        productKafkaProducer.sendConsultationInfoPayment("product-update-consultation", consultation);
+        consultationCancellationRepo.save(consultation);
+
+        productKafkaProducer.sendConsultationInfoProduct("consultation-topic", consultation);
 
         if (originProcessStatus.equals(ProcessStatus.PAID)) {
-            paymentKafkaProducer.sendConsultationInfoPayment("product-update-consultation", consultation);
+            paymentKafkaProducer.sendConsultationInfoPayment("consultation-topic", consultation);
         }
     }
 
@@ -54,9 +59,11 @@ public class CancelConsultationService implements CancelConsultationUseCase {
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_CONSULTATION));
 
         ProcessStatus originProcessStatus = consultation.getStatus();
+        consultationCancellationRepo.save(consultation);
+
 
         consultation.cancelByConsultant(cancellationReq.getReason());
-        productKafkaProducer.sendConsultationInfoPayment("product-update-consultation", consultation);
+        productKafkaProducer.sendConsultationInfoProduct("product-update-consultation", consultation);
 
         if (originProcessStatus.equals(ProcessStatus.PAID)) {
             paymentKafkaProducer.sendConsultationInfoPayment("product-update-consultation", consultation);

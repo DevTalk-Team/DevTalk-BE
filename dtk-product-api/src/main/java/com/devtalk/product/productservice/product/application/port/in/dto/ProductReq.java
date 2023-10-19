@@ -12,6 +12,7 @@ public class ProductReq {
     @Getter
     public static class RegistProdReq {
         private Long memberId;
+
         private LocalDateTime reservationAt;
         private ProductProceedType productProceedType;
     }

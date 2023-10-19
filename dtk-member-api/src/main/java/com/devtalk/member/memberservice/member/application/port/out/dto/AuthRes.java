@@ -7,13 +7,23 @@ public class AuthRes {
 
     @Getter
     @Builder
-    public static class LogInRes {
+    public static class LoginRes {
         private String accessToken;
         private String tokenType;
         private String email; // refreshToken 키 값 (redis)
         private String refreshToken;
     }
 
-    public class LogOutRes {
+    @Getter
+    @Builder
+    public static class LogoutRes {
+        private String email;
+    }
+
+    @Getter
+    @Builder
+    public static class TokenRes {
+        private String accessToken;
+        private String tokenType;
     }
 }

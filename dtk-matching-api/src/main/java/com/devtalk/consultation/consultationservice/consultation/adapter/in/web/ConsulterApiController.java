@@ -29,7 +29,7 @@ import java.util.List;
 import static com.devtalk.consultation.consultationservice.consultation.adapter.in.web.dto.ConsultationInput.*;
 import static com.devtalk.consultation.consultationservice.consultation.application.port.in.dto.ConsultationRes.*;
 
-@Tag(name = "매칭 서비스", description = "데브톡 - 매칭 서비스 REST API")
+@Tag(name = "매칭서비스-내담자", description = "상담 승인, 거절, 취소 내역 조회, 전체 조회, 리뷰 조회")
 @EnableDiscoveryClient
 @RestController
 @Slf4j

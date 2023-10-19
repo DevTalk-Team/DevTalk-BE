@@ -7,7 +7,6 @@ import static org.springframework.http.HttpStatus.*;
 
 @Getter
 public enum ErrorCode {
-
     /* 공통 */
     INVALID_INPUT_VALUE(BAD_REQUEST, "00000", "입력 값이 잘못되었습니다."),
     SERVER_ERROR(INTERNAL_SERVER_ERROR, "00001", "서버 내부 에러"),
@@ -24,6 +23,8 @@ public enum ErrorCode {
     INCORRECT_SIGNATURE(BAD_REQUEST, "01154", "잘못된 서명입니다."),
     EXPIRED_TOKEN(BAD_REQUEST, "01155", "만료된 토큰"),
     UNSUPPORTED_TOKEN(BAD_REQUEST, "01156", "지원되지 않는 토큰"),
+    INVALID_REFRESH_TOKEN(UNAUTHORIZED, "01157", "유효하지 않은 리프레시 토큰, 로그인 필요"),
+    LOGOUT_TOKEN(UNAUTHORIZED, "01158", "로그아웃된 토큰, 로그인 필요"),
     CONSULTANT_INFO_NOT_FOUND(CONFLICT,"01156", "상담자 정보가 없습니다")
     ;
 

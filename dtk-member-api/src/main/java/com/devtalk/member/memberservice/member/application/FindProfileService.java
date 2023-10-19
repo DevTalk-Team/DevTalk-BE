@@ -1,10 +1,8 @@
 package com.devtalk.member.memberservice.member.application;
 
 import com.devtalk.member.memberservice.global.util.RedisUtil;
-import com.devtalk.member.memberservice.member.adapter.in.web.dto.FindProfileOutput;
 import com.devtalk.member.memberservice.member.application.port.in.FindProfileUseCase;
 import com.devtalk.member.memberservice.member.application.port.out.repository.MemberQueryableRepo;
-import com.devtalk.member.memberservice.member.application.port.out.repository.MemberRepo;
 import com.devtalk.member.memberservice.member.application.validator.FindProfileValidator;
 import com.devtalk.member.memberservice.member.domain.member.Member;
 import jakarta.mail.MessagingException;
@@ -83,10 +81,5 @@ public class FindProfileService implements FindProfileUseCase {
     public void changePassword(String password, String newPassword) {
         Member member = validator.changePasswordValidate(password, newPassword);
         member.updatePassword(bCryptPasswordEncoder.encode(newPassword));
-    }
-
-    @Override
-    public FindProfileOutput.MemberOutput findMember(Long memberId) {
-        return memberQueryableRepo.findNameAndEmailById(memberId);
     }
 }

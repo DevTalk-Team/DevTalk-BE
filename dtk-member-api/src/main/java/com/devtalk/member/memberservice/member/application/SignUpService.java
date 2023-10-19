@@ -1,5 +1,7 @@
 package com.devtalk.member.memberservice.member.application;
 
+import com.devtalk.member.memberservice.global.error.ErrorCode;
+import com.devtalk.member.memberservice.global.error.exception.DuplicationException;
 import com.devtalk.member.memberservice.member.application.port.in.SignUpUseCase;
 import com.devtalk.member.memberservice.member.application.port.in.dto.MemberReq;
 import com.devtalk.member.memberservice.member.application.port.out.repository.CategoryRepo;
@@ -63,8 +65,10 @@ public class SignUpService implements SignUpUseCase {
     }
 
     @Override
-    public boolean checkDuplicatedEmail(String email) {
-        return memberRepo.existsByEmail(email);
+    public void checkDuplicatedEmail(String email) {
+        if (memberRepo.existsByEmail(email)) {
+            throw new DuplicationException(ErrorCode.DUPLICATED_EMAIL);
+        }
     }
 
 }

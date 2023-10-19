@@ -3,7 +3,7 @@ package com.devtalk.member.memberservice.member.adapter.in.web;
 import com.devtalk.member.memberservice.global.success.SuccessResponse;
 import com.devtalk.member.memberservice.global.success.SuccessResponseNoResult;
 import com.devtalk.member.memberservice.member.adapter.in.web.dto.FindProfileInput;
-import com.devtalk.member.memberservice.member.adapter.in.web.dto.FindProfileOutput;
+import com.devtalk.member.memberservice.member.adapter.out.web.dto.FindProfileOutput;
 import com.devtalk.member.memberservice.member.application.port.in.FindProfileUseCase;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -36,11 +36,5 @@ public class FindProfileApiController {
     public ResponseEntity<?> changePassword(@RequestBody FindProfileInput.ChangePasswordInput input) {
         findProfileUseCase.changePassword(input.getPassword(), input.getNewPassword());
         return SuccessResponseNoResult.toResponseEntity(CHANGE_PASSWORD_SUCCESS);
-    }
-
-    @GetMapping("/{memberId}")
-    public ResponseEntity<?> findMember(@PathVariable Long memberId) {
-        FindProfileOutput.MemberOutput output = findProfileUseCase.findMember(memberId);
-        return SuccessResponse.toResponseEntity(FIND_MEMBER_SUCCESS, output);
     }
 }

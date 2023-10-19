@@ -10,11 +10,10 @@ public class MemberReq {
     @Getter
     public static class ConsultantReq {
         private Long consultantId;
+        private Integer f2fCost;
+        private Integer nf2fCost;
         private String name;
         private MemberType memberType;
-        //가격은 상품에서도 쓰기 위함
-        private Integer F2F_Cost;
-        private Integer NF2F_Cost;
 
         private enum MemberType {
             CONSULTER, CONSULTANT

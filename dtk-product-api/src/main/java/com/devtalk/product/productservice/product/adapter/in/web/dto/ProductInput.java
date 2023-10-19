@@ -6,7 +6,9 @@ import com.devtalk.product.productservice.product.domain.product.ProductProceedT
 //import com.devtalk.product.productservice.product.domain.product.ReservedProceedType;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class ProductInput {
     @Builder
@@ -16,10 +18,15 @@ public class ProductInput {
     public static class RegistrationInput{
 
         private Long consultantId;
-        private  LocalDateTime reservationAt;
+        private String reservationDate;
+        private String reservationTime;
         private ProductProceedType productProceedType;
 
         public ProductReq.RegistProdReq toReq( ){
+            LocalDate date = LocalDate.parse(reservationDate);
+            LocalTime time = LocalTime.parse(reservationTime);
+            LocalDateTime reservationAt = LocalDateTime.of(date, time);
+
             return ProductReq.RegistProdReq.builder()
                     .memberId(consultantId)
                     .reservationAt(reservationAt)

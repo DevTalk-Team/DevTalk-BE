@@ -1,4 +1,4 @@
-package com.devtalk.member.memberservice.member.adapter.in.web.dto;
+package com.devtalk.member.memberservice.member.adapter.out.web.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -18,6 +18,7 @@ public enum SuccessCode {
     /* auth service */
     LOGIN_SUCCESS(OK, "0115", "로그인 성공"),
     LOGOUT_SUCCESS(OK, "0116", "로그아웃 성공"),
+    REISSUE_SUCCESS(OK, "0131", "AT 재발급 성공"),
     /* profile 찾기 */
     FIND_EMAIL_SUCCESS(OK, "0117", "이메일 찾기 성공"),
     TEMP_PASSWORD_SUCCESS(OK, "0118", "임시 비밀번호 발급 성공"),
@@ -34,7 +35,10 @@ public enum SuccessCode {
     CONSULTANT_INFO_REGION_UPDATE_SUCCESS(OK, "0127", "전문가 소개 - 상담 가능 지역 수정 성공"),
     /* 마이페이지 */
     MYPAGE_PASSWORD_SUCCESS(OK, "0128", "마이페이지 - 비밀번호 확인 성공"),
-    MYPAGE_SUCCESS(OK, "0129", "마이페이지 - 조회 성공")
+    MYPAGE_SUCCESS(OK, "0129", "마이페이지 - 조회 성공"),
+    MYPAGE_UPDATE_SUCCESS(OK, "0130", "마이페이지 - 수정 성공"),
+    /* 상담 */
+    FIND_CONSULTANT_SUCCESS(OK, "0131", "상담 - 전문가 찾기 성공"),
     ;
 
 
