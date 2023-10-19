@@ -1,7 +1,7 @@
 package com.devtalk.member.memberservice.member.application;
 
 import com.devtalk.member.memberservice.global.error.ErrorCode;
-import com.devtalk.member.memberservice.global.error.exception.JwtException;
+import com.devtalk.member.memberservice.global.error.exception.TokenException;
 import com.devtalk.member.memberservice.global.security.JwtTokenProvider;
 import com.devtalk.member.memberservice.global.security.MemberDetails;
 import com.devtalk.member.memberservice.global.util.RedisUtil;
@@ -60,7 +60,6 @@ public class AuthService implements AuthUseCase {
     public AuthRes.LogoutRes logout(String accessToken, String userEmail) {
         // access token 유효성 확인
         jwtTokenProvider.validateToken(accessToken);
-
         // 로그인한 유저의 email와 access token의 email와 일치하는지 확인 후,
         // redis에 저장된 유저의 refresh token 삭제
         String email = jwtTokenProvider.getEmail(accessToken);
@@ -81,7 +80,7 @@ public class AuthService implements AuthUseCase {
         validator.reissueValidate(refreshToken, email);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
-            throw new JwtException(ErrorCode.INVALID_REFRESH_TOKEN);
+            throw new TokenException(ErrorCode.INVALID_REFRESH_TOKEN);
         }
         String newAccessToken = jwtTokenProvider.generateAccessToken(authentication);
         log.info("[newAccessToken = {}", newAccessToken);

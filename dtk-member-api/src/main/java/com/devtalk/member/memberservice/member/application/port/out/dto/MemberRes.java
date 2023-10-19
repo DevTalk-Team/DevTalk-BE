@@ -32,7 +32,6 @@ public class MemberRes {
         private Long consultantId;
         private String name;
         private MemberType memberType;
-        //가격은 상품에서도 쓰기 위함
         private Integer f2fCost;
         private Integer nf2fCost;
 

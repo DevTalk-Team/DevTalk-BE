@@ -1,7 +1,7 @@
 package com.devtalk.member.memberservice.global.security;
 
 import com.devtalk.member.memberservice.global.error.ErrorCode;
-import com.devtalk.member.memberservice.global.error.exception.JwtException;
+import com.devtalk.member.memberservice.global.error.exception.TokenException;
 import com.devtalk.member.memberservice.global.util.RedisUtil;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -43,6 +43,8 @@ public class JwtTokenProvider implements InitializingBean {
         this.secretKey = secretKey;
         this.accessTokenValidity = accessTokenValidity;
         this.refreshTokenValidity = refreshTokenValidity;
+//        this.accessTokenValidity = 180L;
+//        this.refreshTokenValidity = 240L;
         this.memberDetailsService = memberDetailsService;
         this.redisUtil = redisUtil;
     }
@@ -119,13 +121,14 @@ public class JwtTokenProvider implements InitializingBean {
             Jws<Claims> claims = Jwts.parser()
                     .setSigningKey(key)
                     .parseClaimsJws(token);
+            log.info("[validateToken] return 값 = {}", !claims.getBody().getExpiration().before(new Date()));
             return !claims.getBody().getExpiration().before(new Date());
         } catch (SignatureException e) {
-            throw new JwtException(ErrorCode.INCORRECT_SIGNATURE);
+            throw new TokenException(ErrorCode.INCORRECT_SIGNATURE);
         } catch (ExpiredJwtException e) {
-            throw new JwtException(ErrorCode.EXPIRED_TOKEN);
+            throw new TokenException(ErrorCode.EXPIRED_TOKEN);
         } catch (MalformedJwtException | UnsupportedJwtException e) {
-            throw new JwtException(ErrorCode.UNSUPPORTED_TOKEN);
+            throw new TokenException(ErrorCode.UNSUPPORTED_TOKEN);
         } catch (IllegalArgumentException e) {
             throw e;
         }
@@ -142,7 +145,7 @@ public class JwtTokenProvider implements InitializingBean {
     public String getRedisRefreshToken(String email) {
         String refreshToken = redisUtil.getData(email);
         if (refreshToken == null) {
-            throw new JwtException(ErrorCode.INVALID_REFRESH_TOKEN);
+            throw new TokenException(ErrorCode.INVALID_REFRESH_TOKEN);
         }
         return refreshToken;
     }

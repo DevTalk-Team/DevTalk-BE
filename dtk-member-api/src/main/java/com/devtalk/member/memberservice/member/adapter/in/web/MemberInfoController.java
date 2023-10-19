@@ -1,12 +1,14 @@
 package com.devtalk.member.memberservice.member.adapter.in.web;
 
+import com.devtalk.member.memberservice.global.success.SuccessCode;
+import com.devtalk.member.memberservice.global.success.SuccessResponse;
+import com.devtalk.member.memberservice.member.adapter.in.web.dto.ConsultantInput;
 import com.devtalk.member.memberservice.member.application.port.in.MemberInfoUseCase;
+import com.devtalk.member.memberservice.member.application.port.in.dto.ConsultantReq;
 import com.devtalk.member.memberservice.member.application.port.out.dto.MemberRes;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/member/profile")
@@ -32,7 +34,5 @@ public class MemberInfoController {
     MemberRes.ConsulterRes getConsulterInfo(@PathVariable Long consulter) {
         return memberInfoUseCase.findConsulterById(consulter);
     }
-
-
 }
 

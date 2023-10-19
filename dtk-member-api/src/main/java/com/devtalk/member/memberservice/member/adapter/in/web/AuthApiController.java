@@ -34,8 +34,8 @@ public class AuthApiController {
     @DeleteMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request, @AuthenticationPrincipal MemberDetails memberDetails) {
         String accessToken = jwtTokenProvider.resolveToken(request);
-        authUseCase.logout(accessToken, memberDetails.getUsername());
-        return SuccessResponse.toResponseEntity(SuccessCode.LOGOUT_SUCCESS, "");
+        AuthRes.LogoutRes res = authUseCase.logout(accessToken, memberDetails.getUsername());
+        return SuccessResponse.toResponseEntity(SuccessCode.LOGOUT_SUCCESS, res);
     }
 
     @PostMapping("/reissue")

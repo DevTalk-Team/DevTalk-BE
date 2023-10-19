@@ -26,5 +26,12 @@ public class ConsultantReq {
         private List<String> categories;
     }
 
-
+    @Builder
+    @Getter
+    public static class ConsultationReq {
+        private String type;        // 상담 분야: 커리어 상담 ...
+        private String category;    // 기술 분야: 웹 ...
+        private String f2f;         // 대면 여부: 대면 or 비대면, 게시판
+        private String region;      // 대면 시 지역
+    }
 }

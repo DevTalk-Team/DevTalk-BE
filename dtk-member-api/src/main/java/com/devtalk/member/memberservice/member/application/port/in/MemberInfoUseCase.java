@@ -1,5 +1,7 @@
 package com.devtalk.member.memberservice.member.application.port.in;
 
+import com.devtalk.member.memberservice.member.application.port.in.dto.ConsultantReq;
+import com.devtalk.member.memberservice.member.application.port.out.dto.ConsultantRes;
 import com.devtalk.member.memberservice.member.application.port.out.dto.MemberRes;
 
 public interface MemberInfoUseCase {

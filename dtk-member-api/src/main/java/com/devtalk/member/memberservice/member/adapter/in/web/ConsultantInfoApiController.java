@@ -79,4 +79,10 @@ public class ConsultantInfoApiController {
         consultantInfoUseCase.updateRegion(memberDetails.getUsername(), input); // TODO input 검증
         return SuccessResponseNoResult.toResponseEntity(CONSULTANT_INFO_REGION_UPDATE_SUCCESS);
     }
+
+    @GetMapping
+    ResponseEntity<?> getConsultant(@RequestBody ConsultantInput.ConsultationInput input) {
+        List<ConsultantRes.ConsultationRes> res = consultantInfoUseCase.findConsultantForConsultation(input.toReq());
+        return SuccessResponse.toResponseEntity(FIND_CONSULTANT_SUCCESS, res);
+    }
 }
