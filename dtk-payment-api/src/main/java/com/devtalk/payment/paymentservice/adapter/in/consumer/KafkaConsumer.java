@@ -28,7 +28,7 @@ public class KafkaConsumer {
     private final ConsultationRepo consultationRepo;
     private final PaymentRepo paymentRepo;
 
-    @KafkaListener(topics = "approved-consultation-topic")
+    @KafkaListener(topics = "consultation-topic")
     public void receiveConsultationInfo(String kafkaMessage) {
         log.info("Kafka Message: " + kafkaMessage);
 //        Map<Object, Object> map = new HashMap<>();
@@ -43,7 +43,7 @@ public class KafkaConsumer {
             ex.printStackTrace();
         }
 
-        dataSynchronization(consultation);
+//        dataSynchronization(consultation);
     }
 
     // TODO: 결제 취소건 topic 받기
