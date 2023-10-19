@@ -15,4 +15,5 @@ public interface ConsultantInfoUseCase {
     void updateCategory(String email, ConsultantInput.ListInput input);
     List<String> getRegion(String email);
     void updateRegion(String email, ConsultantInput.ListInput input);
+    List<ConsultantRes.ConsultationRes> findConsultantForConsultation(ConsultantReq.ConsultationReq req);
 }

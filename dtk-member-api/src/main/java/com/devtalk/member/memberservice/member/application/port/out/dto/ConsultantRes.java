@@ -45,4 +45,15 @@ public class ConsultantRes {
                     .build();
         }
     }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class ConsultationRes {
+        private String email;
+        private String name;
+        private Integer cost;
+        private int year;
+    }
 }

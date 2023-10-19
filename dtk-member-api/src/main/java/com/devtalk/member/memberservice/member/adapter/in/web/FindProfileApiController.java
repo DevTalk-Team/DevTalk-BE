@@ -3,7 +3,7 @@ package com.devtalk.member.memberservice.member.adapter.in.web;
 import com.devtalk.member.memberservice.global.success.SuccessResponse;
 import com.devtalk.member.memberservice.global.success.SuccessResponseNoResult;
 import com.devtalk.member.memberservice.member.adapter.in.web.dto.FindProfileInput;
-import com.devtalk.member.memberservice.member.adapter.in.web.dto.FindProfileOutput;
+import com.devtalk.member.memberservice.member.adapter.out.web.dto.FindProfileOutput;
 import com.devtalk.member.memberservice.member.application.port.in.FindProfileUseCase;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

@@ -2,8 +2,8 @@ package com.devtalk.member.memberservice.global.error.exception;
 
 import com.devtalk.member.memberservice.global.error.ErrorCode;
 
-public class JwtException extends AbstractBusinessLogicException {
-    public JwtException(ErrorCode errorCode) {
+public class TokenException extends AbstractBusinessLogicException {
+    public TokenException(ErrorCode errorCode) {
         super(errorCode);
     }
 }

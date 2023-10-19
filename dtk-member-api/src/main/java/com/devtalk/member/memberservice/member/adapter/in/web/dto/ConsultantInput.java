@@ -42,5 +42,22 @@ public class ConsultantInput {
     public static class ListInput {
         private List<String> list;
     }
+
+    @Getter
+    public static class ConsultationInput {
+        private String type;        // 상담 분야: 커리어 상담 ...
+        private String category;    // 기술 분야: 웹 ...
+        private String f2f;         // 대면 여부: 대면 or 비대면, 게시판
+        private String region;      // 대면 시 지역
+
+        public ConsultantReq.ConsultationReq toReq() {
+            return ConsultantReq.ConsultationReq.builder()
+                    .type(type)
+                    .category(category)
+                    .f2f(f2f)
+                    .region(region)
+                    .build();
+        }
+    }
 }
 

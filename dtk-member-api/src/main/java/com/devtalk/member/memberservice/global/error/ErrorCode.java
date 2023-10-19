@@ -24,6 +24,7 @@ public enum ErrorCode {
     EXPIRED_TOKEN(BAD_REQUEST, "01155", "만료된 토큰"),
     UNSUPPORTED_TOKEN(BAD_REQUEST, "01156", "지원되지 않는 토큰"),
     INVALID_REFRESH_TOKEN(UNAUTHORIZED, "01157", "유효하지 않은 리프레시 토큰, 로그인 필요"),
+    LOGOUT_TOKEN(UNAUTHORIZED, "01158", "로그아웃된 토큰, 로그인 필요"),
     CONSULTANT_INFO_NOT_FOUND(CONFLICT,"01156", "상담자 정보가 없습니다")
     ;
 

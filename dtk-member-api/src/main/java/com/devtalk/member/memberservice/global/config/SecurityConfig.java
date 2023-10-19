@@ -1,6 +1,7 @@
 package com.devtalk.member.memberservice.global.config;
 
 import com.devtalk.member.memberservice.global.security.*;
+import com.devtalk.member.memberservice.global.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +22,7 @@ public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final RedisUtil redisUtil;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -47,7 +49,7 @@ public class SecurityConfig {
                 .csrf((csrf) -> csrf.disable())
                 .sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .formLogin((formLogin) -> formLogin.disable())
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, redisUtil), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((req) -> req.requestMatchers("/member/mypage/**", "/member/logout",
                                 "/member/consultant/**").authenticated()
                 .anyRequest().permitAll())

@@ -1,26 +1,31 @@
 package com.devtalk.member.memberservice.member.adapter.out.persistence;
 
-import com.devtalk.member.memberservice.member.adapter.in.web.dto.FindProfileOutput;
+import com.devtalk.member.memberservice.member.adapter.out.web.dto.FindProfileOutput;
+import com.devtalk.member.memberservice.member.application.port.in.dto.ConsultantReq;
+import com.devtalk.member.memberservice.member.application.port.out.dto.ConsultantRes;
 import com.devtalk.member.memberservice.member.application.port.out.repository.MemberQueryableRepo;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.EntityManager;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
+import static com.devtalk.member.memberservice.member.domain.category.QMemberCategory.memberCategory;
+import static com.devtalk.member.memberservice.member.domain.consultation.QConsultantConsultationType.consultantConsultationType;
+import static com.devtalk.member.memberservice.member.domain.consultation.QConsultantInfo.consultantInfo;
 import static com.devtalk.member.memberservice.member.domain.member.QMember.member;
+import static com.devtalk.member.memberservice.member.domain.region.QMemberRegion.memberRegion;
 
+@Slf4j
 @Repository
+@RequiredArgsConstructor
 public class MemberQueryRepo implements MemberQueryableRepo {
-    @Autowired
-    EntityManager em;
-
-    private JPAQueryFactory queryFactory;
+    private final JPAQueryFactory queryFactory;
 
     @Override
     public String findEmailByNameAndPhoneNumber(String name, String phoneNumber) {
-        queryFactory = new JPAQueryFactory(em);
-
         return queryFactory
                 .select(member.email)
                 .from(member)
@@ -30,13 +35,46 @@ public class MemberQueryRepo implements MemberQueryableRepo {
 
     @Override
     public FindProfileOutput.MemberOutput findNameAndEmailById(Long id) {
-        queryFactory = new JPAQueryFactory(em);
-
         return queryFactory
                 .select(Projections.constructor(FindProfileOutput.MemberOutput.class,
                         member.name, member.email))
                 .from(member)
                 .where(member.id.eq(id))
                 .fetchOne();
+    }
+
+    @Override
+    public List<ConsultantRes.ConsultationRes> findNf2fConsultant(Long typeId, Long categoryId) {
+        return queryFactory
+                .select(Projections.constructor(ConsultantRes.ConsultationRes.class,
+                        member.email, member.name, consultantInfo.year, consultantInfo.nf2f1h)).distinct()
+                .from(member)
+                .join(consultantInfo).on(member.id.eq(consultantInfo.member.id))
+                .join(consultantConsultationType)
+                .on(consultantConsultationType.member.id.eq(member.id)
+                        .and(consultantConsultationType.consultationType.id.eq(typeId)))
+                .join(memberCategory)
+                .on(memberCategory.member.id.eq(member.id)
+                        .and(memberCategory.category.id.eq(categoryId)))
+                .fetch();
+    }
+
+    @Override
+    public List<ConsultantRes.ConsultationRes> findNf2fConsultant(Long typeId, Long categoryId, Long regionId) {
+        return queryFactory
+                .select(Projections.constructor(ConsultantRes.ConsultationRes.class,
+                        member.email, member.name, consultantInfo.year, consultantInfo.f2f1h)).distinct()
+                .from(member)
+                .join(consultantInfo).on(member.id.eq(consultantInfo.member.id))
+                .join(consultantConsultationType)
+                .on(consultantConsultationType.member.id.eq(member.id)
+                        .and(consultantConsultationType.consultationType.id.eq(typeId)))
+                .join(memberCategory)
+                .on(memberCategory.member.id.eq(member.id)
+                        .and(memberCategory.category.id.eq(categoryId)))
+                .join(memberRegion)
+                .on(memberRegion.member.id.eq(member.id)
+                        .and(memberRegion.region.id.eq(regionId)))
+                .fetch();
     }
 }

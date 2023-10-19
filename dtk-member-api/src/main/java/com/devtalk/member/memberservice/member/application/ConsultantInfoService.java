@@ -4,6 +4,7 @@ import com.devtalk.member.memberservice.global.error.ErrorCode;
 import com.devtalk.member.memberservice.global.error.exception.MemberNotFoundException;
 import com.devtalk.member.memberservice.member.adapter.in.web.dto.ConsultantInput;
 import com.devtalk.member.memberservice.member.application.port.in.ConsultantInfoUseCase;
+import com.devtalk.member.memberservice.member.application.port.in.dto.ConsultantReq;
 import com.devtalk.member.memberservice.member.application.port.out.dto.ConsultantRes;
 import com.devtalk.member.memberservice.member.application.port.out.repository.*;
 import com.devtalk.member.memberservice.member.domain.category.Category;
@@ -36,6 +37,7 @@ public class ConsultantInfoService implements ConsultantInfoUseCase {
     private final MemberCategoryRepo memberCategoryRepo;
     private final RegionRepo regionRepo;
     private final MemberRegionRepo memberRegionRepo;
+    private final MemberQueryableRepo memberQueryableRepo;
 
 //    private final ProfileImageUseCase profileImageUseCase;
 //    private final ProfileImageRepo profileImageRepo;
@@ -144,5 +146,20 @@ public class ConsultantInfoService implements ConsultantInfoUseCase {
             MemberRegion memberRegion = MemberRegion.createMemberRegion(member, findRegion);
             memberRegionRepo.save(memberRegion);
         }
+    }
+
+    @Override
+    public List<ConsultantRes.ConsultationRes> findConsultantForConsultation(ConsultantReq.ConsultationReq req) {
+        // 1. 상담 분야 type
+        Long typeId = consultationTypeRepo.findByConsultationType(req.getType()).getId();
+        // 2. 기술 분야 category
+        Long categoryId = categoryRepo.findByCategory(req.getCategory()).getId();
+        // 3. 대면 여부 f2f
+        if (req.getF2f() == "") { // 비대면 or 게시판 상담
+            return memberQueryableRepo.findNf2fConsultant(typeId, categoryId);
+        }
+        // 3.1 지역 region
+        Long regionId = regionRepo.findByRegion(req.getRegion()).getId(); // 대면
+        return memberQueryableRepo.findNf2fConsultant(typeId, categoryId, regionId);
     }
 }

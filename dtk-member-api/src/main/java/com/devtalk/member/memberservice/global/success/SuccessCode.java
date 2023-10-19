@@ -37,6 +37,8 @@ public enum SuccessCode {
     MYPAGE_PASSWORD_SUCCESS(OK, "0128", "마이페이지 - 비밀번호 확인 성공"),
     MYPAGE_SUCCESS(OK, "0129", "마이페이지 - 조회 성공"),
     MYPAGE_UPDATE_SUCCESS(OK, "0130", "마이페이지 - 수정 성공"),
+    /* 상담 */
+    FIND_CONSULTANT_SUCCESS(OK, "0131", "상담 - 전문가 찾기 성공"),
     ;
 
 
