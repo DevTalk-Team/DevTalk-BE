@@ -46,12 +46,12 @@ public class MatchingKafkaConsumer {
     // *** 수행할 행동 *** //
     private void dataSynchronization(ProductReservedReq productReservedReq) {
         if (productReservedReq.getStatus() == ProcessStatus.ACCEPTED) {
-            cancleUseCase.cancleConsultation(productReservedReq);
+            reserveUseCase.reserveProduct(productReservedReq);
         }
         if (productReservedReq.getStatus() == ProcessStatus.CONSULTANT_CANCELED
-                || productReservedReq.getStatus() == ProcessStatus.CONSULTER_CANCELED
-                || productReservedReq.getStatus() == ProcessStatus.PAID){
-            reserveUseCase.reserveProduct(productReservedReq);
+                || productReservedReq.getStatus() == ProcessStatus.CONSULTER_CANCELED){
+            cancleUseCase.cancleConsultation(productReservedReq);
+
         }
     }
 
