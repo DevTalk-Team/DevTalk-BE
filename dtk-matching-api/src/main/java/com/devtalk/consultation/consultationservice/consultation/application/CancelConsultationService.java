@@ -45,10 +45,10 @@ public class CancelConsultationService implements CancelConsultationUseCase {
         consultation.cancelByConsulter(cancellationReq.getReason());
         consultationCancellationRepo.save(consultation);
 
-        productKafkaProducer.sendConsultationInfoProduct("product-update-consultation", consultation);
+        productKafkaProducer.sendConsultationInfoProduct("consultation-topic", consultation);
 
         if (originProcessStatus.equals(ProcessStatus.PAID)) {
-            paymentKafkaProducer.sendConsultationInfoPayment("product-update-consultation", consultation);
+            paymentKafkaProducer.sendConsultationInfoPayment("consultation-topic", consultation);
         }
     }
 

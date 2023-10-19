@@ -61,7 +61,8 @@ public class Consultation extends BaseTime {
     @JoinColumn(name = "review_id")
     private Review review;
 
-    @OneToOne(mappedBy = "consultation", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "consultation", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+
     private ConsultationCancellation consultationCancellation;
 
     @Column(nullable = false)
