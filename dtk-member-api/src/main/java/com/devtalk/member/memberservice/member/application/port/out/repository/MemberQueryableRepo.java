@@ -10,5 +10,5 @@ public interface MemberQueryableRepo {
     String findEmailByNameAndPhoneNumber(String name, String phoneNumber);
     FindProfileOutput.MemberOutput findNameAndEmailById(Long id);
     List<ConsultantRes.ConsultationRes> findNf2fConsultant(Long typeId, Long categoryId);
-    List<ConsultantRes.ConsultationRes> findNf2fConsultant(Long typeId, Long categoryId, Long regionId);
+    List<ConsultantRes.ConsultationRes> findF2fConsultant(Long typeId, Long categoryId, Long regionId);
 }

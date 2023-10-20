@@ -160,6 +160,6 @@ public class ConsultantInfoService implements ConsultantInfoUseCase {
         }
         // 3.1 지역 region
         Long regionId = regionRepo.findByRegion(req.getRegion()).getId(); // 대면
-        return memberQueryableRepo.findNf2fConsultant(typeId, categoryId, regionId);
+        return memberQueryableRepo.findF2fConsultant(typeId, categoryId, regionId);
     }
 }
