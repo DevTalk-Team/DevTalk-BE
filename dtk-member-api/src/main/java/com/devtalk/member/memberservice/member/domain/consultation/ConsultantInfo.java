@@ -19,13 +19,13 @@ public class ConsultantInfo {
     @Column(name = "CONSULTANT_INFO_ID")
     private Long id;
 
-//    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CONSULTANT_ID")
     private Member member;
 
     private int year;
     private String company;
+
     @Column(name = "SELF_INTRODUCTION")
     private String selfIntroduction;
     private String career;
