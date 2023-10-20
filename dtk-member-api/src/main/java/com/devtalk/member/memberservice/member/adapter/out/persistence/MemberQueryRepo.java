@@ -1,7 +1,6 @@
 package com.devtalk.member.memberservice.member.adapter.out.persistence;
 
 import com.devtalk.member.memberservice.member.adapter.out.web.dto.FindProfileOutput;
-import com.devtalk.member.memberservice.member.application.port.in.dto.ConsultantReq;
 import com.devtalk.member.memberservice.member.application.port.out.dto.ConsultantRes;
 import com.devtalk.member.memberservice.member.application.port.out.repository.MemberQueryableRepo;
 import com.querydsl.core.types.Projections;

@@ -80,7 +80,7 @@ public class ConsultantInfoApiController {
         return SuccessResponseNoResult.toResponseEntity(CONSULTANT_INFO_REGION_UPDATE_SUCCESS);
     }
 
-    @GetMapping
+    @PostMapping
     ResponseEntity<?> getConsultant(@RequestBody ConsultantInput.ConsultationInput input) {
         List<ConsultantRes.ConsultationRes> res = consultantInfoUseCase.findConsultantForConsultation(input.toReq());
         return SuccessResponse.toResponseEntity(FIND_CONSULTANT_SUCCESS, res);
