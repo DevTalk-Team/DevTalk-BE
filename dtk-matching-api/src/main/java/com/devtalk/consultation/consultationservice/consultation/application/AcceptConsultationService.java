@@ -28,6 +28,6 @@ public class AcceptConsultationService implements AcceptConsultationUseCase {
 
         findConsultation.accept();
         productKafkaProducer.sendConsultationInfoProduct("consultation-topic", findConsultation);
-        paymentKafkaProducer.sendConsultationInfoPayment("consultation-topic", findConsultation);
+        paymentKafkaProducer.sendConsultationInfoPayment("approved-consultation-topic", findConsultation);
     }
 }

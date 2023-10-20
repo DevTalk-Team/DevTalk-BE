@@ -17,11 +17,11 @@ public class ConsultationUnitTest {
     @Test
     public void JPA_Auditing_Test(){
         Consultation consultationInfo = Consultation.builder()
-                .consultant("홍길동")
+                .consultantName("홍길동")
                 .consultationAt(LocalDateTime.now())
                 .consultationType("15분 전화상담")
                 .consulterEmail("test@naver.com")
-                .consulter("이순신")
+                .consulterName("이순신")
                 .cost(10000)
                 .id(1L)
                 .processStatus(ProcessStatus.APPROVED)

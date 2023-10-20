@@ -9,4 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface MemberServiceClient {
     @GetMapping("/member/profile/email/{email}")
     MemberRes.ProfileRes getMemberByEmail(@PathVariable String email);
+
+    @GetMapping("/member/profile/{userId}")
+    MemberRes getUserByUserId(@PathVariable Long userId);
 }

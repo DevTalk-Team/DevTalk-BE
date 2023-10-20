@@ -1,11 +1,8 @@
 package com.devtalk.payment.paymentservice.domain.consultation;
 
 import com.devtalk.payment.paymentservice.domain.BaseEntity;
-import com.devtalk.payment.paymentservice.domain.payment.Payment;
-import com.devtalk.payment.paymentservice.domain.payment.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
@@ -23,20 +20,28 @@ public class Consultation extends BaseEntity {
     private Long id;
 
     // 포트원 가맹점 상품 번호
-    @Column(nullable = false)
+    @Column
     private String merchantId;
+
+    // 의뢰자ID
+    @Column(nullable = false)
+    private Long consulterId;
 
     // 의뢰자 이름
     @Column(nullable = false)
-    private String consulter;
+    private String consulterName;
 
     // 의뢰자 이메일
     @Column(nullable = false)
     private String consulterEmail;
 
+    // 전문가ID
+    @Column(nullable = false)
+    private Long consultantId;
+
     // 전문가 이름
     @Column(nullable = false)
-    private String consultant;
+    private String consultantName;
 
     // 상담 유형
     @Column(nullable = false)
@@ -47,14 +52,30 @@ public class Consultation extends BaseEntity {
     private Integer cost;
 
     // 상담 일시
-    @Column(updatable = false, insertable = false) // TODO : nullable = false
-    @ColumnDefault(value = "CURRENT_TIMESTAMP") // 받아와야 할 값임 ! 수정 필요(지금은 현재 시간으로 임의로 저장)
+    @Column(nullable = false)
     private LocalDateTime consultationAt;
 
     // 상담 진행 상태
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ProcessStatus processStatus;
+
+    public static Consultation createConsultation(Long consulterId, String consulterName, String consulterEmail,
+                                                  Long consultantId, String consultantName, String consultationType,
+                                                  Integer cost, LocalDateTime consultationAt, ProcessStatus processStatus){
+        return Consultation.builder()
+                .merchantId(null)
+                .consulterId(consulterId)
+                .consulterName(consulterName)
+                .consulterEmail(consulterEmail)
+                .consultantId(consultantId)
+                .consultantName(consultantName)
+                .consultationType(consultationType)
+                .cost(cost)
+                .consultationAt(consultationAt)
+                .processStatus(processStatus)
+                .build();
+    }
 
     public void changeConsultationByCanceled() {
         this.processStatus = ProcessStatus.CANCELED;

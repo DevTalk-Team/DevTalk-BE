@@ -24,4 +24,9 @@ public class MemberService implements MemberUseCase {
         MemberRes.ProfileRes memberInfo = findUser(email);
         return memberInfo.getId();
     }
+
+    public MemberRes findUserById(Long userId) {
+        return Optional.ofNullable(memberServiceClient.getUserByUserId(userId))
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_MEMBER));
+    }
 }

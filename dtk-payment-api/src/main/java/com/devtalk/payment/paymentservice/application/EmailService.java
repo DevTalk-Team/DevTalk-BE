@@ -25,8 +25,8 @@ class EmailService implements EmailUseCase {
     @Override
     public String getEmailHtmlPaidInfo(Consultation consultation) {
         Context context = new Context();
-        context.setVariable("consulter", consultation.getConsulter());
-        context.setVariable("consultant", consultation.getConsultant());
+        context.setVariable("consulter", consultation.getConsulterName());
+        context.setVariable("consultant", consultation.getConsultantName());
         context.setVariable("message", "결제에 성공했습니다.");
 
         return templateEngine.process("mail/payment-email", context);

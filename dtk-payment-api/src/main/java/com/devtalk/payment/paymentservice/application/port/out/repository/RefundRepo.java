@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RefundRepo extends JpaRepository<Refund, Long>, RefundQueryableRepo {
+public interface RefundRepo extends JpaRepository<Refund, Long> {
 }
