@@ -5,7 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+@Builder
+@AllArgsConstructor
+@Getter
 public class MemberRes {
+    private String name;
+    private String email;
+    private String phoneNumber;
+
     @Builder
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @Getter

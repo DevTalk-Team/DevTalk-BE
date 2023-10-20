@@ -7,6 +7,7 @@ import com.devtalk.payment.paymentservice.application.port.in.PaymentUseCase;
 import com.devtalk.payment.paymentservice.application.port.in.RefundUseCase;
 import com.devtalk.payment.paymentservice.application.port.in.dto.PortOneRes;
 import com.devtalk.payment.paymentservice.application.port.out.repository.ConsultationRepo;
+import com.devtalk.payment.paymentservice.application.port.out.repository.PaymentQueryableRepo;
 import com.devtalk.payment.paymentservice.application.port.out.repository.PaymentRepo;
 import com.devtalk.payment.paymentservice.application.port.out.repository.RefundRepo;
 import com.devtalk.payment.paymentservice.application.validator.PaymentValidator;
@@ -32,6 +33,7 @@ import static com.devtalk.payment.paymentservice.application.port.in.dto.RefundR
 class RefundService implements RefundUseCase {
     private final PaymentUseCase paymentUseCase;
     private final PaymentRepo paymentRepo;
+    private final PaymentQueryableRepo paymentQueryableRepo;
     private final ConsultationRepo consultationRepo;
     private final RefundRepo refundRepo;
     private final PaymentValidator paymentValidator;
@@ -46,7 +48,7 @@ class RefundService implements RefundUseCase {
     public void cancelPayment(Long consultationId, Long userId) {
         Consultation consultation = consultationRepo.findById(consultationId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_CONSULTATION));
-        Payment payment = paymentRepo.findByConsultationId(consultationId)
+        Payment payment = paymentQueryableRepo.findByConsultationId(consultationId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_CONSULTATION));
 
         paymentValidator.validateItIsPaid(payment);

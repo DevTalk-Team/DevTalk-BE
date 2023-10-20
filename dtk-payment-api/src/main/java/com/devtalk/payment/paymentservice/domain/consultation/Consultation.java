@@ -20,7 +20,7 @@ public class Consultation extends BaseEntity {
     private Long id;
 
     // 포트원 가맹점 상품 번호
-    @Column(nullable = false)
+    @Column
     private String merchantId;
 
     // 의뢰자ID
@@ -52,13 +52,30 @@ public class Consultation extends BaseEntity {
     private Integer cost;
 
     // 상담 일시
-    @Column(updatable = false, insertable = false, nullable = false)
+    @Column(nullable = false)
     private LocalDateTime consultationAt;
 
     // 상담 진행 상태
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ProcessStatus processStatus;
+
+    public static Consultation createConsultation(Long consulterId, String consulterName, String consulterEmail,
+                                                  Long consultantId, String consultantName, String consultationType,
+                                                  Integer cost, LocalDateTime consultationAt, ProcessStatus processStatus){
+        return Consultation.builder()
+                .merchantId(null)
+                .consulterId(consulterId)
+                .consulterName(consulterName)
+                .consulterEmail(consulterEmail)
+                .consultantId(consultantId)
+                .consultantName(consultantName)
+                .consultationType(consultationType)
+                .cost(cost)
+                .consultationAt(consultationAt)
+                .processStatus(processStatus)
+                .build();
+    }
 
     public void changeConsultationByCanceled() {
         this.processStatus = ProcessStatus.CANCELED;

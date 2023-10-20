@@ -45,6 +45,17 @@ public class Payment extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;
 
+    public static Payment createPayment(Consultation consultation) {
+        return Payment.builder()
+                .consultation(consultation)
+                .paymentUid(null)
+                .merchantId(consultation.getMerchantId())
+                .cost(consultation.getCost())
+                .paidAt(null)
+                .status(PaymentStatus.READY)
+                .build();
+    }
+
     public void changePaymentBySuccess(String paymentUid) {
         this.status = PaymentStatus.PAID;
         this.paymentUid = paymentUid;

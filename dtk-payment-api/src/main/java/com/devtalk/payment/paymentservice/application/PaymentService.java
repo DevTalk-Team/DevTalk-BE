@@ -2,12 +2,16 @@ package com.devtalk.payment.paymentservice.application;
 
 import com.devtalk.payment.global.code.ErrorCode;
 import com.devtalk.payment.global.error.exception.NotFoundException;
+import com.devtalk.payment.paymentservice.adapter.in.consumer.dto.ConsumerInput;
 import com.devtalk.payment.paymentservice.adapter.in.web.dto.ConsultationInput;
 import com.devtalk.payment.paymentservice.adapter.out.producer.KafkaProducer;
 import com.devtalk.payment.paymentservice.application.port.in.ConsultationUseCase;
 import com.devtalk.payment.paymentservice.application.port.in.EmailUseCase;
 import com.devtalk.payment.paymentservice.application.port.in.PaymentUseCase;
+import com.devtalk.payment.paymentservice.application.port.out.MemberUseCase;
+import com.devtalk.payment.paymentservice.application.port.out.client.dto.MemberRes;
 import com.devtalk.payment.paymentservice.application.port.out.repository.ConsultationRepo;
+import com.devtalk.payment.paymentservice.application.port.out.repository.PaymentQueryableRepo;
 import com.devtalk.payment.paymentservice.application.port.out.repository.PaymentRepo;
 import com.devtalk.payment.paymentservice.domain.consultation.Consultation;
 import com.devtalk.payment.paymentservice.domain.consultation.ProcessStatus;
@@ -35,8 +39,10 @@ import static com.devtalk.payment.paymentservice.application.port.in.dto.PortOne
 public class PaymentService implements PaymentUseCase {
     private final ConsultationRepo consultationRepo;
     private final PaymentRepo paymentRepo;
+    private final PaymentQueryableRepo paymentQueryableRepo;
     private final ConsultationUseCase consultationUseCase;
     private final EmailUseCase emailUseCase;
+    private final MemberUseCase memberUseCase;
     private final KafkaProducer kafkaProducer;
 
     @Value("${portone.imp_key}") private String impKey;
@@ -82,7 +88,7 @@ public class PaymentService implements PaymentUseCase {
         String status = webhookReq.getStatus();
 
         if (status.equals("paid")) {
-            Payment payment = paymentRepo.findByMerchantId(webhookReq.getMerchant_uid())
+            Payment payment = paymentQueryableRepo.findByMerchantId(webhookReq.getMerchant_uid())
                     .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_CONSULTATION));
             Consultation consultation = payment.getConsultation();
             payment.changePaymentBySuccess(webhookReq.getImp_uid());
@@ -94,10 +100,18 @@ public class PaymentService implements PaymentUseCase {
 
     @Override
     public PaymentSearchRes searchPaymentInfo(Long consultationId) {
-        Payment payment = paymentRepo.findByConsultationId(consultationId)
+        Payment payment = paymentQueryableRepo.findByConsultationId(consultationId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_CONSULTATION));
 
         return PaymentSearchRes.of(payment);
+    }
+
+    @Override
+    public void recieveAcceptedConsultation(ConsumerInput.ConsultationInput consultationInput) {
+        MemberRes consulter = memberUseCase.findUserById(consultationInput.getConsulterId());
+        Consultation consultation = consultationInput.toEntity(consulter.getEmail());
+        consultationRepo.save(consultation);
+        paymentRepo.save(Payment.createPayment(consultation));
     }
 
     // 테스트용
@@ -111,7 +125,7 @@ public class PaymentService implements PaymentUseCase {
                 .consulterEmail(consultationInput.getConsulterEmail())
                 .merchantId(UUID.randomUUID().toString())
                 .consultationAt(LocalDateTime.now())
-                .processStatus(ProcessStatus.APPROVED)
+                .processStatus(ProcessStatus.ACCEPTED)
                 .build();
 
         consultationRepo.save(consultation);

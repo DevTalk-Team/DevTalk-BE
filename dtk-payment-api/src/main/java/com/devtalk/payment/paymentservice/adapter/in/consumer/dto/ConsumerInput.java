@@ -2,10 +2,13 @@ package com.devtalk.payment.paymentservice.adapter.in.consumer.dto;
 
 import com.devtalk.payment.paymentservice.domain.consultation.Consultation;
 import com.devtalk.payment.paymentservice.domain.consultation.ProcessStatus;
+import com.devtalk.payment.paymentservice.domain.refund.Refund;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -14,6 +17,8 @@ public class ConsumerInput {
     @Getter
     @Builder
     @JsonIgnoreProperties(ignoreUnknown = true)
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class ConsultationInput {
         @JsonProperty("id")
         private Long consultationId;
@@ -27,36 +32,44 @@ public class ConsumerInput {
         private Cost cost;
 
         public Consultation toEntity(String consulterEmail) {
-            return Consultation.builder()
-                    .merchantId(null)
-                    .consulterId(consulterId)
-                    .consulterName(consulterName)
-                    .consulterEmail(consulterEmail)
-                    .consultantId(consultantId)
-                    .consultantName(consultantName)
-                    .consultationType(consultationDetails.getProductProceedType())
-                    .cost(cost.getAmount())
-                    .consultationAt(consultationDetails.getReservationAt())
-                    .processStatus(com.devtalk.payment.paymentservice.domain.consultation.ProcessStatus.APPROVED)
-                    .build();
+            return Consultation.createConsultation(
+                    consulterId, consulterName, consulterEmail,
+                    consultantId, consultantName, consultationDetails.getProceedTypeDescription(),
+                    cost.getAmount(), consultationDetails.getReservationAt(), status);
         }
 
         @Getter
         @Builder
+        @NoArgsConstructor
+        @AllArgsConstructor
         private static class ConsultationDetails{
-            private String productProceedType;
+            @JsonIgnoreProperties(ignoreUnknown = true)
+            private ProductProceedType productProceedType;
+            @JsonProperty("reservationAT")
             private LocalDateTime reservationAt;
+
+            public String getProceedTypeDescription() {
+                return switch (productProceedType) {
+                    case F2F -> "대면 상담";
+                    case NF2F -> "비대면 상담";
+                    case ALL -> "비대면 및 대면 상담";
+                    case NULL -> "구분 없음";
+                };
+            }
+        }
+
+        @Getter
+        @NoArgsConstructor
+        private enum ProductProceedType {
+            F2F, NF2F, ALL, NULL
         }
 
         @Getter
         @Builder
+        @NoArgsConstructor
+        @AllArgsConstructor
         private static class Cost{
             private Integer amount;
-        }
-
-        @Getter
-        public enum ProcessStatus {
-            ACCEPTED, CANCELED
         }
     }
 }
