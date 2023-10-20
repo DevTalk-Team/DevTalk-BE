@@ -51,8 +51,9 @@ public class ConsultantRes {
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class ConsultationRes {
-        private String email;
+        private Long id;
         private String name;
+        private String company;
         private int year;
         private Integer cost;
     }
