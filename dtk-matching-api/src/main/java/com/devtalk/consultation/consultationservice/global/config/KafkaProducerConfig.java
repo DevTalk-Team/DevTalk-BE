@@ -15,7 +15,7 @@ import java.util.Map;
 @EnableKafka
 @Configuration
 public class KafkaProducerConfig {
-    String bootstrapServer = "3.38.212.179:9092, 3.38.209.103:9092, 3.35.133.207:9092";
+    String bootstrapServer = "3.38.212.179:9092,3.38.209.103:9092,3.35.133.207:9092";
 
     @Bean
     public ProducerFactory<String, String> producerFactory() {

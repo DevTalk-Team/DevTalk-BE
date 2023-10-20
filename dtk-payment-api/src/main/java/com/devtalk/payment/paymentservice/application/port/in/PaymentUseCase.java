@@ -1,5 +1,6 @@
 package com.devtalk.payment.paymentservice.application.port.in;
 
+import com.devtalk.payment.paymentservice.adapter.in.consumer.dto.ConsumerInput;
 import com.devtalk.payment.paymentservice.adapter.in.web.dto.ConsultationInput;
 import com.devtalk.payment.paymentservice.adapter.in.web.dto.PaymentInput;
 import com.devtalk.payment.paymentservice.adapter.in.web.dto.PaymentInput.WebhookInput;
@@ -22,4 +23,6 @@ public interface PaymentUseCase {
     PaymentSearchRes searchPaymentInfo(Long consultationId);
 
     void createPaymentInfo(ConsultationInput consultationInput);
+
+    void recieveAcceptedConsultation(ConsumerInput.ConsultationInput consultationInput);
 }

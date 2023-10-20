@@ -6,4 +6,6 @@ public interface MemberUseCase {
     MemberRes.ProfileRes findUser(String email);
 
     Long findUserId(String email);
+
+    MemberRes findUserById(Long userId);
 }
