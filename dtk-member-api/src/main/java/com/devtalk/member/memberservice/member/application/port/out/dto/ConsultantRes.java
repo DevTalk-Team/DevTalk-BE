@@ -53,7 +53,7 @@ public class ConsultantRes {
     public static class ConsultationRes {
         private String email;
         private String name;
-        private Integer cost;
         private int year;
+        private Integer cost;
     }
 }

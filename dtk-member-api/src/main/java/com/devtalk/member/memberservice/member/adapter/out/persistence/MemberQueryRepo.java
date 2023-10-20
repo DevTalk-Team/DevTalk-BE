@@ -59,7 +59,7 @@ public class MemberQueryRepo implements MemberQueryableRepo {
     }
 
     @Override
-    public List<ConsultantRes.ConsultationRes> findNf2fConsultant(Long typeId, Long categoryId, Long regionId) {
+    public List<ConsultantRes.ConsultationRes> findF2fConsultant(Long typeId, Long categoryId, Long regionId) {
         return queryFactory
                 .select(Projections.constructor(ConsultantRes.ConsultationRes.class,
                         member.email, member.name, consultantInfo.year, consultantInfo.f2f1h)).distinct()
