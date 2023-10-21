@@ -41,7 +41,6 @@ public class CancelConsultationService implements CancelConsultationUseCase {
 
         ProcessStatus originProcessStatus = consultation.getStatus();
 
-
         consultation.cancelByConsulter(cancellationReq.getReason());
         consultationCancellationRepo.save(consultation);
 
@@ -59,14 +58,14 @@ public class CancelConsultationService implements CancelConsultationUseCase {
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_CONSULTATION));
 
         ProcessStatus originProcessStatus = consultation.getStatus();
-        consultationCancellationRepo.save(consultation);
-
 
         consultation.cancelByConsultant(cancellationReq.getReason());
-        productKafkaProducer.sendConsultationInfoProduct("product-update-consultation", consultation);
+        consultationCancellationRepo.save(consultation);
+
+        productKafkaProducer.sendConsultationInfoProduct("consultation-topic", consultation);
 
         if (originProcessStatus.equals(ProcessStatus.PAID)) {
-            paymentKafkaProducer.sendConsultationInfoPayment("product-update-consultation", consultation);
+            paymentKafkaProducer.sendConsultationInfoPayment("consultation-topic", consultation);
         }
     }
 }

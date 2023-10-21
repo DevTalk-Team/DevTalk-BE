@@ -115,13 +115,30 @@ class ProductApiController {
         return ResponseEntity.status(HttpStatus.OK).body(productOutput);
     }
 
-    //상품 수정 - 완료
-    @Operation(summary = "상담 진행 방식 수정 API", description = "상담 진행 방식을 수정한다.")
+    //상품 조회 - 완료
+    @Operation(summary = "상품 조회 API", description = "상담 상품을 조회한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "예약 가능 상품 조회 성공",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = SuccessResponse.class))),
             @ApiResponse(responseCode = "401", description = "예약 가능 상품 조회 실패",
+                    content = @Content(mediaType = "application/json"))
+    })
+    @GetMapping("/search/product")
+    public ResponseEntity<?> searchProduct(@RequestBody @Validated ProductInput.SearchInput searchInput) {
+        ProductRes.ProductDetailsRes productDetailsRes = searchUseCase.searchProduct(searchInput.toReq());
+        ProductOutput productOutput
+                = new ProductOutput("0502", "조회 성공", productDetailsRes);
+        return ResponseEntity.status(HttpStatus.OK).body(productOutput);
+    }
+
+    //상품 수정 - 완료
+    @Operation(summary = "상담 진행 방식 수정 API", description = "상담 진행 방식을 수정한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "상품 수정 성공",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = SuccessResponse.class))),
+            @ApiResponse(responseCode = "401", description = "상품 수정 실패",
                     content = @Content(mediaType = "application/json"))
     })
     @PutMapping("/update/prodocuts/{productId}")

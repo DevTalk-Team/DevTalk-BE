@@ -2,4 +2,4 @@ spring:
   cloud:
     config:
       uri: http://localhost:8888/
-      name: consultation, consultation_file, common
+      name: consultation, common

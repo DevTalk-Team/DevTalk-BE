@@ -73,8 +73,12 @@ dependencies {
 	annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
 	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
 	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+	// aws s3
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
 	// File 관련
 	implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
+
 
 	implementation "com.fasterxml.uuid:java-uuid-generator:4.0.1" //UUID
 }

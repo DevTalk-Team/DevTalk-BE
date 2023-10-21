@@ -51,7 +51,7 @@ public class ConsulterApiController {
     })
     @PostMapping(path = "/consulters/creation/consultations", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> reserveConsultation(@RequestParam("reservationJson") String reservationJson,
-                                                 @RequestPart("attachedFiles") List<MultipartFile> attachedFiles,
+                                                 @RequestPart(value = "attachedFiles", required = false) List<MultipartFile> attachedFiles,
                                                  @RequestHeader(value = "User-Email") String userEmail) throws JsonProcessingException {
         log.info("User-Eamil : {}", userEmail);
         Long consulterId = authUseCase.auth(userEmail);

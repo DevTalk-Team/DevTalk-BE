@@ -14,9 +14,9 @@ import com.devtalk.consultation.consultationservice.consultation.domain.consulta
 import com.devtalk.consultation.consultationservice.consultation.domain.member.Consultant;
 import com.devtalk.consultation.consultationservice.consultation.domain.member.Consulter;
 import com.devtalk.consultation.consultationservice.consultation.domain.member.MemberType;
-import com.devtalk.consultation.consultationservice.global.util.FileUploadService;
 import com.devtalk.consultation.consultationservice.global.vo.BaseFile;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,9 +28,11 @@ import static com.devtalk.consultation.consultationservice.consultation.applicat
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
+
 public class ReserveConsultationService implements ReserveConsultationUseCase {
     private final ConsultationReservationValidator consultationValidator;
-    private final FileUploadService fileUploadService;
+    private final FileUploadUseCase fileUploadUseCase;
     private final ConsultationRepo consultationRepo;
     private final MemberQueryableRepo memberQueryableRepo;
     private final MemberServiceClient memberServiceClient;
@@ -38,9 +40,10 @@ public class ReserveConsultationService implements ReserveConsultationUseCase {
     private final AttachedFileRepo attachedFileRepo;
     private final MemberRepo memberRepo;
 
+    @Override
     @Transactional
     public void reserve(ReservationReq reservationReq, List<MultipartFile> attachedFiles) {
-        //consultationValidator.validateReservation(reservationReq); //파일 정책 체크 + 회원 존재여부 체크 + 상품 매칭 가능여부 체크 + 매칭 중복 체크
+        consultationValidator.validateReservation(reservationReq); //파일 정책 체크 + 회원 존재여부 체크 + 상품 매칭 가능여부 체크 + 매칭 중복 체크
         if (!memberQueryableRepo.existsByConsultantId(reservationReq.getConsultantId())){
             MemberReq.ConsultantReq consultantInfo = memberServiceClient.getConsultantInfo(reservationReq.getConsultantId());
             if(consultantInfo.getMemberType() == MemberType.CONSULTANT) {
@@ -64,7 +67,7 @@ public class ReserveConsultationService implements ReserveConsultationUseCase {
     }
 
     private void uploadAttachedFileList(Consultation newConsultation, List<MultipartFile> attachedFileList) {
-        List<BaseFile> baseFileList = fileUploadService.uploadConsultationFileList(attachedFileList);
+        List<BaseFile> baseFileList = fileUploadUseCase.uploadConsultationFileList(attachedFileList);
 
         baseFileList.forEach(baseFile ->
             attachedFileRepo.save(

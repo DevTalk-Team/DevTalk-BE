@@ -31,6 +31,15 @@ public class ProductReq {
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @Getter
+    public static class SearchProdReq {
+        private Long memberId;
+        private LocalDateTime reservationAt;
+    }
+
+    @Builder
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @Getter
     public static class DeleteProdReq {
         private Long reservedId;
     }

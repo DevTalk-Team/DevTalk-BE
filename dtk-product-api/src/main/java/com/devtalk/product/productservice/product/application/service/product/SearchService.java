@@ -2,8 +2,10 @@ package com.devtalk.product.productservice.product.application.service.product;
 
 import com.devtalk.product.productservice.global.error.exception.NotFoundException;
 //import com.devtalk.product.productservice.product.adapter.out.web.persistence.MemberQueryRepo;
+import com.devtalk.product.productservice.product.application.port.in.dto.ProductReq;
 import com.devtalk.product.productservice.product.application.port.in.product.SearchUseCase;
 import com.devtalk.product.productservice.product.application.port.in.dto.ProductRes;
+import com.devtalk.product.productservice.product.application.port.out.repository.ProductQueryableRepo;
 import com.devtalk.product.productservice.product.application.port.out.repository.ProductRepo;
 //import com.devtalk.product.productservice.product.application.port.out.repository.ReservedProductRepo;
 //import com.devtalk.product.productservice.product.domain.member.Consulter;
@@ -20,12 +22,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.devtalk.product.productservice.global.error.ErrorCode.NOT_FOUND_MEMBER;
+import static com.devtalk.product.productservice.global.error.ErrorCode.NOT_FOUND_PRODUCT;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class SearchService implements SearchUseCase {
     private final ProductRepo productRepo;
+    private final ProductQueryableRepo productQueryableRepo;
     //private final MemberQueryRepo memberQueryRepo;
     //private final ReservedProductRepo reservedProductRepo;
     //상담자 예약 가능 상품 조회
@@ -42,6 +46,13 @@ public class SearchService implements SearchUseCase {
                         .productProceedType(product.getProductProceedType())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public ProductRes.ProductDetailsRes searchProduct(ProductReq.SearchProdReq searchProdReq) {
+        Product product = productQueryableRepo.findByConsultantIdAndReservationAt(searchProdReq.getMemberId(), searchProdReq.getReservationAt())
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND_PRODUCT));
+        return ProductRes.ProductDetailsRes.of(product);
     }
 
 //    //마이페이지 예약 리스트 조회
