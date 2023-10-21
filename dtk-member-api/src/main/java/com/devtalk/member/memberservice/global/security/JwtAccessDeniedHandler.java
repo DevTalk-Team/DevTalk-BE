@@ -14,6 +14,7 @@ import static com.devtalk.member.memberservice.global.error.ErrorCode.*;
 
 @Component
 public class JwtAccessDeniedHandler implements AccessDeniedHandler {
+    // 접근 막힘
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
         response.setContentType("application/json;charset=UTF-8");
@@ -24,5 +25,6 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
         responseJson.put("message", MEMBER_NOT_FOUND.getMessage());
 
         response.getWriter().print(responseJson);
+//        response.sendRedirect("/member/signup");
     }
 }

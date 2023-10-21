@@ -1,7 +1,9 @@
 package com.devtalk.member.memberservice.global.config;
 
-import com.devtalk.member.memberservice.global.security.*;
-import com.devtalk.member.memberservice.global.util.RedisUtil;
+import com.devtalk.member.memberservice.global.security.JwtAccessDeniedHandler;
+import com.devtalk.member.memberservice.global.security.JwtAuthenticationEntryPoint;
+import com.devtalk.member.memberservice.global.security.JwtAuthenticationFilter;
+import com.devtalk.member.memberservice.global.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,16 +21,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final JwtTokenProvider jwtTokenProvider;
+    private final TokenProvider tokenProvider;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final RedisUtil redisUtil;
-
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        // 비밀번호를 DB에 저장할 때 사용할 암호화
-        return new BCryptPasswordEncoder();
-    }
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
@@ -36,28 +31,30 @@ public class SecurityConfig {
         return (web -> web
                 .ignoring()
                 .requestMatchers("/member/signup", "/member/login",
-                        /* swagger v3 */
-                        "/v3/api-docs/**",
-                        "/swagger-ui/**"));
+                        /* swagger v3 */"/v3/api-docs/**", "/swagger-ui/**"));
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        // 인터셉터로 요청을 안전하게 보호하는 방법 설정
-        return httpSecurity
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http
                 .httpBasic((httpBasic) -> httpBasic.disable())
                 .csrf((csrf) -> csrf.disable())
                 .sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .formLogin((formLogin) -> formLogin.disable())
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, redisUtil), UsernamePasswordAuthenticationFilter.class)
-                .authorizeHttpRequests((req) -> req.requestMatchers("/member/mypage/**", "/member/logout",
-                                "/member/consultant/**").authenticated()
-                .anyRequest().permitAll())
+                .addFilterBefore(new JwtAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
+                .authorizeHttpRequests((req) -> req
+                        .requestMatchers("/member/mypage/**", "/member/logout", "/member/consultant/**").authenticated()
+                        .anyRequest().permitAll())
                 .exceptionHandling((e) ->
                         e.authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                        .accessDeniedHandler(jwtAccessDeniedHandler))
+                                .accessDeniedHandler(jwtAccessDeniedHandler))
                 .build();
 
+    }
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
