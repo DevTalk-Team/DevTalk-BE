@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ProductRepo extends JpaRepository<Product, Long>, ProductQueryableRepo {
+public interface ProductRepo extends JpaRepository<Product, Long> {
 
     Product findAllById(Long Id);
 

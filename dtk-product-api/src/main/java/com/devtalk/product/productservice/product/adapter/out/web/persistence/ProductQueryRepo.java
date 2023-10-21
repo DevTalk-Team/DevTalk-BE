@@ -12,8 +12,22 @@ import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import static com.devtalk.product.productservice.product.domain.product.QProduct.product;
+
 @Repository
 @RequiredArgsConstructor
 class ProductQueryRepo implements ProductQueryableRepo {
 
+    private final JPAQueryFactory queryFactory;
+
+    @Override
+    public Optional<Product> findByConsultantIdAndReservationAt(Long consultantId, LocalDateTime reservationAt){
+        return Optional.ofNullable(
+                queryFactory
+                .select(product)
+                .from(product)
+                .where(product.consultantId.eq(consultantId)
+                        .and(product.reservationAt.eq(reservationAt)))
+                .fetchFirst());
+    }
 }

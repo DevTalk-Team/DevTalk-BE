@@ -35,7 +35,7 @@ public class ConsultationReservationValidator {
         validateAttachedFileList(reservationReq.getAttachedFileList());
         //validateConsulter(reservationReq.getConsulterId());
         //validateConsultant(reservationReq.getConsultantId());
-        validateProduct(reservationReq);
+        //validateProduct(reservationReq);
         validateDuplicatedMatching(reservationReq.getProductId());
     }
 
@@ -44,33 +44,33 @@ public class ConsultationReservationValidator {
         fileValidator.checkFileCountAndSizeAndExtension(attachedFileList);
     }
 
-    public void validateConsulter(Long consulterId) {
-        MemberReq.ConsulterReq consulterInfo = memberServiceClient.getConsulterInfo(consulterId);
-        if(consulterInfo == null){
-            throw new NotFoundException(NOT_FOUND_CONSULTER);
-        }
-    }
-
-    public void validateConsultant(Long consultantId) {
-        MemberReq.ConsultantReq consultantInfo = memberServiceClient.getConsultantInfo(consultantId);
-        if(consultantInfo == null){
-            throw new NotFoundException(NOT_FOUND_CONSULTANT);
-        }
-    }
-
-    // reservationReq 의 내용과 ProductSearchRes 의 내용이 같은지 비교함
-    private void validateProduct(ReservationReq reservationReq) {
-        ProductReq.ProductSearchReq realProduct = productServiceClient.getProduct(reservationReq.getProductId());
-
-        if (reservationReq.getConsultantId() != realProduct.getConsultantId() ||
-                reservationReq.getReservationAT() != realProduct.getReservationAT() ||
-                (!realProduct.getProductProceedType().equals(ProductProceedType.ALL) &&
-                        reservationReq.getProductProceedType() != realProduct.getProductProceedType()) ||
-                !realProduct.getReservationStatus().equals(ProductStatus.AVAILABLE.getStatus())) {
-            throw new InvalidInputException(INVALID_RESERVATION_REQUEST);
-        }
-
-    }
+//    public void validateConsulter(Long consulterId) {
+//        MemberReq.ConsulterReq consulterInfo = memberServiceClient.getConsulterInfo(consulterId);
+//        if(consulterInfo == null){
+//            throw new NotFoundException(NOT_FOUND_CONSULTER);
+//        }
+//    }
+//
+//    public void validateConsultant(Long consultantId) {
+//        MemberReq.ConsultantReq consultantInfo = memberServiceClient.getConsultantInfo(consultantId);
+//        if(consultantInfo == null){
+//            throw new NotFoundException(NOT_FOUND_CONSULTANT);
+//        }
+//    }
+//
+//    // reservationReq 의 내용과 ProductSearchRes 의 내용이 같은지 비교함
+//    private void validateProduct(ReservationReq reservationReq) {
+//        ProductReq.ProductSearchReq realProduct = productServiceClient.getProduct(reservationReq.getProductId());
+//
+//        if (reservationReq.getConsultantId() != realProduct.getConsultantId() ||
+//                reservationReq.getReservationAT() != realProduct.getReservationAT() ||
+//                (!realProduct.getProductProceedType().equals(ProductProceedType.ALL) &&
+//                        reservationReq.getProductProceedType() != realProduct.getProductProceedType()) ||
+//                !realProduct.getReservationStatus().equals(ProductStatus.AVAILABLE.getStatus())) {
+//            throw new InvalidInputException(INVALID_RESERVATION_REQUEST);
+//        }
+//
+//    }
 
     private void validateDuplicatedMatching(Long productId) {
         if(consultationQueryableRepo.existsByProductIdInReservedItem(productId) == true) {

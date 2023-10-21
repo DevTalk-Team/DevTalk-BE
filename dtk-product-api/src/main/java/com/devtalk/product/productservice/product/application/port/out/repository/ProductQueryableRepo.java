@@ -8,4 +8,5 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface ProductQueryableRepo {
+    Optional <Product> findByConsultantIdAndReservationAt(Long consultantId, LocalDateTime reservationAt);
 }

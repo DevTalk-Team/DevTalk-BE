@@ -6,5 +6,5 @@ import com.devtalk.consultation.consultationservice.consultation.domain.consulta
 import java.util.List;
 
 public interface AttachedFileQueruableRepo {
-    List<AttachedFile> findByPostId(Long postId);
+    List<AttachedFile> findByConsultationId(Long consultationId);
 }

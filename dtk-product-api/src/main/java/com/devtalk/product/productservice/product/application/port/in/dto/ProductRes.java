@@ -21,6 +21,26 @@ public class ProductRes {
         private LocalDateTime reservationAt;
         private ProductProceedType productProceedType;
     }
+
+    @Getter
+    @Builder
+    public static class ProductDetailsRes {
+        private Long productId;
+        private Long consultantId;
+        private String status;
+        private LocalDateTime reservationAt;
+        private ProductProceedType productProceedType;
+
+        public static ProductDetailsRes of(Product product){
+            return ProductDetailsRes.builder()
+                    .productId(product.getId())
+                    .consultantId(product.getConsultantId())
+                    .status(product.getStatus())
+                    .reservationAt(product.getReservationAt())
+                    .productProceedType(product.getProductProceedType())
+                    .build();
+        }
+    }
 }
 
 

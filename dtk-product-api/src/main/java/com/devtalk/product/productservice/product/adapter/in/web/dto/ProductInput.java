@@ -34,7 +34,54 @@ public class ProductInput {
                     .build();
         }
     }
-//    @Builder
+
+    @Builder
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @Getter
+    public static class SearchInput{
+
+        private Long consultantId;
+        private String reservationDate;
+        private String reservationTime;
+
+        public ProductReq.SearchProdReq toReq( ){
+            LocalDate date = LocalDate.parse(reservationDate);
+            LocalTime time = LocalTime.parse(reservationTime);
+            LocalDateTime reservationAt = LocalDateTime.of(date, time);
+
+            return ProductReq.SearchProdReq.builder()
+                    .memberId(consultantId)
+                    .reservationAt(reservationAt)
+                    .build();
+        }
+    }
+
+    @Builder
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @Getter
+    public static class UpdateInput{
+
+        private Long productId;
+        private String reservationDate;
+        private String reservationTime;
+        private ProductProceedType type;
+
+        public ProductReq.UpdateProdReq toReq(Long productId){
+            LocalDate date = LocalDate.parse(reservationDate);
+            LocalTime time = LocalTime.parse(reservationTime);
+            LocalDateTime reservationAt = LocalDateTime.of(date, time);
+
+            return ProductReq.UpdateProdReq.builder()
+                    .productId(productId)
+                    .reservationAt(reservationAt)
+                    .productProceedType(type)
+                    .build();
+        }
+    }
+
+    //    @Builder
 //    @AllArgsConstructor(access = AccessLevel.PRIVATE)
 //    @NoArgsConstructor(access = AccessLevel.PRIVATE)
 //    @Getter
@@ -52,22 +99,10 @@ public class ProductInput {
 //        }
 //    }
 
-    @Builder
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    @Getter
-    public static class UpdateInput{
 
-        private Long productId;
-        private LocalDateTime reservationAt;
-        private ProductProceedType type;
-
-        public ProductReq.UpdateProdReq toReq(Long productId){
-            return ProductReq.UpdateProdReq.builder()
-                    .productId(productId)
-                    .reservationAt(reservationAt)
-                    .productProceedType(type)
-                    .build();
-        }
-    }
 }
+
+
+
+
+
