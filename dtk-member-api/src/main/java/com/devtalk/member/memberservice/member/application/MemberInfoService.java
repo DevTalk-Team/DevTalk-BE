@@ -49,4 +49,12 @@ public class MemberInfoService implements MemberInfoUseCase {
                 .orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
         return MemberRes.ProfileRes.of(member);
     }
+
+    @Override
+    public Member findByEmail(String email) {
+        return memberRepo.findByEmail(email)
+                .orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+    }
+
+
 }
