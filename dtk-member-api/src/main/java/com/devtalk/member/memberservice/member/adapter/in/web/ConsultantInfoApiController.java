@@ -7,6 +7,11 @@ import com.devtalk.member.memberservice.member.adapter.in.web.dto.ConsultantInpu
 import com.devtalk.member.memberservice.member.adapter.out.producer.KafkaProducer;
 import com.devtalk.member.memberservice.member.application.port.in.ConsultantInfoUseCase;
 import com.devtalk.member.memberservice.member.application.port.out.dto.ConsultantRes;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +23,7 @@ import java.util.List;
 
 import static com.devtalk.member.memberservice.global.success.SuccessCode.*;
 
+@Tag(name = "전문가 페이지", description = "메인, 상담 유형, 분야, 지역")
 @Slf4j
 @RestController
 @RequestMapping("/member/consultant")
@@ -26,12 +32,20 @@ public class ConsultantInfoApiController {
     private final ConsultantInfoUseCase consultantInfoUseCase;
     private final KafkaProducer kafkaProducer;
 
+    @Operation(summary = "전문가 페이지 - 메인 조회", responses = {
+            @ApiResponse(description = "성공", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponse.class)))
+    })
     @GetMapping("/info")
     public ResponseEntity<?> getInfo(@AuthenticationPrincipal MemberDetails memberDetails) {
         ConsultantRes.InfoRes res = consultantInfoUseCase.getInfo(memberDetails.getUsername());
         return SuccessResponse.toResponseEntity(CONSULTANT_INFO_SUCCESS, res);
     }
 
+    @Operation(summary = "전문가 페이지 - 메인 수정", responses = {
+            @ApiResponse(description = "성공", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponse.class)))
+    })
     @PutMapping("/info")
     public ResponseEntity<?> updateInfo(@RequestBody ConsultantInput.InfoInput input,
                                         @RequestPart(value = "file", required = false) MultipartFile file,
@@ -41,12 +55,20 @@ public class ConsultantInfoApiController {
         return SuccessResponse.toResponseEntity(CONSULTANT_INFO_UPDATE_SUCCESS, res);
     }
 
+    @Operation(summary = "전문가 페이지 - 상담 가능 유형(예: 커리어상담, 멘토섭외 ...) 조회", responses = {
+            @ApiResponse(description = "성공", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponse.class)))
+    })
     @GetMapping("/info/type") // 상담 가능 유형 (예: 커리어 상담, 멘토섭외 ...)
     public ResponseEntity<?> getType(@AuthenticationPrincipal MemberDetails memberDetails) {
         List<String> res = consultantInfoUseCase.getType(memberDetails.getUsername());
         return SuccessResponse.toResponseEntity(CONSULTANT_INFO_TYPE_SUCCESS, res);
     }
 
+    @Operation(summary = "전문가 페이지 - 상담 가능 유형(예: 커리어상담, 멘토섭외 ...) 수정", responses = {
+            @ApiResponse(description = "성공", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponse.class)))
+    })
     @PutMapping("/info/type")
     public ResponseEntity<?> updateType(@RequestBody ConsultantInput.ListInput input,
                                         @AuthenticationPrincipal MemberDetails memberDetails) {
@@ -54,12 +76,20 @@ public class ConsultantInfoApiController {
         return SuccessResponseNoResult.toResponseEntity(CONSULTANT_INFO_TYPE_UPDATE_SUCCESS);
     }
 
+    @Operation(summary = "전문가 페이지 - 상담 가능 카테고리(예: 웹, DB ...) 조회", responses = {
+            @ApiResponse(description = "성공", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponse.class)))
+    })
     @GetMapping("/info/category") // 상담 가능 카테고리 (예: 웹, DB ...)
     public ResponseEntity<?> getCategory(@AuthenticationPrincipal MemberDetails memberDetails) {
         List<String> res = consultantInfoUseCase.getCategory(memberDetails.getUsername());
         return SuccessResponse.toResponseEntity(CONSULTANT_INFO_CATEGORY_SUCCESS, res);
     }
 
+    @Operation(summary = "전문가 페이지 - 상담 가능 유형(예: 커리어상담, 멘토섭외 ...) 수정", responses = {
+            @ApiResponse(description = "성공", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponse.class)))
+    })
     @PutMapping("/info/category")
     public ResponseEntity<?> updateCategory(@RequestBody ConsultantInput.ListInput input,
                                             @AuthenticationPrincipal MemberDetails memberDetails) {
@@ -67,12 +97,20 @@ public class ConsultantInfoApiController {
         return SuccessResponseNoResult.toResponseEntity(CONSULTANT_INFO_CATEGORY_UPDATE_SUCCESS);
     }
 
+    @Operation(summary = "전문가 페이지 - 상담 가능 지역 조회", responses = {
+            @ApiResponse(description = "성공", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponse.class)))
+    })
     @GetMapping("/info/region") // 상담 가능 지역
     public ResponseEntity<?> getRegion(@AuthenticationPrincipal MemberDetails memberDetails) {
         List<String> res = consultantInfoUseCase.getRegion(memberDetails.getUsername());
         return SuccessResponse.toResponseEntity(CONSULTANT_INFO_REGION_SUCCESS, res);
     }
 
+    @Operation(summary = "전문가 페이지 - 상담 가능 지역 수정", responses = {
+            @ApiResponse(description = "성공", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponse.class)))
+    })
     @PutMapping("/info/region")
     public ResponseEntity<?> updateRegion(@RequestBody ConsultantInput.ListInput input,
                                           @AuthenticationPrincipal MemberDetails memberDetails) {
@@ -80,6 +118,10 @@ public class ConsultantInfoApiController {
         return SuccessResponseNoResult.toResponseEntity(CONSULTANT_INFO_REGION_UPDATE_SUCCESS);
     }
 
+    @Operation(summary = "상담 - 조건 맞는 전문가 조회", responses = {
+            @ApiResponse(description = "성공", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponse.class)))
+    })
     @PostMapping
     ResponseEntity<?> getConsultant(@RequestBody ConsultantInput.ConsultationInput input) {
         List<ConsultantRes.ConsultationRes> res = consultantInfoUseCase.findConsultantForConsultation(input.toReq());
