@@ -45,7 +45,6 @@ public class SignUpApiController {
                 + ", token expiration time=" + env.getProperty("token.expiration_time"));
     }
 
-
     /* 이메일 인증 코드 보내기 */
     @Operation(summary = "회원가입 - 이메일 인증 코드 요청", responses = {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseNoResult.class)))

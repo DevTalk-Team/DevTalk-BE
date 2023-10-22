@@ -17,5 +17,4 @@ public class JwtProperties {
     private Long accessTokenValidity = 120L;
 //    @Value("${jwt.token.refresh-token-validity-in-seconds}")
     private Long refreshTokenValidity = 180L;
-
 }

@@ -27,11 +27,12 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        // ACL(Access Control List, 접근 제어 목록)의 예외 URL 설정
         return (web -> web
                 .ignoring()
                 .requestMatchers("/member/signup/**", "/member/login", "/member/profile/**",
-                        /* swagger v3 */"/v3/api-docs/**", "/swagger-ui/**"));
+                        /* swagger v3 */
+                        "/v3/api-docs/**",
+                        "/swagger-ui/**"));
     }
 
     @Bean
