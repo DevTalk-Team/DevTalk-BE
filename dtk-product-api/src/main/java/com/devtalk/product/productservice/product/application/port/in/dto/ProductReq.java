@@ -41,7 +41,7 @@ public class ProductReq {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @Getter
     public static class DeleteProdReq {
-        private Long reservedId;
+        private LocalDateTime reservationAt;
     }
 
     @Builder
@@ -49,7 +49,6 @@ public class ProductReq {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @Getter
     public static class UpdateProdReq {
-        private Long productId;
         private LocalDateTime reservationAt;
         private ProductProceedType productProceedType;
     }

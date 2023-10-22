@@ -44,15 +44,13 @@ import java.util.List;
 @RequiredArgsConstructor
 
 class ProductApiController {
-    //private final DeleteUseCase deleteUseCase;
     private final RegistUseCase registUseCase;
     private final SearchUseCase searchUseCase;
     private final UpdateUseCase updateUseCase;
     private final AuthUseCase authUseCase;
-    //private final ReserveUseCase reserveUseCase;
+    private final DeleteUseCase deleteUseCase;
 
 
-    //private final KafkaProducer kafkaProducer;
     private final Environment env;
 
     //private final SignUpUseCase signUpUseCase;
@@ -124,7 +122,7 @@ class ProductApiController {
             @ApiResponse(responseCode = "401", description = "예약 가능 상품 조회 실패",
                     content = @Content(mediaType = "application/json"))
     })
-    @GetMapping("/search/product")
+    @GetMapping("/search/productInfo")
     public ResponseEntity<?> searchProduct(@RequestBody @Validated ProductInput.SearchInput searchInput) {
         ProductRes.ProductDetailsRes productDetailsRes = searchUseCase.searchProduct(searchInput.toReq());
         ProductOutput productOutput
@@ -141,63 +139,38 @@ class ProductApiController {
             @ApiResponse(responseCode = "401", description = "상품 수정 실패",
                     content = @Content(mediaType = "application/json"))
     })
-    @PutMapping("/update/prodocuts/{productId}")
+    @PutMapping("/update/prodocuts")
     public ResponseEntity<?> updateProduct(@RequestBody @Validated ProductInput.UpdateInput updateInput,
-                                           @PathVariable Long productId) {
-        updateUseCase.updateProductType(updateInput.toReq(productId));
-        return ResponseEntity.ok().build();
+                                           @RequestHeader(value = "User-Email") String userEmail) {
+        log.info("User-Eamil : {}", userEmail);
+        Long consultantId = authUseCase.auth(userEmail);
+        try {
+            updateUseCase.updateProductType(consultantId,updateInput.toReq());
+            return ResponseEntity.ok().build();
+        } catch (DateTimeParseException e) {
+            return ResponseEntity.badRequest().body("Invalid date or time format");
+        }
     }
 
-//    //예약 상품 삭제 - 완료
-//    @Operation(summary = "예약 상품 삭제 API", description = "예약된 상담을 삭제한다.")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "201", description = "예약 상품 삭제 성공",
-//                    content = @Content(mediaType = "application/json",
-//                            schema = @Schema(implementation = SuccessResponse.class))),
-//            @ApiResponse(responseCode = "401", description = "예약 상품 삭제 실패",
-//                    content = @Content(mediaType = "application/json"))
-//    })
-//    @DeleteMapping("delete/{consultationId}")
-//    public ResponseEntity<?> deleteProduct(@PathVariable Long consultationId) {
-//        deleteUseCase.deleteReservation(consultationId);
-//        return ResponseEntity.ok().build();
-//    }
-//
-//    //마이페이지 예약 리스트 조회 - 완료
-//    @Operation(summary = "마이페이지 예약 리스트 조회 API", description = "나의 예약된 상담을 조회한다.")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "201", description = "마이페이지 예약 리스트 조회 성공",
-//                    content = @Content(mediaType = "application/json",
-//                            schema = @Schema(implementation = SuccessResponse.class))),
-//            @ApiResponse(responseCode = "401", description = "마이페이지 예약 리스트 조회 실패",
-//                    content = @Content(mediaType = "application/json"))
-//    })
-//    @GetMapping("search/memberId/{memberId}")
-//    public ResponseEntity<ProductOutput> myConsultationList(@PathVariable Long memberId) {
-//        List<ProductRes.ReservedProductRes> myConsultatioinListRes = searchUseCase.searchConsulationListByMemberId(memberId);
-//        ProductOutput productOutput
-//                = new ProductOutput("0500", "조회 성공", myConsultatioinListRes);
-//        return ResponseEntity.status(HttpStatus.OK).body(productOutput);
-//    }
-
-
-    //상담자등록
-//    @PostMapping("/regist/consultant")
-//    public ResponseEntity<?> registConsultant(@RequestBody MemberInput.ConsultantInput consultantInput) {
-//    signUpUseCase.signupConsultant(consultantInput.toReq());
-//    return ResponseEntity.ok().build();
-//    }
-//    //내담자등록
-//    @PostMapping("/regist/consulter")
-//    public ResponseEntity<?> registConsulter(@RequestBody ConsulterReq consulterReq) {
-//        signUpUseCase.signupConsulter(consulterReq);
-//        return ResponseEntity.ok().build();
-//    }
-//
-//    //상담예약
-//    @PostMapping("/reserveConsultation")
-//    public ResponseEntity<?> reserveConsultation(@RequestBody ProductReservedDetailsReq productReservedDetailsReq) {
-//        reserveUseCase.reserveProduct(productReservedDetailsReq);
-//        return ResponseEntity.ok().build();
-//    }
+    //상품 삭제 - 완료
+    @Operation(summary = "상담 상품 삭제 API", description = "상담 상품을 삭제한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "상품 삭제 성공",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = SuccessResponse.class))),
+            @ApiResponse(responseCode = "401", description = "상품 삭제 실패",
+                    content = @Content(mediaType = "application/json"))
+    })
+    @DeleteMapping("/delete/prodocuts")
+    public ResponseEntity<?> deleteProduct(@RequestBody @Validated ProductInput.DeleteInput deleteInput,
+                                           @RequestHeader(value = "User-Email") String userEmail) {
+        log.info("User-Eamil : {}", userEmail);
+        Long consultantId = authUseCase.auth(userEmail);
+        try {
+            deleteUseCase.deleteProduct(consultantId,deleteInput.toReq());
+            return ResponseEntity.ok().build();
+        } catch (DateTimeParseException e) {
+            return ResponseEntity.badRequest().body("Invalid date or time format");
+        }
+    }
 }
