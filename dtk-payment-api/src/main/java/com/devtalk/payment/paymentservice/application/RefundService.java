@@ -53,10 +53,6 @@ class RefundService implements RefundUseCase {
 
         paymentValidator.validateItIsPaid(payment);
 
-        payment.changePaymentByCanceled();
-        consultation.changeConsultationByCanceled();
-        saveRefundInfo(payment, consultation);
-
         WebClient wc = WebClient.create("https://api.iamport.kr/payments/cancel");
         PortOneRefundRes response = wc.post()
                 .header("Authorization", "Bearer " + paymentUseCase.getToken())
@@ -64,6 +60,10 @@ class RefundService implements RefundUseCase {
                 .retrieve()
                 .bodyToMono(PortOneRefundRes.class)
                 .block();
+
+        payment.changePaymentByCanceled();
+        consultation.changeConsultationByCanceled();
+        saveRefundInfo(payment, consultation);
 
         if (response.getCode() != 0) {
             throw new IncorrectException(ErrorCode.INVALID_REFUND_REQUEST);
