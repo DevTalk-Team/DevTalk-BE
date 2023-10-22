@@ -24,10 +24,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         log.info("[doFilterInternal token -> {}", token);
 
-        if (tokenProvider.isValidToken(token) && !tokenProvider.isBlackToken(token)) {
-            log.info("[doFilterInternal if 통과");
-            Authentication authentication = tokenProvider.getAuthentication(token);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        try {
+            if (token != null && tokenProvider.isValidToken(token) && !tokenProvider.isBlackToken(token)) {
+                log.info("[doFilterInternal if 통과");
+                Authentication authentication = tokenProvider.getAuthentication(token);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        } catch (Exception ex) {
+            log.info("[doFilterInternal 에러] -> {}", ex.getMessage());
         }
 
         filterChain.doFilter(request, response);
