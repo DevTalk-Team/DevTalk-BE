@@ -9,14 +9,12 @@ import com.devtalk.member.memberservice.member.application.port.in.dto.AuthReq;
 import com.devtalk.member.memberservice.member.application.port.out.dto.AuthRes;
 import com.devtalk.member.memberservice.member.application.validator.AuthValidator;
 import com.devtalk.member.memberservice.member.domain.member.Member;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor

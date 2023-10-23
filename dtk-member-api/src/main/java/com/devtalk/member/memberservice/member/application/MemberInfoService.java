@@ -10,9 +10,11 @@ import com.devtalk.member.memberservice.member.domain.consultation.ConsultantInf
 import com.devtalk.member.memberservice.member.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MemberInfoService implements MemberInfoUseCase {
     private final MemberRepo memberRepo;
     private final ConsultantInfoRepo consultantInfoRepo;
@@ -55,6 +57,4 @@ public class MemberInfoService implements MemberInfoUseCase {
         return memberRepo.findByEmail(email)
                 .orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
     }
-
-
 }
