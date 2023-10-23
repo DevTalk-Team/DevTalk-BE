@@ -4,6 +4,7 @@ import com.devtalk.member.memberservice.global.security.MemberDetails;
 import com.devtalk.member.memberservice.global.success.SuccessCode;
 import com.devtalk.member.memberservice.global.success.SuccessResponse;
 import com.devtalk.member.memberservice.global.success.SuccessResponseNoResult;
+import com.devtalk.member.memberservice.member.adapter.in.web.dto.MyPageInput;
 import com.devtalk.member.memberservice.member.application.port.in.MyPageUseCase;
 import com.devtalk.member.memberservice.member.application.port.out.dto.MemberRes;
 import com.devtalk.member.memberservice.member.application.port.out.dto.MyPageRes;
@@ -45,13 +46,14 @@ public class MyPageApiController {
         return SuccessResponse.toResponseEntity(SuccessCode.MYPAGE_SUCCESS, res);
     }
 
-    @Operation(summary = "마이페이지 - 수정 -> 아직 구현 안 됐어요..!!", responses = {
+    @Operation(summary = "마이페이지 - 수정(이름, 휴대폰 번호, 관심 분야)", responses = {
             @ApiResponse(description = "성공", responseCode = "200",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponse.class)))
     })
     @PutMapping("/mypage")
-    public ResponseEntity<?> updateMyPage(@AuthenticationPrincipal MemberDetails memberDetails) {
-
-        return SuccessResponse.toResponseEntity(SuccessCode.MYPAGE_UPDATE_SUCCESS, "");
+    public ResponseEntity<?> updateMyPage(@RequestBody MyPageInput.UpdateInput input,
+                                          @AuthenticationPrincipal MemberDetails memberDetails) {
+        MyPageRes.UpdateRes res = myPageUseCase.updateMyPage(memberDetails.getUsername(), input.toReq());
+        return SuccessResponse.toResponseEntity(SuccessCode.MYPAGE_UPDATE_SUCCESS, res);
     }
 }
