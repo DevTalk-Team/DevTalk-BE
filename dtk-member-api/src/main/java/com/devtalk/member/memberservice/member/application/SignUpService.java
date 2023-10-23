@@ -14,29 +14,28 @@ import com.devtalk.member.memberservice.member.domain.category.MemberCategory;
 import com.devtalk.member.memberservice.member.domain.consultation.ConsultantInfo;
 import com.devtalk.member.memberservice.member.domain.member.Member;
 import com.devtalk.member.memberservice.member.domain.member.MemberType;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static com.devtalk.member.memberservice.member.domain.member.Member.createMember;
 
-@Slf4j
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class SignUpService implements SignUpUseCase {
 
     private final MemberRepo memberRepo;
     private final SignUpValidator signUpValidator;
-    private final PasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
     private final CategoryRepo categoryRepo;
     private final MemberCategoryRepo memberCategoryRepo;
     private final ConsultantInfoRepo consultantInfoRepo;
 
+    @Transactional
     @Override
     public Member signUp(MemberReq.SignUpReq req) {
         signUpValidator.validate(req);

@@ -9,7 +9,6 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.UnsupportedEncodingException;
 
-@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -40,7 +38,6 @@ public class FindProfileService implements FindProfileUseCase {
     public void sendTempPassword(String name, String email) {
         Member member = validator.sendTempPasswordValidate(name, email);
         javaMailSender.send(createMessage(email));
-//        member.updatePassword(bCryptPasswordEncoder.encode(tempPassword));
         redisUtil.setDataExpire(tempPassword, email, 500000);
     }
 

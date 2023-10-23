@@ -7,7 +7,6 @@ import lombok.Getter;
 import java.util.List;
 
 public class ConsultantInput {
-
     @Getter
     @AllArgsConstructor
     public static class InfoInput {
