@@ -30,6 +30,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
@@ -82,7 +84,7 @@ class ProductApiController {
             @ApiResponse(responseCode = "401", description = "상품 등록 실패",
                     content = @Content(mediaType = "application/json"))
     })
-    @PostMapping("/consultants/registration")
+    @PostMapping("/regist/products")
     public ResponseEntity<?> registProduct(@RequestBody @Validated ProductInput.RegistrationInput registrationInput,
                                            @RequestHeader(value = "User-Email") String userEmail) {
         log.info("User-Eamil : {}", userEmail);
@@ -97,7 +99,7 @@ class ProductApiController {
         }
     }
 
-    @Operation(summary = "상담사 예약 가능 상품 조회 API", description = "내담자가 상담을 원하는 상담자의 예약 가능 시간을 확인한다.")
+    @Operation(summary = "상담사 예약 가능 상품 전체 조회 API", description = "상담자의 모든 상담 상품을 확인한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "예약 가능 상품 조회 성공",
                     content = @Content(mediaType = "application/json",
@@ -108,6 +110,22 @@ class ProductApiController {
     @GetMapping("/search/consultants/{memberId}")
     public ResponseEntity<ProductOutput> searchProductList(@PathVariable Long memberId) {
         List<ProductRes.ConsultantProductListRes> consultantProductListRes = searchUseCase.searchList(memberId);
+        ProductOutput productOutput
+                = new ProductOutput("0502", "조회 성공", consultantProductListRes);
+        return ResponseEntity.status(HttpStatus.OK).body(productOutput);
+    }
+
+    @Operation(summary = "상담사 예약 가능 상품 날짜별 조회 API", description = "내담자가 상담을 원하는 날짜의 상담자의 예약 가능 시간을 확인한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "해당 날짜 상품 조회 성공",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = SuccessResponse.class))),
+            @ApiResponse(responseCode = "401", description = "해당 날짜 상품 조회 실패",
+                    content = @Content(mediaType = "application/json"))
+    })
+    @GetMapping("/search/consultants/{memberId}/Date/{date}")
+    public ResponseEntity<ProductOutput> searchProductByDateList(@PathVariable Long memberId, @PathVariable LocalDateTime date) {
+        List<ProductRes.ConsultantProductListRes> consultantProductListRes = searchUseCase.searchProductByDateList(memberId,date);
         ProductOutput productOutput
                 = new ProductOutput("0502", "조회 성공", consultantProductListRes);
         return ResponseEntity.status(HttpStatus.OK).body(productOutput);
@@ -139,7 +157,7 @@ class ProductApiController {
             @ApiResponse(responseCode = "401", description = "상품 수정 실패",
                     content = @Content(mediaType = "application/json"))
     })
-    @PutMapping("/update/prodocuts")
+    @PutMapping("/update/products")
     public ResponseEntity<?> updateProduct(@RequestBody @Validated ProductInput.UpdateInput updateInput,
                                            @RequestHeader(value = "User-Email") String userEmail) {
         log.info("User-Eamil : {}", userEmail);
