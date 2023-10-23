@@ -17,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,6 +39,20 @@ public class SearchService implements SearchUseCase {
     public List<ProductRes.ConsultantProductListRes> searchList(Long consultantId) {
         List<Product> productList =  productRepo.findAllByConsultantId(consultantId);
 
+        return productList.stream()
+                .map(product -> ProductRes.ConsultantProductListRes.builder()
+                        .productId(product.getId())
+                        .consultantId(product.getConsultantId())
+                        .status(product.getStatus())
+                        .reservationAt(product.getReservationAt())
+                        .productProceedType(product.getProductProceedType())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductRes.ConsultantProductListRes> searchProductByDateList(Long consultantId, LocalDateTime date) {
+        List<Product> productList =  productQueryableRepo.findByConsultantIdAndDate(consultantId,date);
         return productList.stream()
                 .map(product -> ProductRes.ConsultantProductListRes.builder()
                         .productId(product.getId())

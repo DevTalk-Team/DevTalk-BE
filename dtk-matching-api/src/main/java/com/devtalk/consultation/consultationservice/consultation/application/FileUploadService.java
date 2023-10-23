@@ -24,6 +24,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -73,6 +74,10 @@ public class FileUploadService implements FileUploadUseCase {
     @Override
     @Transactional
     public List<BaseFile> uploadFileList(List<MultipartFile> multipartFiles, String path) {
+        if (multipartFiles == null || multipartFiles.isEmpty()) {
+            return Collections.emptyList();
+        }
+
         List<BaseFile> fileList = new ArrayList<>();
 
         multipartFiles.stream().forEach(multipartFile -> {
