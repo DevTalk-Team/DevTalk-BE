@@ -41,8 +41,6 @@ public class TokenProvider implements InitializingBean {
     public String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(HEADER_AUTHORIZATION);
         if (bearerToken != null && bearerToken.startsWith(TOKEN_PREFIX)) {
-            log.info("[resolveToken] -> {}", bearerToken.substring(TOKEN_PREFIX.length() + 1));
-            log.info("[resolveToken] -> {}", TOKEN_PREFIX.length());
             return bearerToken.substring(TOKEN_PREFIX.length());
         }
         return null;
@@ -124,11 +122,7 @@ public class TokenProvider implements InitializingBean {
     }
 
     public Authentication getAuthentication(String token) {
-
-        log.info("[getAuthentication] getEmail(token) -> {}", getEmail(token));
-        log.info("[getAuthentication] token -> {}", token);
         MemberDetails memberDetails = memberDetailsService.loadUserByUsername(getEmail(token));
-        log.info("[getAuthentication] memberDetails.getUsername() -> {}", memberDetails.getUsername());
         return new UsernamePasswordAuthenticationToken(memberDetails, token, memberDetails.getAuthorities());
     }
 }

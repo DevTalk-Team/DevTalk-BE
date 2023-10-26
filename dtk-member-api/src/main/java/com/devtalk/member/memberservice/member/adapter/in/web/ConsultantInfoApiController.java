@@ -46,11 +46,11 @@ public class ConsultantInfoApiController {
             @ApiResponse(description = "성공", responseCode = "200",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponse.class)))
     })
-    @PutMapping("/info")
-    public ResponseEntity<?> updateInfo(@RequestBody ConsultantInput.InfoInput input,
-                                        @RequestPart(value = "file", required = false) MultipartFile file,
+    @PostMapping("/info")
+    public ResponseEntity<?> updateInfo(@RequestPart(value = "input") ConsultantInput.InfoInput input,
+                                        @RequestPart(value = "files", required = false) List<MultipartFile> files,
                                         @AuthenticationPrincipal MemberDetails memberDetails) {
-        ConsultantRes.InfoRes res = consultantInfoUseCase.updateInfo(memberDetails.getUsername(), input);
+        ConsultantRes.InfoRes res = consultantInfoUseCase.updateInfo(memberDetails.getUsername(), input.toReq(files));
         kafkaProducer.sendConsultantInfo(res.toEntity());
         return SuccessResponse.toResponseEntity(CONSULTANT_INFO_UPDATE_SUCCESS, res);
     }

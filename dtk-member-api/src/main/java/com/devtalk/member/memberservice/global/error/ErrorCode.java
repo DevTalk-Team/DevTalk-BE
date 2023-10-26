@@ -16,7 +16,7 @@ public enum ErrorCode {
     PASSWORD_MISMATCHING(CONFLICT, "01113", "비밀번호가 일치하지 않습니다."),
     /* AUTH */
     AUTH_CODE_MISMATCHING(CONFLICT, "01141", "인증번호가 일치하지 않습니다."),
-    MEMBER_NOT_FOUND(CONFLICT, "01151", "일치하는 회원 정보가 없습니다."),
+    MEMBER_NOT_FOUND(NOT_FOUND, "01151", "일치하는 회원 정보가 없습니다."),
     WRONG_PASSWORD(CONFLICT, "01152", "비밀번호를 잘못 입력하였습니다."),
     AUTH_FAIL(UNAUTHORIZED, "01153", "인증 실패"),
     /* TOKEN */
@@ -25,7 +25,9 @@ public enum ErrorCode {
     UNSUPPORTED_TOKEN(BAD_REQUEST, "01156", "지원되지 않는 토큰"),
     INVALID_REFRESH_TOKEN(UNAUTHORIZED, "01157", "유효하지 않은 리프레시 토큰, 로그인 필요"),
     LOGOUT_TOKEN(UNAUTHORIZED, "01158", "로그아웃된 토큰, 로그인 필요"),
-    CONSULTANT_INFO_NOT_FOUND(CONFLICT,"01156", "상담자 정보가 없습니다")
+    CONSULTANT_INFO_NOT_FOUND(NOT_FOUND,"01156", "상담자 정보가 없습니다"),
+    /* FILE */
+    FILE_NOT_FOUND(NOT_FOUND, "01161", "파일을 찾을 수 없습니다."),
     ;
 
     private final HttpStatus httpStatus;
