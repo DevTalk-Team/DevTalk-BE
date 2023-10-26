@@ -1,8 +1,11 @@
 package com.devtalk.member.memberservice.member.application.port.in.dto;
 
+import com.devtalk.member.memberservice.member.application.port.out.dto.ProfileFileRes;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ConsultantReq {
@@ -18,6 +21,8 @@ public class ConsultantReq {
         private String skill;
         private Integer f2f1h;
         private Integer nf2f1h;
+        @Builder.Default
+        private List<MultipartFile> profileFileResList = new ArrayList<>();
     }
 
     @Builder
