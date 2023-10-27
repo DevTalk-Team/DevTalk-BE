@@ -62,7 +62,8 @@ public class Payment extends BaseEntity {
         this.paidAt = LocalDateTime.now();
     }
 
-    public void changePaymentByCanceled() {
+    public void changePaymentByCanceled(Consultation consultation) {
         this.status = PaymentStatus.CANCELED;
+        consultation.changeConsultationByCanceled();
     }
 }

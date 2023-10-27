@@ -41,4 +41,13 @@ public class Refund extends BaseEntity {
     // 포트원 가맹점 상품 고유번호
     @Column(nullable = false)
     private String merchantId;
+
+    public static Refund createRefund(Payment payment, Consultation consultation) {
+        return Refund.builder()
+                .refundCost(payment.getCost())
+                .consultationId(consultation)
+                .paymentId(payment)
+                .merchantId(payment.getMerchantId())
+                .build();
+    }
 }
