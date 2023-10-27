@@ -20,6 +20,7 @@ import com.devtalk.payment.paymentservice.domain.payment.PaymentStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -36,6 +37,7 @@ import static com.devtalk.payment.paymentservice.application.port.in.dto.PortOne
 @Transactional
 @Slf4j
 @RequiredArgsConstructor
+@RefreshScope
 public class PaymentService implements PaymentUseCase {
     private final ConsultationRepo consultationRepo;
     private final PaymentRepo paymentRepo;

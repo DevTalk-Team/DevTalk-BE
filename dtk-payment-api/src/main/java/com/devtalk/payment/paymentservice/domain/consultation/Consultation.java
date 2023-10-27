@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table
@@ -64,7 +65,7 @@ public class Consultation extends BaseEntity {
                                                   Long consultantId, String consultantName, String consultationType,
                                                   Integer cost, LocalDateTime consultationAt, ProcessStatus processStatus){
         return Consultation.builder()
-                .merchantId(null)
+                .merchantId(UUID.randomUUID().toString())
                 .consulterId(consulterId)
                 .consulterName(consulterName)
                 .consulterEmail(consulterEmail)
