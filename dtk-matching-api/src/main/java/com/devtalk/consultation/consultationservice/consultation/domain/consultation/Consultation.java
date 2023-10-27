@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -152,10 +153,10 @@ public class Consultation extends BaseTime {
     }
 
     public void writeReview(Integer score, String content,
-                            String photoUrl, String photoOriginName, String photoStoredName, LocalDateTime reviewAt) {
+                            String photoUrl, String photoOriginName, String photoStoredName, LocalDate reviewAt) {
         if (!this.status.equals(PAID)
-                && this.consultationDetails.getReservationAT().isAfter(reviewAt)
-                && this.consultationDetails.getReservationAT().plusDays(7).isBefore(reviewAt)
+                && this.consultationDetails.getReservationDate().isAfter(reviewAt)
+                && this.consultationDetails.getReservationDate().plusDays(7).isBefore(reviewAt)
                 && this.review != null) {
             throw new BusinessRuleException(REVIEW_IMPOSSIBLE_STATUS);
         }

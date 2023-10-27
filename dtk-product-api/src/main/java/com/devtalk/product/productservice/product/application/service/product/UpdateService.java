@@ -21,7 +21,7 @@ public class UpdateService implements UpdateUseCase {
 
     @Transactional
     public void updateProductType(Long consultantId, ProductReq.UpdateProdReq updateProdReq){
-        Product product = productQueryableRepo.findByConsultantIdAndReservationAt(consultantId, updateProdReq.getReservationAt())
+        Product product = productQueryableRepo.findByConsultantIdAndReservationAt(consultantId, updateProdReq.getReservationDate(), updateProdReq.getReservationTime())
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_PRODUCT));
         product.updateProductType(updateProdReq.getProductProceedType());
     }

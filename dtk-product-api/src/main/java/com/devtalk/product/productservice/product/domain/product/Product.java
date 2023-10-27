@@ -8,7 +8,9 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.apachecommons.CommonsLog;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -35,8 +37,11 @@ public class Product extends BaseTime {
     private String status;
 
     //상담시간
-    @Column(name = "reservation_at", nullable = false)
-    private LocalDateTime reservationAt;
+    @Column(name = "reservation_date", nullable = false)
+    private LocalDate reservationDate;
+
+    @Column(name = "reservation_time", nullable = false)
+    private LocalTime reservationTime;
 
     //상담유형
     @Column(name = "type")
@@ -50,11 +55,12 @@ public class Product extends BaseTime {
     private Integer F2FCost;
 
 
-    public Product(Long consultantId, String status, LocalDateTime reservationAt, ProductProceedType type
+    public Product(Long consultantId, String status, LocalDate reservationDate, LocalTime reservationTime, ProductProceedType type
                    ,Integer F2FCost,Integer NF2FCost){
         this.consultantId=consultantId;
         this.status=status;
-        this.reservationAt=reservationAt;
+        this.reservationDate=reservationDate;
+        this.reservationTime=reservationTime;
         this.productProceedType=type;
         this.F2FCost=F2FCost;
         this.NF2FCost=NF2FCost;
@@ -70,12 +76,13 @@ public class Product extends BaseTime {
 
 
 
-    public static Product registProduct(Long consultantId, LocalDateTime reservationAt, ProductProceedType productProceedType
+    public static Product registProduct(Long consultantId, LocalDate reservationDate, LocalTime reservationTime, ProductProceedType productProceedType
     ,Integer F2FCost,Integer NF2FCost){
         return Product.builder()
                 .consultantId(consultantId)
                 .status("AVAILABLE")
-                .reservationAt(reservationAt)
+                .reservationDate(reservationDate)
+                .reservationTime(reservationTime)
                 .productProceedType(productProceedType)
                 .F2FCost(F2FCost)
                 .NF2FCost(NF2FCost)

@@ -3,7 +3,9 @@ package com.devtalk.consultation.consultationservice.consultation.domain.consult
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +25,9 @@ public class ConsultationDetails {
 
 
     @Column(nullable = false, length = 30)
-    private LocalDateTime reservationAT;
+    private LocalDate reservationDate;
+    private LocalTime reservationTime;
+
 
     @Column(length = 500)
     private String content;

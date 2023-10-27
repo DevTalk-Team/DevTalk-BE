@@ -29,7 +29,8 @@ public class RegistService implements RegistUseCase {
         MemberReq.ConsultantReq consultantReq = findConsultantInfo(consultantId);
         MemberReq.ConsultantReq consultantReq2 = consultantReq;
         Product product = Product.registProduct(consultantReq.getConsultantId(),
-                registProdReq.getReservationAt(),
+                registProdReq.getReservationDate(),
+                registProdReq.getReservationTime(),
                 registProdReq.getProductProceedType(),
                 consultantReq.getF2fCost(),
                 consultantReq.getNf2fCost());
