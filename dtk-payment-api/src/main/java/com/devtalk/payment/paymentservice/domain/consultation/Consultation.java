@@ -18,7 +18,6 @@ import java.util.UUID;
 public class Consultation extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, unique = true)
     private Long id;
 
