@@ -4,7 +4,9 @@ import com.devtalk.payment.paymentservice.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.UUID;
 
 @Entity
@@ -54,7 +56,10 @@ public class Consultation extends BaseEntity {
 
     // 상담 일시
     @Column(nullable = false)
-    private LocalDateTime consultationAt;
+    private LocalDate consultationDate;
+
+    @Column(nullable = false)
+    private LocalTime consultationTime;
 
     // 상담 진행 상태
     @Column(nullable = false)
@@ -63,7 +68,7 @@ public class Consultation extends BaseEntity {
 
     public static Consultation createConsultation(Long consulterId, String consulterName, String consulterEmail,
                                                   Long consultantId, String consultantName, String consultationType,
-                                                  Integer cost, LocalDateTime consultationAt, ProcessStatus processStatus){
+                                                  Integer cost, LocalDate consultationDate, LocalTime consultationTime, ProcessStatus processStatus){
         return Consultation.builder()
                 .merchantId(UUID.randomUUID().toString())
                 .consulterId(consulterId)
@@ -73,7 +78,8 @@ public class Consultation extends BaseEntity {
                 .consultantName(consultantName)
                 .consultationType(consultationType)
                 .cost(cost)
-                .consultationAt(consultationAt)
+                .consultationDate(consultationDate)
+                .consultationTime(consultationTime)
                 .processStatus(processStatus)
                 .build();
     }

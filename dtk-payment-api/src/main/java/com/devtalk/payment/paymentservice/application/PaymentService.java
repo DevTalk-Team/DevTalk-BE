@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -126,7 +127,7 @@ public class PaymentService implements PaymentUseCase {
                 .consultationType(consultationInput.getConsultationType())
                 .consulterEmail(consultationInput.getConsulterEmail())
                 .merchantId(UUID.randomUUID().toString())
-                .consultationAt(LocalDateTime.now())
+                .consultationDate(LocalDate.now())
                 .processStatus(ProcessStatus.ACCEPTED)
                 .build();
 

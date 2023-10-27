@@ -33,9 +33,15 @@ public class PaymentKafkaConsumer {
         } catch (JsonProcessingException ex) {
             ex.printStackTrace();
         }
-        paymentUseCase.paidConsultation(paymentInput);
+        dataSynchronization(paymentInput);
+
     }
 
+    private void dataSynchronization(PaymentInput paymentInput) {
+        if (paymentInput.getStatus() == PaymentInput.PaymentStatus.PAID) {
+            paymentUseCase.paidConsultation(paymentInput);
+        }
+    }
     public ObjectMapper deserializeMapper(){
         SimpleModule simpleModule = new SimpleModule();
         simpleModule.addDeserializer(LocalDateTime.class, new CustomLocalDateTimeDeserializer());

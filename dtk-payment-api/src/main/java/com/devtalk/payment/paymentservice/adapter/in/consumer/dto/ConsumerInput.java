@@ -10,7 +10,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class ConsumerInput {
 
@@ -35,7 +37,7 @@ public class ConsumerInput {
             return Consultation.createConsultation(
                     consulterId, consulterName, consulterEmail,
                     consultantId, consultantName, consultationDetails.getProceedTypeDescription(),
-                    cost.getAmount(), consultationDetails.getReservationAt(), status);
+                    cost.getAmount(), consultationDetails.getReservationDate(), consultationDetails.getReservationTime(), status);
         }
 
         @Getter
@@ -45,8 +47,10 @@ public class ConsumerInput {
         private static class ConsultationDetails{
             @JsonIgnoreProperties(ignoreUnknown = true)
             private ProductProceedType productProceedType;
-            @JsonProperty("reservationAT")
-            private LocalDateTime reservationAt;
+            @JsonProperty("reservationDate")
+            private LocalDate reservationDate;
+            @JsonProperty("reservationTime")
+            private LocalTime reservationTime;
 
             public String getProceedTypeDescription() {
                 return switch (productProceedType) {
