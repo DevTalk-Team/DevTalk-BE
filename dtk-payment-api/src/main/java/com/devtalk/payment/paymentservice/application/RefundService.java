@@ -45,7 +45,7 @@ class RefundService implements RefundUseCase {
 
     @Override
     @Transactional
-    public void cancelPayment(Long consultationId, Long userId) {
+    public void cancelPayment(Long consultationId) {
         Consultation consultation = consultationRepo.findById(consultationId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_CONSULTATION));
         Payment payment = paymentQueryableRepo.findByConsultationId(consultationId)

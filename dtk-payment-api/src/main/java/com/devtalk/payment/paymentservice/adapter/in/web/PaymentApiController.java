@@ -69,9 +69,8 @@ class PaymentApiController {
             content = @Content(mediaType = "application/json",
             schema = @Schema(implementation = SuccessResponseWithoutResult.class)))})
     @DeleteMapping("/{consultationId}/cancel")
-    public ResponseEntity<?> cancelPayment(@PathVariable("consultationId") Long consultationId,
-                                           @RequestHeader("User_Email") String email){
-        refundUseCase.cancelPayment(consultationId, memberUseCase.findUserId(email));
+    public ResponseEntity<?> cancelPayment(@PathVariable("consultationId") Long consultationId){
+        refundUseCase.cancelPayment(consultationId);
         return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.REFUND_REQUEST_SUCCESS);
     }
 

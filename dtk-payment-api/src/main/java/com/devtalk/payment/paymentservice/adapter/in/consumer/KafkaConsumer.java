@@ -45,7 +45,7 @@ public class KafkaConsumer {
     }
 
     // TODO: 결제 취소건 topic 받기
-    @KafkaListener(topics = "refund-consultation-topic")
+    @KafkaListener(topics = "cancel-consultation-topic")
     public void receiveCanceledInfo(String kafkaMessage) {
         log.info("kafka Message: " + kafkaMessage);
         ConsultationInput consultation = null;
@@ -55,7 +55,7 @@ public class KafkaConsumer {
         } catch (JsonProcessingException ex) {
             ex.printStackTrace();
         }
-        refundUseCase.cancelPayment(consultation.getConsultationId(), consultation.getConsulterId());
+
     }
 
     public ObjectMapper deserializeMapper(){
