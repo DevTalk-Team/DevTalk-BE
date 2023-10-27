@@ -66,6 +66,7 @@ public class CancelConsultationService implements CancelConsultationUseCase {
         productKafkaProducer.sendConsultationInfoProduct("consultation-topic", consultation);
 
         if (originProcessStatus.equals(ProcessStatus.PAID)) {
+            Long id = consultation.getId();
             paymentServiceClient.refund(consultation.getId());
             //paymentKafkaProducer.sendConsultationInfoPayment("consultation-topic", consultation);
         }
