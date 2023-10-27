@@ -52,7 +52,7 @@ public class SearchService implements SearchUseCase {
     }
 
     @Override
-    public List<ProductRes.ConsultantProductListRes> searchProductByDateList(Long consultantId, LocalDateTime date) {
+    public List<ProductRes.ConsultantProductListRes> searchProductByDateList(Long consultantId, LocalDate date) {
         List<Product> productList =  productQueryableRepo.findByConsultantIdAndDate(consultantId,date);
         return productList.stream()
                 .map(product -> ProductRes.ConsultantProductListRes.builder()

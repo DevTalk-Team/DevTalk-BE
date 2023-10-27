@@ -37,7 +37,11 @@ class ProductQueryRepo implements ProductQueryableRepo {
     }
 
     @Override
-    public List<Product> findByConsultantIdAndDate(Long consultantId, LocalDateTime date) {
-        return null;
+    public List<Product> findByConsultantIdAndDate(Long consultantId, LocalDate date) {
+        return queryFactory
+                .select(product)
+                .from(product)
+                .where(product.consultantId.eq(consultantId).and(product.reservationDate.eq(date)))
+                .fetch();
     }
 }
