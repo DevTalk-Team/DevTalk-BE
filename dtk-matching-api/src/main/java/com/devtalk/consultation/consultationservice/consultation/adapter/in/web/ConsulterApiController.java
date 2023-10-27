@@ -49,7 +49,7 @@ public class ConsulterApiController {
     @Operation(summary = "내담자 - 상담 예약", responses = {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
     })
-    @PostMapping(path = "/consulters/creation/consultations", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(path = "/consulters/reserve/consultations", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> reserveConsultation(@RequestParam("reservationJson") String reservationJson,
                                                  @RequestPart(value = "attachedFiles", required = false) List<MultipartFile> attachedFiles,
                                                  @RequestHeader(value = "User-Email") String userEmail) throws JsonProcessingException {
@@ -70,10 +70,12 @@ public class ConsulterApiController {
     @Operation(summary = "내담자 - 상담 취소", responses = {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
     })
-    @DeleteMapping("/consulters/{consulterId}/consultations/{consultationId}")
+    @DeleteMapping("/consulters/cancle/consultations/{consultationId}")
     public ResponseEntity<?> cancelConsultationByConsulter(@RequestBody @Validated CancellationOfConsulterInput cancellationInput,
-                                                           @PathVariable Long consulterId,
+                                                           @RequestHeader(value = "User-Email") String userEmail,
                                                            @PathVariable Long consultationId) {
+        log.info("User-Eamil : {}", userEmail);
+        Long consulterId = authUseCase.auth(userEmail);
         cancelUseCase.cancelByConsulter(cancellationInput.toReq(consulterId, consultationId));
         return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.CONSULTATION_CONSULTER_CANCEL_SUCCESS);
     }
@@ -81,10 +83,12 @@ public class ConsulterApiController {
     @Operation(summary = "내담자 - 상담 내용 수정 (첨부 파일이나 내용)", responses = {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
     })
-    @PatchMapping("/consulters/{consulterId}/consultations/{consultationId}")
+    @PatchMapping("/consulters/update/consultations/{consultationId}")
     public ResponseEntity<?> modifyConsultationContents(@RequestBody @Validated ConsultationModificationInput consultationModificationInput,
-                                                        @PathVariable Long consulterId,
+                                                        @RequestHeader(value = "User-Email") String userEmail,
                                                         @PathVariable Long consultationId) {
+        log.info("User-Eamil : {}", userEmail);
+        Long consulterId = authUseCase.auth(userEmail);
         modifyUseCase.modifyConsultation(consultationModificationInput.toReq(consulterId, consultationId));
         return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.CONSULTATION_MODIFICATION_SUCCESS);
     }
@@ -92,8 +96,10 @@ public class ConsulterApiController {
     @Operation(summary = "내담자 - 상담 내역 전체 조회 (모든 상태)", responses = {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(type = "array", implementation = ConsultationSearchRes.class)))
     })
-    @GetMapping("/consulters/{consulterId}/consultations")
-    public ResponseEntity<SuccessResponse> searchConsultationByConsulter(@PathVariable Long consulterId) {
+    @GetMapping("/consulters/searchAllConsultation")
+    public ResponseEntity<SuccessResponse> searchConsultationByConsulter(@RequestHeader(value = "User-Email") String userEmail) {
+        log.info("User-Eamil : {}", userEmail);
+        Long consulterId = authUseCase.auth(userEmail);
         return SuccessResponse.toResponseEntity(SuccessCode.CONSULTER_CONSULTATION_SEARCH_SUCCESS,
                 searchUseCase.searchConsultationListByConsulter(consulterId));
     }
@@ -101,19 +107,23 @@ public class ConsulterApiController {
     @Operation(summary = "내담자 - 상담 1개 세부 내용 조회", responses = {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ConsultationSearchRes.class)))
     })
-    @GetMapping("/consulters/{consulterId}/consultations/{consultationId}")
-    public ResponseEntity<SuccessResponse> searchConsultationDetailsByConsulter(@PathVariable Long consulterId,
+    @GetMapping("/consulters/searchOneConsultation/consultation/{consultationId}")
+    public ResponseEntity<SuccessResponse> searchConsultationDetailsByConsulter(@RequestHeader(value = "User-Email") String userEmail,
                                                                                 @PathVariable Long consultationId) {
+        log.info("User-Eamil : {}", userEmail);
+        Long consulterId = authUseCase.auth(userEmail);
         return SuccessResponse.toResponseEntity(SuccessCode.CONSULTER_CONSULTATION_DETAIL_SEARCH_SUCCESS,
-                searchUseCase.searchConsultationDetailsBy(consulterId, consultationId));
+                searchUseCase.searchConsultationDetailsByConsulter(consultationId, consulterId));
     }
 
     @Operation(summary = "내담자 - 취소된 상담 내역 조회", responses = {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CancellationReasonRes.class)))
     })
-    @GetMapping("/consulters/{consulterId}/canceled-consultations/{consultationId}")
-    public ResponseEntity<SuccessResponse> searchCanceledConsultationByConsulter(@PathVariable Long consulterId,
+    @GetMapping("/consulters/canceled-consultations/{consultationId}")
+    public ResponseEntity<SuccessResponse> searchCanceledConsultationByConsulter(@RequestHeader(value = "User-Email") String userEmail,
                                                                                  @PathVariable Long consultationId) {
+        log.info("User-Eamil : {}", userEmail);
+        Long consulterId = authUseCase.auth(userEmail);
         return SuccessResponse.toResponseEntity(SuccessCode.CONSULTER_CANCELED_CONSULTATION_SEARCH_SUCCESS,
                 searchUseCase.searchCanceledConsultationDetailsByConsulter(consulterId, consultationId));
     }
@@ -121,10 +131,12 @@ public class ConsulterApiController {
     @Operation(summary = "내담자 - 리뷰 작성", responses = {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
     })
-    @PostMapping("/consulter/{consulterId}/consultations/{consultationId}/reviews")
+    @PostMapping("/consulter/reviews/consultations/{consultationId}")
     public ResponseEntity<?> writeReview(@RequestBody @Validated ReviewInput reviewInput,
-                                         @PathVariable Long consulterId,
+                                         @RequestHeader(value = "User-Email") String userEmail,
                                          @PathVariable Long consultationId) {
+        log.info("User-Eamil : {}", userEmail);
+        Long consulterId = authUseCase.auth(userEmail);
         reviewUseCase.reviewConsultation(reviewInput.toReq(consulterId, consultationId));
         return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.CONSULTATION_REVIEW_WRITE_SUCCESS);
     }

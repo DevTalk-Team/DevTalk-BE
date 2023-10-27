@@ -34,12 +34,17 @@ public class SearchConsultationService implements SearchConsultationUseCase {
     }
 
     @Override
-    public ConsultationSearchRes searchConsultationDetailsBy(Long consultationId, Long consulterId) {
+    public ConsultationSearchRes searchConsultationDetailsByConsulter(Long consultationId, Long consulterId) {
         Consultation findConsultation = consultationQueryableRepo.findByIdWithConsulterId(consultationId, consulterId)
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_CONSULTATION));
         return ConsultationSearchRes.of(findConsultation);
     }
-
+    @Override
+    public ConsultationSearchRes searchConsultationDetailsByConsultant(Long consultationId, Long consultantId) {
+        Consultation findConsultation = consultationQueryableRepo.findByIdWithConsultantId(consultationId, consultantId)
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND_CONSULTATION));
+        return ConsultationSearchRes.of(findConsultation);
+    }
     @Override
     public CancellationReasonRes searchCanceledConsultationDetailsByConsulter(Long consulterId, Long consultationId) {
         ConsultationCancellation consultationCancellation = consultationQueryableRepo.findCancellationByConsultationIdAndConsulterId(consultationId, consulterId)
