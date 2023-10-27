@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static com.devtalk.product.productservice.product.domain.product.QProduct.product;
@@ -29,5 +30,10 @@ class ProductQueryRepo implements ProductQueryableRepo {
                 .where(product.consultantId.eq(consultantId)
                         .and(product.reservationAt.eq(reservationAt)))
                 .fetchFirst());
+    }
+
+    @Override
+    public List<Product> findByConsultantIdAndDate(Long consultantId, LocalDateTime date) {
+        return null;
     }
 }

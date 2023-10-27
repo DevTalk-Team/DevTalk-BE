@@ -3,6 +3,7 @@ package com.devtalk.member.memberservice.member.domain.member;
 import com.devtalk.member.memberservice.member.application.port.in.dto.MemberReq;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
@@ -32,7 +33,7 @@ public class Member {
     @Column(nullable = false, length = 20, unique = true)
     private String phoneNumber;
 
-    public static Member createMember(MemberReq.SignUpReq req, PasswordEncoder passwordEncoder) {
+    public static Member createMember(MemberReq.SignUpReq req, BCryptPasswordEncoder passwordEncoder) {
         return Member.builder()
                 .memberType(req.getMemberType())
                 .name(req.getName())
@@ -44,6 +45,12 @@ public class Member {
 
     public Member updatePassword(String password) {
         this.password = password;
+        return this;
+    }
+
+    public Member updateNameAndPhoneNumber(String name, String phoneNumber) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
         return this;
     }
 }

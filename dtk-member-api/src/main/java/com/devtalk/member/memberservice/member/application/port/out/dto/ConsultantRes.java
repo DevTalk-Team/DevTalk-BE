@@ -3,6 +3,8 @@ package com.devtalk.member.memberservice.member.application.port.out.dto;
 import com.devtalk.member.memberservice.member.domain.consultation.ConsultantInfo;
 import lombok.*;
 
+import java.util.List;
+
 public class ConsultantRes {
 
     @Builder
@@ -18,8 +20,9 @@ public class ConsultantRes {
         private String skill;
         private Integer f2f1h;
         private Integer nf2f1h;
+        private List<ProfileFileRes> profileFileResList;
 
-        public static InfoRes of(ConsultantInfo info) {
+        public static InfoRes of(ConsultantInfo info, List<ProfileFileRes> profileFileResList) {
             return InfoRes.builder()
                     .year(info.getYear())
                     .company(info.getCompany())
@@ -29,6 +32,7 @@ public class ConsultantRes {
                     .skill(info.getSkill())
                     .f2f1h(info.getF2f1h())
                     .nf2f1h(info.getNf2f1h())
+                    .profileFileResList(profileFileResList)
                     .build();
         }
 

@@ -13,9 +13,8 @@ import org.springframework.stereotype.Component;
 public class JwtProperties {
     @Value("${jwt.token.secret}")
     private String secret;
-//    @Value("${jwt.token.access-token-validity-in-seconds}")
-    private Long accessTokenValidity = 120L;
-//    @Value("${jwt.token.refresh-token-validity-in-seconds}")
-    private Long refreshTokenValidity = 180L;
-
+    @Value("${jwt.token.access-token-validity-in-seconds}")
+    private Long accessTokenValidity;
+    @Value("${jwt.token.refresh-token-validity-in-seconds}")
+    private Long refreshTokenValidity;
 }

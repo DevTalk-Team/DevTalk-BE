@@ -2,8 +2,10 @@ package com.devtalk.member.memberservice.member.application;
 
 import com.devtalk.member.memberservice.global.error.ErrorCode;
 import com.devtalk.member.memberservice.global.error.exception.MemberNotFoundException;
+import com.devtalk.member.memberservice.global.vo.BaseFile;
 import com.devtalk.member.memberservice.member.adapter.in.web.dto.ConsultantInput;
 import com.devtalk.member.memberservice.member.application.port.in.ConsultantInfoUseCase;
+import com.devtalk.member.memberservice.member.application.port.in.FileUploadUseCase;
 import com.devtalk.member.memberservice.member.application.port.in.dto.ConsultantReq;
 import com.devtalk.member.memberservice.member.application.port.out.dto.ConsultantRes;
 import com.devtalk.member.memberservice.member.application.port.out.repository.*;
@@ -12,11 +14,11 @@ import com.devtalk.member.memberservice.member.domain.category.MemberCategory;
 import com.devtalk.member.memberservice.member.domain.consultation.ConsultantConsultationType;
 import com.devtalk.member.memberservice.member.domain.consultation.ConsultantInfo;
 import com.devtalk.member.memberservice.member.domain.consultation.ConsultationType;
+import com.devtalk.member.memberservice.member.domain.consultation.ProfileImage;
 import com.devtalk.member.memberservice.member.domain.member.Member;
 import com.devtalk.member.memberservice.member.domain.region.MemberRegion;
 import com.devtalk.member.memberservice.member.domain.region.Region;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@Slf4j
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ConsultantInfoService implements ConsultantInfoUseCase {
@@ -39,38 +40,43 @@ public class ConsultantInfoService implements ConsultantInfoUseCase {
     private final MemberRegionRepo memberRegionRepo;
     private final MemberQueryableRepo memberQueryableRepo;
 
-//    private final ProfileImageUseCase profileImageUseCase;
-//    private final ProfileImageRepo profileImageRepo;
+    private final FileUploadUseCase fileUploadUseCase;
+    private final ProfileImageRepo profileImageRepo;
 
     @Override
     public ConsultantRes.InfoRes getInfo(String email) {
         Member member = memberRepo.findByEmail(email)
                 .orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
         ConsultantInfo info = consultantInfoRepo.findByMember(member);
-        return ConsultantRes.InfoRes.of(info);
+        return ConsultantRes.InfoRes.of(info, fileUploadUseCase.getConsultantInfoFileList(info.getId()));
     }
 
     @Transactional
     @Override
-    public ConsultantRes.InfoRes updateInfo(String email, ConsultantInput.InfoInput input) {
+    public ConsultantRes.InfoRes updateInfo(String email, ConsultantReq.InfoReq req) {
         Member member = memberRepo.findByEmail(email)
                 .orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
         ConsultantInfo info = consultantInfoRepo.findByMember(member);
 
-        ConsultantInfo newInfo = info.update(input.toReq());
-//        if (input.getProfileImage() != null) {
-//            uploadProfileImage(newInfo, input.getProfileImage());
-//        }
-
-        return ConsultantRes.InfoRes.of(consultantInfoRepo.save(newInfo));
+        ConsultantInfo newInfo = info.update(req);
+        if (req.getProfileFileResList() != null) {
+            uploadProfileFileList(newInfo, req.getProfileFileResList());
+        }
+        return ConsultantRes.InfoRes.of(consultantInfoRepo.save(newInfo), fileUploadUseCase.getConsultantInfoFileList(info.getId()));
     }
 
-    private void uploadProfileImage(ConsultantInfo info, MultipartFile profileImage) {
-//        BaseFile baseFile = profileImageUseCase.uploadImage(profileImage);
-//
-//        profileImageRepo.save(ProfileImage.createProfileImage(
-//                info, baseFile.getFileUrl(), baseFile.getOriginFileName(), baseFile.getStoredFileName()
-//        ));
+    private void uploadProfileFileList(ConsultantInfo info, List<MultipartFile> profileFileList) {
+        fileUploadUseCase.deleteConsultantInfoFileList(info.getId());
+        List<BaseFile> baseFiles = fileUploadUseCase.uploadConsultantInfoFileList(profileFileList);
+
+        baseFiles.forEach(baseFile ->
+                profileImageRepo.save(
+                        ProfileImage.createProfileImage(
+                                info,
+                                baseFile.getFileUrl(),
+                                baseFile.getOriginFileName(),
+                                baseFile.getStoredFileName())
+                ));
     }
 
     @Override

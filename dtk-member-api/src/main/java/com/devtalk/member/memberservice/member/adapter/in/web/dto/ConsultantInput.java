@@ -3,11 +3,11 @@ package com.devtalk.member.memberservice.member.adapter.in.web.dto;
 import com.devtalk.member.memberservice.member.application.port.in.dto.ConsultantReq;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public class ConsultantInput {
-
     @Getter
     @AllArgsConstructor
     public static class InfoInput {
@@ -23,7 +23,7 @@ public class ConsultantInput {
 //        @Builder.Default
 //        private MultipartFile profileImage;
 
-        public ConsultantReq.InfoReq toReq() {
+        public ConsultantReq.InfoReq toReq(List<MultipartFile> files) {
             return ConsultantReq.InfoReq.builder()
                     .year(year)
                     .company(company)
@@ -33,6 +33,7 @@ public class ConsultantInput {
                     .skill(skill)
                     .f2f1h(f2f1h)
                     .nf2f1h(nf2f1h)
+                    .profileFileResList(files)
                     .build();
         }
 
