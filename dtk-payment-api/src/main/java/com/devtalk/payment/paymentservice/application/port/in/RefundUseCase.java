@@ -6,7 +6,7 @@ import com.devtalk.payment.paymentservice.domain.payment.Payment;
 public interface RefundUseCase {
     String getEmailHtmlConsultationRefundInfo(Consultation consultation);
 
-    void cancelPayment(Long consultationId, Long userId);
+    void cancelPayment(Long consultationId);
 
     void saveRefundInfo(Payment payment, Consultation consultation);
 }

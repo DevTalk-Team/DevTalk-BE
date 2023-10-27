@@ -45,17 +45,13 @@ class RefundService implements RefundUseCase {
 
     @Override
     @Transactional
-    public void cancelPayment(Long consultationId, Long userId) {
+    public void cancelPayment(Long consultationId) {
         Consultation consultation = consultationRepo.findById(consultationId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_CONSULTATION));
         Payment payment = paymentQueryableRepo.findByConsultationId(consultationId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_CONSULTATION));
 
         paymentValidator.validateItIsPaid(payment);
-
-        payment.changePaymentByCanceled();
-        consultation.changeConsultationByCanceled();
-        saveRefundInfo(payment, consultation);
 
         WebClient wc = WebClient.create("https://api.iamport.kr/payments/cancel");
         PortOneRefundRes response = wc.post()
@@ -68,16 +64,13 @@ class RefundService implements RefundUseCase {
         if (response.getCode() != 0) {
             throw new IncorrectException(ErrorCode.INVALID_REFUND_REQUEST);
         }
+
+        payment.changePaymentByCanceled(consultation);
+        saveRefundInfo(payment, consultation);
     }
 
     @Override
     public void saveRefundInfo(Payment payment, Consultation consultation) {
-        Refund refund = Refund.builder()
-                .refundCost(payment.getCost())
-                .consultationId(consultation)
-                .paymentId(payment)
-                .merchantId(payment.getMerchantId())
-                .build();
-        refundRepo.save(refund);
+        refundRepo.save(Refund.createRefund(payment, consultation));
     }
 }
