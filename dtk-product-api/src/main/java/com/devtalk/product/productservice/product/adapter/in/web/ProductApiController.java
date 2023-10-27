@@ -179,7 +179,7 @@ class ProductApiController {
             @ApiResponse(responseCode = "401", description = "상품 삭제 실패",
                     content = @Content(mediaType = "application/json"))
     })
-    @DeleteMapping("/delete/prodocuts")
+    @DeleteMapping("/delete/products")
     public ResponseEntity<?> deleteProduct(@RequestBody @Validated ProductInput.DeleteInput deleteInput,
                                            @RequestHeader(value = "User-Email") String userEmail) {
         log.info("User-Eamil : {}", userEmail);
