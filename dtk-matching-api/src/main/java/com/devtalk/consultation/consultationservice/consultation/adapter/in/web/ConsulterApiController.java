@@ -70,7 +70,7 @@ public class ConsulterApiController {
     @Operation(summary = "내담자 - 상담 취소", responses = {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
     })
-    @DeleteMapping("/consulters/cancle/consultations/{consultationId}")
+    @DeleteMapping("/consulters/cancel/consultations/{consultationId}")
     public ResponseEntity<?> cancelConsultationByConsulter(@RequestBody @Validated CancellationOfConsulterInput cancellationInput,
                                                            @RequestHeader(value = "User-Email") String userEmail,
                                                            @PathVariable Long consultationId) {
