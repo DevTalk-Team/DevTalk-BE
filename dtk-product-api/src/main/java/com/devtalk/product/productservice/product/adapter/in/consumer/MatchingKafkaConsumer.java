@@ -48,7 +48,8 @@ public class MatchingKafkaConsumer {
         if (productReservedReq.getStatus() == ProcessStatus.ACCEPTED) {
             reserveUseCase.reserveProduct(productReservedReq);
         }
-        if (productReservedReq.getStatus() == ProcessStatus.CONSULTANT_CANCELED
+        if (productReservedReq.getStatus() == ProcessStatus.CONSULTANT_REFUSED
+                ||productReservedReq.getStatus() == ProcessStatus.CONSULTANT_CANCELED
                 || productReservedReq.getStatus() == ProcessStatus.CONSULTER_CANCELED){
             cancleUseCase.cancleConsultation(productReservedReq);
 

@@ -5,6 +5,7 @@ import com.devtalk.consultation.consultationservice.consultation.adapter.out.pro
 import com.devtalk.consultation.consultationservice.consultation.application.port.in.CancelConsultationUseCase;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.client.PaymentServiceClient;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.client.ProductServiceClient;
+import com.devtalk.consultation.consultationservice.consultation.application.port.out.client.dto.MemberReq;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.ConsultationCancellationRepo;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.ConsultationQueryableRepo;
 import com.devtalk.consultation.consultationservice.consultation.domain.consultation.Consultation;
@@ -47,7 +48,7 @@ public class CancelConsultationService implements CancelConsultationUseCase {
         productKafkaProducer.sendConsultationInfoProduct("consultation-topic", consultation);
 
         if (originProcessStatus.equals(ProcessStatus.PAID)) {
-            paymentKafkaProducer.sendConsultationInfoPayment("consultation-topic", consultation);
+            paymentServiceClient.refund(consultation.getId());
         }
     }
 
@@ -65,7 +66,8 @@ public class CancelConsultationService implements CancelConsultationUseCase {
         productKafkaProducer.sendConsultationInfoProduct("consultation-topic", consultation);
 
         if (originProcessStatus.equals(ProcessStatus.PAID)) {
-            paymentKafkaProducer.sendConsultationInfoPayment("consultation-topic", consultation);
+            paymentServiceClient.refund(consultation.getId());
+            //paymentKafkaProducer.sendConsultationInfoPayment("consultation-topic", consultation);
         }
     }
 }
