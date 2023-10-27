@@ -55,7 +55,7 @@ public class ConsultantApiController {
     @Operation(summary = "상담사 - 상담 취소 및 거절", responses = {
             @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class))),
     })
-    @DeleteMapping("/consultants/cancle/consultations/{consultationId}")
+    @DeleteMapping("/consultants/cancel/consultations/{consultationId}")
     public ResponseEntity<?> cancelConsultationByConsultant(@RequestBody @Validated CancellationOfConsultantInput cancellationInput,
                                                             @RequestHeader(value = "User-Email") String userEmail,
                                                             @PathVariable Long consultationId) {
