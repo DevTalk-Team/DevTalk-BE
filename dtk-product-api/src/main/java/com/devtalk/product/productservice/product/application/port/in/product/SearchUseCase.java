@@ -11,7 +11,7 @@ public interface SearchUseCase {
     //상담자 예약 가능 상품 조회
     List<ProductRes.ConsultantProductListRes> searchList(Long consultantId);
 
-    List<ProductRes.ConsultantProductListRes> searchProductByDateList(Long consultantId, LocalDateTime date);
+    List<ProductRes.ConsultantProductListRes> searchProductByDateList(Long consultantId, LocalDate date);
 
 
     ProductRes.ProductDetailsRes searchProduct(ProductReq.SearchProdReq searchProdReq);

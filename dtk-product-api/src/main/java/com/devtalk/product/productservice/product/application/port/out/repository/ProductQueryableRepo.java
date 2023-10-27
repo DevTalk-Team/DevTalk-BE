@@ -13,5 +13,7 @@ import java.util.Optional;
 public interface ProductQueryableRepo {
     Optional <Product> findByConsultantIdAndReservationAt(Long consultantId, LocalDate reservationDate, LocalTime reservationTime);
 
-    List<Product> findByConsultantIdAndDate(Long consultantId, LocalDateTime date);
+    List<Product> findByConsultantIdAndDate(Long consultantId, LocalDate date);
+
+
 }

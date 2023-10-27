@@ -126,7 +126,7 @@ class ProductApiController {
                     content = @Content(mediaType = "application/json"))
     })
     @GetMapping("/search/consultants/{memberId}/Date/{date}")
-    public ResponseEntity<ProductOutput> searchProductByDateList(@PathVariable Long memberId, @PathVariable LocalDateTime date) {
+    public ResponseEntity<ProductOutput> searchProductByDateList(@PathVariable Long memberId, @PathVariable LocalDate date) {
         List<ProductRes.ConsultantProductListRes> consultantProductListRes = searchUseCase.searchProductByDateList(memberId,date);
         ProductOutput productOutput
                 = new ProductOutput("0502", "조회 성공", consultantProductListRes);
