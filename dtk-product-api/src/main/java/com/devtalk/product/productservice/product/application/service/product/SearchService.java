@@ -44,7 +44,8 @@ public class SearchService implements SearchUseCase {
                         .productId(product.getId())
                         .consultantId(product.getConsultantId())
                         .status(product.getStatus())
-                        .reservationAt(product.getReservationAt())
+                        .reservationDate(product.getReservationDate())
+                        .reservationTime(product.getReservationTime())
                         .productProceedType(product.getProductProceedType())
                         .build())
                 .collect(Collectors.toList());
@@ -58,7 +59,8 @@ public class SearchService implements SearchUseCase {
                         .productId(product.getId())
                         .consultantId(product.getConsultantId())
                         .status(product.getStatus())
-                        .reservationAt(product.getReservationAt())
+                        .reservationDate(product.getReservationDate())
+                        .reservationTime(product.getReservationTime())
                         .productProceedType(product.getProductProceedType())
                         .build())
                 .collect(Collectors.toList());
@@ -66,7 +68,7 @@ public class SearchService implements SearchUseCase {
 
     @Override
     public ProductRes.ProductDetailsRes searchProduct(ProductReq.SearchProdReq searchProdReq) {
-        Product product = productQueryableRepo.findByConsultantIdAndReservationAt(searchProdReq.getMemberId(), searchProdReq.getReservationAt())
+        Product product = productQueryableRepo.findByConsultantIdAndReservationAt(searchProdReq.getMemberId(), searchProdReq.getReservationDate(), searchProdReq.getReservationTime())
                 .orElseThrow(() -> new NotFoundException(NOT_FOUND_PRODUCT));
         return ProductRes.ProductDetailsRes.of(product);
     }

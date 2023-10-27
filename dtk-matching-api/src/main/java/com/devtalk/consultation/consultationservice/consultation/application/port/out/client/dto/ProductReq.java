@@ -6,7 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class ProductReq {
 
@@ -15,7 +17,8 @@ public class ProductReq {
     @Getter
     public static class ProductSearchReq {
         private Long consultantId;
-        private LocalDateTime reservationAT;
+        private LocalDate reservationDate;
+        private LocalTime reservationTime;
         private ProductProceedType productProceedType;
         private String reservationStatus;
         private Integer F2F_Cost;

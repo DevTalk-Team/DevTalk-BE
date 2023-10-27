@@ -18,18 +18,22 @@ public class ProductInput {
     public static class RegistrationInput{
 
         private Long consultantId;
-        private String reservationDate;
-        private String reservationTime;
+        private String reserveDate;
+        private String reserveTime;
         private ProductProceedType productProceedType;
 
         public ProductReq.RegistProdReq toReq( ){
-            LocalDate date = LocalDate.parse(reservationDate);
-            LocalTime time = LocalTime.parse(reservationTime);
-            LocalDateTime reservationAt = LocalDateTime.of(date, time);
+            if (reserveDate == null || reserveTime == null) {
+                throw new IllegalArgumentException("reservationDate and reservationTime must not be null");
+            }
+           LocalDate reservationDate = LocalDate.parse(reserveDate);
+           LocalTime reservationTime = LocalTime.parse(reserveTime);
+//            LocalDateTime reservationAt = LocalDateTime.of(date, time);
 
             return ProductReq.RegistProdReq.builder()
                     .memberId(consultantId)
-                    .reservationAt(reservationAt)
+                    .reservationDate(reservationDate)
+                    .reservationTime(reservationTime)
                     .productProceedType(productProceedType)
                     .build();
         }
@@ -42,17 +46,21 @@ public class ProductInput {
     public static class SearchInput{
 
         private Long consultantId;
-        private String reservationDate;
-        private String reservationTime;
+        private String searchDate;
+        private String searchTime;
 
         public ProductReq.SearchProdReq toReq( ){
-            LocalDate date = LocalDate.parse(reservationDate);
-            LocalTime time = LocalTime.parse(reservationTime);
-            LocalDateTime reservationAt = LocalDateTime.of(date, time);
+            if (searchDate == null || searchTime == null) {
+                throw new IllegalArgumentException("reservationDate and reservationTime must not be null");
+            }
+            LocalDate date = LocalDate.parse(searchDate);
+            LocalTime time = LocalTime.parse(searchTime);
+            //LocalDateTime reservationAt = LocalDateTime.of(date, time);
 
             return ProductReq.SearchProdReq.builder()
                     .memberId(consultantId)
-                    .reservationAt(reservationAt)
+                    .reservationDate(date)
+                    .reservationTime(time)
                     .build();
         }
     }
@@ -63,17 +71,21 @@ public class ProductInput {
     @Getter
     public static class UpdateInput{
 
-        private String reservationDate;
-        private String reservationTime;
+        private String updateDate;
+        private String updateTime;
         private ProductProceedType type;
 
         public ProductReq.UpdateProdReq toReq(){
-            LocalDate date = LocalDate.parse(reservationDate);
-            LocalTime time = LocalTime.parse(reservationTime);
-            LocalDateTime reservationAt = LocalDateTime.of(date, time);
+            if (updateDate == null || updateTime == null) {
+                throw new IllegalArgumentException("reservationDate and reservationTime must not be null");
+            }
+            LocalDate date = LocalDate.parse(updateDate);
+            LocalTime time = LocalTime.parse(updateTime);
+            //LocalDateTime reservationAt = LocalDateTime.of(date, time);
 
             return ProductReq.UpdateProdReq.builder()
-                    .reservationAt(reservationAt)
+                    .reservationDate(date)
+                    .reservationTime(time)
                     .productProceedType(type)
                     .build();
         }
@@ -84,16 +96,20 @@ public class ProductInput {
     @Getter
     public static class DeleteInput{
 
-        private String reservationDate;
-        private String reservationTime;
+        private String deleteDate;
+        private String deleteTime;
 
         public ProductReq.DeleteProdReq toReq(){
-            LocalDate date = LocalDate.parse(reservationDate);
-            LocalTime time = LocalTime.parse(reservationTime);
-            LocalDateTime reservationAt = LocalDateTime.of(date, time);
+            if (deleteDate == null || deleteTime == null) {
+                throw new IllegalArgumentException("reservationDate and reservationTime must not be null");
+            }
+            LocalDate date = LocalDate.parse(deleteDate);
+            LocalTime time = LocalTime.parse(deleteTime);
+            //LocalDateTime reservationAt = LocalDateTime.of(date, time);
 
             return ProductReq.DeleteProdReq.builder()
-                    .reservationAt(reservationAt)
+                    .reservationDate(date)
+                    .reservationTime(time)
                     .build();
         }
     }
@@ -101,6 +117,7 @@ public class ProductInput {
 
 
 }
+
 
 
 

@@ -5,7 +5,9 @@ import com.devtalk.product.productservice.product.domain.product.ProductProceedT
 
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -18,7 +20,9 @@ public class ProductRes {
         private Long productId;
         private Long consultantId;
         private String status;
-        private LocalDateTime reservationAt;
+        private LocalDate reservationDate;
+        private LocalTime reservationTime;
+
         private ProductProceedType productProceedType;
     }
 
@@ -28,7 +32,8 @@ public class ProductRes {
         private Long productId;
         private Long consultantId;
         private String status;
-        private LocalDateTime reservationAt;
+        private LocalDate reservationDate;
+        private LocalTime reservationTime;
         private ProductProceedType productProceedType;
 
         public static ProductDetailsRes of(Product product){
@@ -36,7 +41,8 @@ public class ProductRes {
                     .productId(product.getId())
                     .consultantId(product.getConsultantId())
                     .status(product.getStatus())
-                    .reservationAt(product.getReservationAt())
+                    .reservationDate(product.getReservationDate())
+                    .reservationTime(product.getReservationTime())
                     .productProceedType(product.getProductProceedType())
                     .build();
         }

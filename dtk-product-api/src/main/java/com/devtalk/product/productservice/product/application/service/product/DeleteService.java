@@ -22,7 +22,7 @@ public class DeleteService implements DeleteUseCase {
     @Transactional
 
     public void deleteProduct(Long consultantId, ProductReq.DeleteProdReq deleteProdReq) {
-        Product product = productQueryableRepo.findByConsultantIdAndReservationAt(consultantId, deleteProdReq.getReservationAt())
+        Product product = productQueryableRepo.findByConsultantIdAndReservationAt(consultantId, deleteProdReq.getReservationDate(), deleteProdReq.getReservationTime())
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_PRODUCT));
         productRepo.delete(product);
 

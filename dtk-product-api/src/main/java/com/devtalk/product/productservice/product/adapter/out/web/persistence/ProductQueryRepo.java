@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.swing.text.html.Option;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,13 +24,15 @@ class ProductQueryRepo implements ProductQueryableRepo {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Optional<Product> findByConsultantIdAndReservationAt(Long consultantId, LocalDateTime reservationAt){
+    public Optional<Product> findByConsultantIdAndReservationAt(Long consultantId, LocalDate reservationDate, LocalTime reservationTime){
         return Optional.ofNullable(
                 queryFactory
                 .select(product)
                 .from(product)
                 .where(product.consultantId.eq(consultantId)
-                        .and(product.reservationAt.eq(reservationAt)))
+                        .and(product.reservationDate.eq(reservationDate))
+                        .and(product.reservationTime.eq(reservationTime)))
+
                 .fetchFirst());
     }
 

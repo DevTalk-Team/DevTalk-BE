@@ -9,7 +9,9 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +30,9 @@ public class ConsultationReq {
         private ProductProceedType productProceedType;
 
         private String region;
-        private LocalDateTime reservationAT;
+        private LocalDate reservationDate;
+        private LocalTime reservationTime;
+
         private String content;
 
         @Builder.Default
@@ -36,7 +40,7 @@ public class ConsultationReq {
         private Integer cost;
 
         public Consultation toEntity() {
-            ConsultationDetails consultationDetails = new ConsultationDetails(productProceedType, region, reservationAT, content, new ArrayList<>());
+            ConsultationDetails consultationDetails = new ConsultationDetails(productProceedType, region, reservationDate, reservationTime, content, new ArrayList<>());
             return Consultation.createConsultation(consulterId, consulterName, consultantId, consultantName, productId, consultationDetails, cost);
         }
     }

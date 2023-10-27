@@ -98,7 +98,9 @@ class ProductApiController {
             return ResponseEntity.badRequest().body("Invalid date or time format");
         }
     }
-
+//            LocalDate date = LocalDate.parse(reservationDate);
+//            LocalTime time = LocalTime.parse(reservationTime);
+//            LocalDateTime reservationAt = LocalDateTime.of(date, time);
     @Operation(summary = "상담사 예약 가능 상품 전체 조회 API", description = "상담자의 모든 상담 상품을 확인한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "예약 가능 상품 조회 성공",

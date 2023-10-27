@@ -5,7 +5,9 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,9 +40,10 @@ public class ConsultationInput {
         @NotBlank @Size(max = 20)
         private String region;
 
-        @NotNull
         @Future
-        private LocalDateTime reservationAT;
+        private LocalDate reservationDate;
+        private LocalTime reservationTime;
+
 
         @NotBlank @Size(max = 500)
         private String content;
@@ -60,7 +63,8 @@ public class ConsultationInput {
                     .productId(productId)
                     .productProceedType(productProceedType)
                     .region(region)
-                    .reservationAT(reservationAT)
+                    .reservationDate(reservationDate)
+                    .reservationTime(reservationTime)
                     .content(content)
                     .cost(cost)
                     .build();

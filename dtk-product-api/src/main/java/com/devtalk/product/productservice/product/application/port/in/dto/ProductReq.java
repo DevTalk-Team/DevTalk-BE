@@ -3,7 +3,9 @@ package com.devtalk.product.productservice.product.application.port.in.dto;
 import com.devtalk.product.productservice.product.domain.product.ProductProceedType;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class ProductReq {
     @Builder
@@ -13,7 +15,8 @@ public class ProductReq {
     public static class RegistProdReq {
         private Long memberId;
 
-        private LocalDateTime reservationAt;
+        private LocalDate reservationDate;
+        private LocalTime reservationTime;
         private ProductProceedType productProceedType;
     }
 
@@ -33,7 +36,8 @@ public class ProductReq {
     @Getter
     public static class SearchProdReq {
         private Long memberId;
-        private LocalDateTime reservationAt;
+        private LocalDate reservationDate;
+        private LocalTime reservationTime;
     }
 
     @Builder
@@ -41,7 +45,8 @@ public class ProductReq {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @Getter
     public static class DeleteProdReq {
-        private LocalDateTime reservationAt;
+        private LocalDate reservationDate;
+        private LocalTime reservationTime;
     }
 
     @Builder
@@ -49,7 +54,8 @@ public class ProductReq {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @Getter
     public static class UpdateProdReq {
-        private LocalDateTime reservationAt;
+        private LocalDate reservationDate;
+        private LocalTime reservationTime;
         private ProductProceedType productProceedType;
     }
 }

@@ -7,7 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class ProductInfoRes {
     @Builder
@@ -15,7 +17,8 @@ public class ProductInfoRes {
     @Getter
     public static class ProductSearchRes {
         private Long consultantId;
-        private LocalDateTime reservationAT;
+        private LocalDate reservationDate;
+        private LocalTime reservationTime;
         private ProductProceedType productProceedType;
         private String reservationStatus;
         private Integer F2F_Cost;
@@ -24,7 +27,8 @@ public class ProductInfoRes {
         public static ProductSearchRes of(Product product){
             return ProductSearchRes.builder()
                     .consultantId(product.getConsultantId())
-                    .reservationAT(product.getReservationAt())
+                    .reservationDate(product.getReservationDate())
+                    .reservationTime(product.getReservationTime())
                     .productProceedType(product.getProductProceedType())
                     .reservationStatus(product.getStatus())
                     .F2F_Cost(product.getF2FCost())
