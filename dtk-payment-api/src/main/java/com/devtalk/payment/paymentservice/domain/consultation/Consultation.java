@@ -65,10 +65,11 @@ public class Consultation extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ProcessStatus processStatus;
 
-    public static Consultation createConsultation(Long consulterId, String consulterName, String consulterEmail,
+    public static Consultation createConsultation(Long consultationId, Long consulterId, String consulterName, String consulterEmail,
                                                   Long consultantId, String consultantName, String consultationType,
                                                   Integer cost, LocalDate consultationDate, LocalTime consultationTime, ProcessStatus processStatus){
         return Consultation.builder()
+                .id(consultationId)
                 .merchantId(UUID.randomUUID().toString())
                 .consulterId(consulterId)
                 .consulterName(consulterName)

@@ -19,7 +19,7 @@ class PaymentQueryRepo implements PaymentQueryableRepo {
     public Optional<Payment> findByConsultationId(Long consultationId) {
         return Optional.ofNullable(
                 queryFactory.selectFrom(payment)
-                        .where(payment.consultation.id.eq(consultationId))
+                        .where(payment.consultation.consultantId.eq(consultationId))
                         .fetchOne()
         );
     }
