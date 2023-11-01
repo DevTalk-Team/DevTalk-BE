@@ -21,7 +21,10 @@ public class MemberDetailsService implements UserDetailsService {
         log.info("[loadUserByUsername] 수행. email : {}", email);
         Member member = memberRepo.findByEmail(email)
                 .orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
-        return new MemberDetails(member);
+//        return new MemberDetails(member);
+        MemberDetails memberDetails = new MemberDetails(member);
+        log.info("[loadUserByUsername] 수행. password : {}", memberDetails.getPassword());
+        return memberDetails;
     }
 
 }

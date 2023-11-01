@@ -16,6 +16,7 @@ import com.devtalk.member.memberservice.member.domain.member.Member;
 import com.devtalk.member.memberservice.member.domain.member.MemberType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,10 +28,9 @@ import static com.devtalk.member.memberservice.member.domain.member.Member.creat
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class SignUpService implements SignUpUseCase {
-
     private final MemberRepo memberRepo;
     private final SignUpValidator signUpValidator;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
     private final CategoryRepo categoryRepo;
     private final MemberCategoryRepo memberCategoryRepo;
     private final ConsultantInfoRepo consultantInfoRepo;
