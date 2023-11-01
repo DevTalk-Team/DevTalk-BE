@@ -3,11 +3,10 @@ package com.devtalk.member.memberservice.global.security;
 import com.devtalk.member.memberservice.member.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 @RequiredArgsConstructor
 public class MemberDetails implements UserDetails {
@@ -16,12 +15,12 @@ public class MemberDetails implements UserDetails {
 
     @Override // 계정이 가지고 있는 권한 목록
     public Collection<? extends GrantedAuthority> getAuthorities() {
-//        Collection<GrantedAuthority> authorities = new ArrayList<>();
-//        authorities.add(() -> {
-//            return "ROLE_" + member.getMemberType().toString();
-//        });
-//        return authorities;
-        return List.of(new SimpleGrantedAuthority("user"));
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(() -> {
+            return "ROLE_" + member.getMemberType().toString();
+        });
+        return authorities;
+//        return List.of(new SimpleGrantedAuthority("user"));
     }
 
     @Override // 계정의 이메일(아이디)

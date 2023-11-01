@@ -27,6 +27,9 @@ public class AuthService implements AuthUseCase {
     @Override
     public AuthRes.LoginRes login(AuthReq.LoginReq req) {
         Member member = memberInfoService.findByEmail(req.getEmail());
+
+        validator.loginValidate(req, member);
+
         String accessToken = tokenProvider.generateAccessToken(member);
 
         Authentication authentication = tokenProvider.getAuthentication(accessToken);
