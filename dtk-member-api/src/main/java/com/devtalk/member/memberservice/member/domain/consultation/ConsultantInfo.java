@@ -1,6 +1,5 @@
 package com.devtalk.member.memberservice.member.domain.consultation;
 
-import com.devtalk.member.memberservice.member.adapter.in.web.dto.ConsultantInput;
 import com.devtalk.member.memberservice.member.application.port.in.dto.ConsultantReq;
 import com.devtalk.member.memberservice.member.domain.member.Member;
 import jakarta.persistence.*;
@@ -33,10 +32,14 @@ public class ConsultantInfo {
     private String skill;
     private Integer f2f1h;
     private Integer nf2f1h;
+    private float star;
+    private int consultationCount;
 
     public static ConsultantInfo setMember(Member member) {
         ConsultantInfo consultantInfo = new ConsultantInfo();
         consultantInfo.member = member;
+        consultantInfo.star = 0.0f;
+        consultantInfo.consultationCount = 0;
         return consultantInfo;
     }
 
@@ -50,5 +53,10 @@ public class ConsultantInfo {
         this.f2f1h = req.getF2f1h();
         this.nf2f1h = req.getNf2f1h();
         return this;
+    }
+
+    public void rate(int star) {
+        this.star = (float) (Math.round((this.star * consultationCount + star) / ++consultationCount * 100) / 100.0);
+        System.out.println("this.star = " + this.star);
     }
 }
