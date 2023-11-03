@@ -127,4 +127,15 @@ public class ConsultantInfoApiController {
         List<ConsultantRes.ConsultationRes> res = consultantInfoUseCase.findConsultantForConsultation(input.toReq());
         return SuccessResponse.toResponseEntity(FIND_CONSULTANT_SUCCESS, res);
     }
+
+    @Operation(summary = "상담 - 전문가 별점 평가", responses = {
+            @ApiResponse(description = "성공", responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseNoResult.class)))
+    })
+    @GetMapping("/{consultantId}/rate")
+    ResponseEntity<?> rate(@PathVariable(value = "consultantId") Long id,
+                           @RequestParam(value = "star") int star) {
+        consultantInfoUseCase.rate(id, star);
+        return SuccessResponseNoResult.toResponseEntity(CONSULTANT_RATE_SUCCESS);
+    }
 }

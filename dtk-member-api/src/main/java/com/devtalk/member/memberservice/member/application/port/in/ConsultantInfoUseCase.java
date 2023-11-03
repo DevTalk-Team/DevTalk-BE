@@ -16,4 +16,5 @@ public interface ConsultantInfoUseCase {
     List<String> getRegion(String email);
     void updateRegion(String email, ConsultantInput.ListInput input);
     List<ConsultantRes.ConsultationRes> findConsultantForConsultation(ConsultantReq.ConsultationReq req);
+    void rate(Long consultantId, int star);
 }
