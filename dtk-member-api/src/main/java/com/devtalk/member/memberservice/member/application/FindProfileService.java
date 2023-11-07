@@ -10,7 +10,7 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +24,7 @@ public class FindProfileService implements FindProfileUseCase {
     private final MemberQueryableRepo memberQueryableRepo;
     private final FindProfileValidator validator;
     private final JavaMailSender javaMailSender;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PasswordEncoder passwordEncoder;
     private final RedisUtil redisUtil;
     private String tempPassword;
 
@@ -77,6 +77,6 @@ public class FindProfileService implements FindProfileUseCase {
     @Override
     public void changePassword(String password, String newPassword) {
         Member member = validator.changePasswordValidate(password, newPassword);
-        member.updatePassword(bCryptPasswordEncoder.encode(newPassword));
+        member.updatePassword(passwordEncoder.encode(newPassword));
     }
 }

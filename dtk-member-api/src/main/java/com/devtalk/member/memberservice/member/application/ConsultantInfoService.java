@@ -168,4 +168,13 @@ public class ConsultantInfoService implements ConsultantInfoUseCase {
         Long regionId = regionRepo.findByRegion(req.getRegion()).getId(); // 대면
         return memberQueryableRepo.findF2fConsultant(typeId, categoryId, regionId);
     }
+
+    @Transactional
+    @Override
+    public void rate(Long consultantId, int star) {
+        Member consultant = memberRepo.findById(consultantId)
+                .orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+        ConsultantInfo consultantInfo = consultantInfoRepo.findByMember(consultant);
+        consultantInfo.rate(star);
+    }
 }

@@ -39,6 +39,7 @@ public enum SuccessCode {
     MYPAGE_UPDATE_SUCCESS(OK, "0130", "마이페이지 - 수정 성공"),
     /* 상담 */
     FIND_CONSULTANT_SUCCESS(OK, "0131", "상담 - 전문가 찾기 성공"),
+    CONSULTANT_RATE_SUCCESS(OK, "0132", "상담 - 전문가 별점 매기기 성공"),
     ;
 
 
