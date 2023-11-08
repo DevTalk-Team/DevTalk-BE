@@ -12,6 +12,7 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Data
 public class AttachedFile extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -12,6 +12,7 @@ import java.util.List;
 @Embeddable
 @Builder
 @Getter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ConsultationDetails {
