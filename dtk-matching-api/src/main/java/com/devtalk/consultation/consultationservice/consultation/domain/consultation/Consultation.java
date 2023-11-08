@@ -160,7 +160,7 @@ public class Consultation extends BaseTime {
                 && this.review != null) {
             throw new BusinessRuleException(REVIEW_IMPOSSIBLE_STATUS);
         }
-        this.review = Review.createReview(this.consultantId, this.consulterName, this.consultantId, this.consultantName, score, photoUrl, photoOriginName, photoStoredName, content);
+        this.review = Review.createReview(this.consultantId, this.consulterName, this.consultantId, this.consultantName, score, content);
     }
 
     private ConsultationCancellation cancel(ProcessStatus status, String canceledReason) {

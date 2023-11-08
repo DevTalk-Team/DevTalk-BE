@@ -51,11 +51,9 @@ public class FileUploadService implements FileUploadUseCase {
 
 
     @Override
-    public BaseFile uploadReviewPhoto(MultipartFile multipartFile) throws FileException {
-        return uploadFile(multipartFile, reviewFolderPath);
+    public List<BaseFile> uploadReviewPhoto(List<MultipartFile> multipartFiles) {
+        return null;
     }
-
-
 
     @Override
     public List<AttachedFileRes> getConsultationFileList(Long consultationId) {
