@@ -80,6 +80,5 @@ public class ConsultationReq {
         private Long consultationId;
         private Integer score;
         private String content;
-        private MultipartFile photo;
     }
 }

@@ -29,27 +29,18 @@ public class Review extends BaseTime {
     @Column(nullable = false)
     private Integer score;
 
-    private String photoUrl;
-
-    private String photoOriginName;
-
-    private String photoStoredName;
 
     @Column(length = 255)
     private String content;
 
     public static Review createReview(Long consulterId, String consulterName, Long consultantId, String consultantName,
-                                      Integer score, String photoUrl, String photoOriginName, String photoStoredName,
-                                      String content) {
+                                      Integer score, String content) {
         return Review.builder()
                 .consulterId(consulterId)
                 .consulterName(consulterName)
                 .consultantId(consultantId)
                 .consultantName(consultantName)
                 .score(score)
-                .photoUrl(photoUrl)
-                .photoOriginName(photoOriginName)
-                .photoStoredName(photoStoredName)
                 .content(content)
                 .build();
     }

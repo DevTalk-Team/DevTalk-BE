@@ -64,18 +64,38 @@ public class ConsultationRes {
         private String photoStoredName;
         private String content;
 
-        public static ReviewSearchRes of(Review review) {
+        public static ReviewSearchRes of(Review review, ReviewPhoto reviewPhoto) {
             return ReviewSearchRes.builder()
                     .id(review.getId())
                     .consulterName(review.getConsulterName())
                     .consultantName(review.getConsultantName())
                     .score(review.getScore())
-                    .photoUrl(review.getPhotoUrl())
-                    .photoOriginName(review.getPhotoOriginName())
-                    .photoStoredName(review.getPhotoStoredName())
+                    .photoUrl(reviewPhoto.getFileUrl())
+                    .photoOriginName(reviewPhoto.getOriginFileName())
+                    .photoStoredName(reviewPhoto.getStoredFileName())
                     .content(review.getContent())
                     .build();
         }
     }
 
+    @Builder(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @Getter
+    public static class ReviewPhotoRes {
+        private Long id;
+        private Review review;
+        private String photoUrl;
+        private String photoOriginName;
+        private String photoStoredName;
+
+        public static ReviewPhotoRes of(ReviewPhoto reviewPhoto) {
+            return ReviewPhotoRes.builder()
+                    .id(reviewPhoto.getId())
+                    .review(reviewPhoto.getReview())
+                    .photoUrl(reviewPhoto.getFileUrl())
+                    .photoOriginName(reviewPhoto.getOriginFileName())
+                    .photoStoredName(reviewPhoto.getStoredFileName())
+                    .build();
+        }
+    }
 }

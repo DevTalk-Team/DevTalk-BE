@@ -41,7 +41,7 @@ public class ConsulterApiController {
     private final CancelConsultationUseCase cancelUseCase;
     private final ModifyConsultationUseCase modifyUseCase;
     private final SearchConsultationUseCase searchUseCase;
-    private final ReviewConsultationUseCase reviewUseCase;
+    //private final ReviewConsultationUseCase reviewUseCase;
     private final AuthUseCase authUseCase;
     private final Environment env;
 
@@ -128,16 +128,17 @@ public class ConsulterApiController {
                 searchUseCase.searchCanceledConsultationDetailsByConsulter(consulterId, consultationId));
     }
 
-    @Operation(summary = "내담자 - 리뷰 작성", responses = {
-            @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
-    })
-    @PostMapping("/consulter/reviews/consultations/{consultationId}")
-    public ResponseEntity<?> writeReview(@RequestBody @Validated ReviewInput reviewInput,
-                                         @RequestHeader(value = "User-Email") String userEmail,
-                                         @PathVariable Long consultationId) {
-        log.info("User-Eamil : {}", userEmail);
-        Long consulterId = authUseCase.auth(userEmail);
-        reviewUseCase.reviewConsultation(reviewInput.toReq(consulterId, consultationId));
-        return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.CONSULTATION_REVIEW_WRITE_SUCCESS);
-    }
+//    @Operation(summary = "내담자 - 리뷰 작성", responses = {
+//            @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SuccessResponseWithoutResult.class)))
+//    })
+//    @PostMapping("/consulter/reviews/consultations/{consultationId}")
+//    public ResponseEntity<?> writeReview(@RequestBody @Validated ReviewInput reviewInput,
+//                                         @RequestHeader(value = "User-Email") String userEmail,
+//                                         @PathVariable Long consultationId,
+//                                         @RequestPart(value = "files", required = false) List<MultipartFile> files){
+//        log.info("User-Eamil : {}", userEmail);
+//        Long consulterId = authUseCase.auth(userEmail);
+//        reviewUseCase.reviewConsultation(reviewInput.toReq(consulterId, consultationId), files);
+//        return SuccessResponseWithoutResult.toResponseEntity(SuccessCode.CONSULTATION_REVIEW_WRITE_SUCCESS);
+//    }
 }

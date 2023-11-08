@@ -124,10 +124,10 @@ public class ConsultationInput {
         @NotBlank @Size(max = 500)
         private String content;
 
-        private MultipartFile photo;
+        //private MultipartFile photo;
 
         public ReviewReq toReq(Long consulterId, Long consultationId) {
-            return new ReviewReq(consulterId, consultationId, score, content, photo);
+            return new ReviewReq(consulterId, consultationId, score, content);
         }
     }
 

@@ -100,14 +100,14 @@ public class ConsultantApiController {
                 searchUseCase.searchConsultationListByConsultant(consultantId));
     }
 
-    @Operation(summary = "상담사 - 리뷰 전체 조회", responses = {
-            @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(type = "array", implementation = ReviewSearchRes.class)))
-    })
-    @GetMapping("/consultants/{consultantId}/reviews")
-    public ResponseEntity<SuccessResponse> searchReviewsByConsultant(@RequestHeader(value = "User-Email") String userEmail) {
-        log.info("User-Eamil : {}", userEmail);
-        Long consultantId = authUseCase.auth(userEmail);
-        return SuccessResponse.toResponseEntity(SuccessCode.CONSULTANT_REVIEW_SEARCH_SUCCESS,
-                searchUseCase.searchReviewByConsultant(consultantId));
-    }
+//    @Operation(summary = "상담사 - 리뷰 전체 조회", responses = {
+//            @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(type = "array", implementation = ReviewSearchRes.class)))
+//    })
+//    @GetMapping("/consultants/{consultantId}/reviews")
+//    public ResponseEntity<SuccessResponse> searchReviewsByConsultant(@RequestHeader(value = "User-Email") String userEmail) {
+//        log.info("User-Eamil : {}", userEmail);
+//        Long consultantId = authUseCase.auth(userEmail);
+//        return SuccessResponse.toResponseEntity(SuccessCode.CONSULTANT_REVIEW_SEARCH_SUCCESS,
+//                searchUseCase.searchReviewByConsultant(consultantId));
+//    }
 }

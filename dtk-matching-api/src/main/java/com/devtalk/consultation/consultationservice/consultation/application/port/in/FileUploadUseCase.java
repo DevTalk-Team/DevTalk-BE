@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface FileUploadUseCase {
-    BaseFile uploadReviewPhoto(MultipartFile multipartFile);
+    List<BaseFile>  uploadReviewPhoto(List<MultipartFile> multipartFiles);
     List<AttachedFileRes> getConsultationFileList(Long postId);
     List<BaseFile> uploadConsultationFileList(List<MultipartFile> multipartFiles);
     List<BaseFile> uploadFileList(List<MultipartFile> multipartFiles, String path);

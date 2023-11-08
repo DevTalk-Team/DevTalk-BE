@@ -2,8 +2,10 @@ package com.devtalk.consultation.consultationservice.consultation.application;
 
 import com.devtalk.consultation.consultationservice.consultation.application.port.in.SearchConsultationUseCase;
 import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.ConsultationQueryableRepo;
+//import com.devtalk.consultation.consultationservice.consultation.application.port.out.repository.ReviewPhotoQueryableRepo;
 import com.devtalk.consultation.consultationservice.consultation.domain.consultation.Consultation;
 import com.devtalk.consultation.consultationservice.consultation.domain.consultation.ConsultationCancellation;
+import com.devtalk.consultation.consultationservice.consultation.domain.consultation.ReviewPhoto;
 import com.devtalk.consultation.consultationservice.global.error.execption.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,9 @@ import static com.devtalk.consultation.consultationservice.global.error.ErrorCod
 @RequiredArgsConstructor
 public class SearchConsultationService implements SearchConsultationUseCase {
     private final ConsultationQueryableRepo consultationQueryableRepo;
+    //private final ReviewPhotoQueryableRepo reviewPhotoQueryableRepo;
+
+
 
     public List<ConsultationSearchRes> searchConsultationListByConsulter(Long consulterId) {
         List<Consultation> consultationList = consultationQueryableRepo.findAllByConsulterId(consulterId);
@@ -61,10 +66,17 @@ public class SearchConsultationService implements SearchConsultationUseCase {
         return CancellationReasonRes.of(consultationCancellation);
     }
 
-    @Override
-    public List<ReviewSearchRes> searchReviewByConsultant(Long consultantId) {
-        return consultationQueryableRepo.findAllReviewByConsultantId(consultantId).stream()
-                .map(review -> ReviewSearchRes.of(review)).toList();
-    }
-
+//    @Override
+//    public List<ReviewSearchRes> searchReviewByConsultant(Long consultantId) {
+//        return consultationQueryableRepo.findAllReviewByConsultantId(consultantId).stream()
+//                .map(review -> ReviewSearchRes.of(review))
+//                .toList();
+//    }
+//    @Override
+//    public List<ReviewPhotoRes> searchPhotoByReview(Long reviewId) {
+//        List<ReviewPhoto> reviewPhotoResList = reviewPhotoQueryableRepo.findAllPhotoByreviewId(reviewId);
+//
+//
+//        return ReviewPhotoRes.of()
+//    }
 }
