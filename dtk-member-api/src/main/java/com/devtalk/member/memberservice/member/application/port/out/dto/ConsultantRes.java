@@ -60,5 +60,6 @@ public class ConsultantRes {
         private String company;
         private int year;
         private Integer cost;
+        private float star;
     }
 }

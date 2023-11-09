@@ -46,7 +46,7 @@ public class MemberQueryRepo implements MemberQueryableRepo {
     public List<ConsultantRes.ConsultationRes> findNf2fConsultant(Long typeId, Long categoryId) {
         return queryFactory
                 .select(Projections.constructor(ConsultantRes.ConsultationRes.class,
-                        member.id, member.name, consultantInfo.company, consultantInfo.year, consultantInfo.nf2f1h)).distinct()
+                        member.id, member.name, consultantInfo.company, consultantInfo.year, consultantInfo.nf2f1h, consultantInfo.star)).distinct()
                 .from(member)
                 .join(consultantInfo).on(member.id.eq(consultantInfo.member.id))
                 .join(consultantConsultationType)
@@ -62,7 +62,7 @@ public class MemberQueryRepo implements MemberQueryableRepo {
     public List<ConsultantRes.ConsultationRes> findF2fConsultant(Long typeId, Long categoryId, Long regionId) {
         return queryFactory
                 .select(Projections.constructor(ConsultantRes.ConsultationRes.class,
-                        member.id, member.name, consultantInfo.company, consultantInfo.year, consultantInfo.f2f1h)).distinct()
+                        member.id, member.name, consultantInfo.company, consultantInfo.year, consultantInfo.f2f1h, consultantInfo.star)).distinct()
                 .from(member)
                 .join(consultantInfo).on(member.id.eq(consultantInfo.member.id))
                 .join(consultantConsultationType)
