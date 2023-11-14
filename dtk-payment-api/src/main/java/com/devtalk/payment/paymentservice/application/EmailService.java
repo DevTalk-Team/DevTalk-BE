@@ -37,7 +37,7 @@ class EmailService implements EmailUseCase {
         String content = getEmailHtmlPaidInfo(consultation);
 
         EmailMessageReq emailMessageReq = EmailMessageReq.builder()
-                .to("zktl34@naver.com")
+                .to(consultation.getConsulterEmail())
                 .subject("데브톡 - 결제 내역")
                 .message(content)
                 .build();

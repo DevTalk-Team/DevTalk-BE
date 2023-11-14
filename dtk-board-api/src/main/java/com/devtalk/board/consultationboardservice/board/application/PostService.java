@@ -64,7 +64,7 @@ public class PostService implements PostUseCase {
     }
 
     @Override
-    @Transactional(readOnly = true) // TODO : readOnly
+    @Transactional // TODO : readOnly
     public PostViewRes viewPost(Long postId) {
         Post post = postQueryableRepo.findPostByPostId(postId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_POST));

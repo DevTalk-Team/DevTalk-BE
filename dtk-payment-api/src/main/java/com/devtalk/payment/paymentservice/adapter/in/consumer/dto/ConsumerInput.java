@@ -35,7 +35,7 @@ public class ConsumerInput {
 
         public Consultation toEntity(String consulterEmail) {
             return Consultation.createConsultation(
-                    consulterId, consulterName, consulterEmail,
+                    consultationId, consulterId, consulterName, consulterEmail,
                     consultantId, consultantName, consultationDetails.getProceedTypeDescription(),
                     cost.getAmount(), consultationDetails.getReservationDate(), consultationDetails.getReservationTime(), status);
         }
