@@ -31,7 +31,7 @@ public class KafkaConsumer {
     private final PaymentUseCase paymentUseCase;
     private final RefundUseCase refundUseCase;
 
-    @KafkaListener(topics = "approved-consultation-topic")
+    @KafkaListener(topics = "approved-consultation")
     public void receiveConsultationInfo(String kafkaMessage) {
         log.info("Kafka Message: " + kafkaMessage);
         ConsultationInput consultation = null;
