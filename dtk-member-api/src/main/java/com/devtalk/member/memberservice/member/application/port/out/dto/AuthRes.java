@@ -12,6 +12,7 @@ public class AuthRes {
         private String tokenType;
         private String email; // refreshToken 키 값 (redis)
         private String refreshToken;
+        private String memberType;
     }
 
     @Getter

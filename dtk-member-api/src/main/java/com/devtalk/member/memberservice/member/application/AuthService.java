@@ -42,6 +42,7 @@ public class AuthService implements AuthUseCase {
                 .accessToken(accessToken)
                 .email(member.getEmail())
                 .refreshToken(refreshToken)
+                .memberType(member.getMemberType().toString())
                 .build();
     }
 
